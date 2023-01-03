@@ -1,8 +1,12 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom'
 
 const dashboard = () => {
   return (
-    <div>dashboard</div>
+    <div>
+      <h1>User account</h1>
+      <Outlet/>  
+    </div>
   )
 }
 
