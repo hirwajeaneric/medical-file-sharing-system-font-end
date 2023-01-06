@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import AdminAuthentication from './pages/admin/authentication/AdminAuthentication';
@@ -14,41 +14,60 @@ import PatientAuthentication from './pages/admin/authentication/AdminAuthenticat
 import PatientSignin from './components/authenticationRelated/AdminSignin';
 import PatientSignup from './components/authenticationRelated/AdminSignup';
 import PatientAccount from './pages/admin/dashboard/dashboard';
+import AdminForgotPassword from './components/authenticationRelated/AdminForgotPassword';
+import HospitalForgotPassword from './components/authenticationRelated/HospitalForgotPassword';
+import PatientForgotPassword from './components/authenticationRelated/PatientForgotPassword';
+
+export var ResponseMessageContext = createContext();
+export var ResponseMessageContextSetter = createContext();
 
 function App() {
+
+  const [responseMessage, setResponseMessage] = useState({
+    message: '',
+    visible: false
+  });
+
   return (
-    <Router>
-      <Routes>
-        
-        {/* Admin routes  */}
-        <Route path='/' element={<Home/>}/>
-        <Route path='/admin/' element={<AdminAuthentication/>}>
-          <Route path='signin/' element={<AdminSignin/>}/>
-          <Route path='signup/' element={<AdminSignup/>}/>
-        </Route>
-        <Route path='/admin/dashboard/' element={<Dashboard/>}>
-        </Route>
+    <ResponseMessageContext.Provider value={responseMessage}>
+      <ResponseMessageContextSetter.Provider value={setResponseMessage}>
+        <Router>
+          <Routes>
+            
+            {/* Admin routes  */}
+            <Route path='/' element={<Home/>}/>
+            <Route path='/admin/' element={<AdminAuthentication/>}>
+              <Route path='signin/' element={<AdminSignin/>}/>
+              <Route path='signup/' element={<AdminSignup/>}/>
+              <Route path='forgotPassword/' element={<AdminForgotPassword/>}/>
+            </Route>
+            <Route path='/admin/dashboard/' element={<Dashboard/>}>
+            </Route>
 
-        {/* Hospital and hospital Personel routes  */}
-        <Route path='/hp/' element={<HospitalAuthentication/>}>
-          <Route path='signin/' element={<HospitalSignin/>}/>
-          <Route path='signup/' element={<HospitalSignup/>}/>
-        </Route>
-        <Route path='/hp/dashboard/' element={<HospitalDashboard/>}>
-        </Route>
-        <Route path='/hp/user/' element={<HospitalPersonelAccount/>}>
-        </Route>
-        
-        {/* User routes  */}
-        <Route path='/user/' element={<PatientAuthentication/>}>
-          <Route path='signin/' element={<PatientSignin/>}/>
-          <Route path='signup/' element={<PatientSignup/>}/>
-        </Route>
-        <Route path='/user/account/' element={<PatientAccount/>}>
-        </Route>
+            {/* Hospital and hospital Personel routes  */}
+            <Route path='/hp/' element={<HospitalAuthentication/>}>
+              <Route path='signin/' element={<HospitalSignin/>}/>
+              <Route path='signup/' element={<HospitalSignup/>}/>
+              <Route path='forgotPassword/' element={<HospitalForgotPassword/>}/>
+            </Route>
+            <Route path='/hp/dashboard/' element={<HospitalDashboard/>}>
+            </Route>
+            <Route path='/hp/user/' element={<HospitalPersonelAccount/>}>
+            </Route>
+            
+            {/* User routes  */}
+            <Route path='/user/' element={<PatientAuthentication/>}>
+              <Route path='signin/' element={<PatientSignin/>}/>
+              <Route path='signup/' element={<PatientSignup/>}/>
+              <Route path='forgotPassword/' element={<PatientForgotPassword/>}/>
+            </Route>
+            <Route path='/user/account/' element={<PatientAccount/>}>
+            </Route>
 
-      </Routes>
-    </Router>
+          </Routes>
+        </Router>
+      </ResponseMessageContextSetter.Provider>
+    </ResponseMessageContext.Provider>
   );
 }
 
