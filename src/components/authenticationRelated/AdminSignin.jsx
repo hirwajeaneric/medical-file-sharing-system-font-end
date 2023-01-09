@@ -16,6 +16,7 @@ import { ResponseMessageContext, ResponseMessageContextSetter } from '../../App'
 import { Alert, FormControl, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Helmet } from 'react-helmet-async';
 
 const AdminSignin = () => {
   const responseMessage = React.useContext(ResponseMessageContext);
@@ -63,8 +64,9 @@ const AdminSignin = () => {
             password: ''
           })
 
-          localStorage.setItem('admnTok', response.data.token);
-          localStorage.setItem('usr', JSON.stringify(response.data.user));
+          const {token, id, firstName, lastName, email, phone} = response.data;
+          localStorage.setItem('admnTok', token);
+          localStorage.setItem('usr', JSON.stringify({id, firstName, lastName, email, phone}));
 
           navigate('/admin/dashboard');
         } else {
@@ -94,6 +96,10 @@ const AdminSignin = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      {/* <Helmet>
+        <title>Medicase - Admin Sign In </title>
+      </Helmet> */}
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

@@ -6,17 +6,19 @@ import AdminSignin from './components/authenticationRelated/AdminSignin';
 import AdminSignup from './components/authenticationRelated/AdminSignup';
 import Dashboard from './pages/admin/dashboard/dashboard';
 import HospitalAuthentication from './pages/admin/authentication/AdminAuthentication';
-import HospitalSignin from './components/authenticationRelated/AdminSignin';
-import HospitalSignup from './components/authenticationRelated/AdminSignup';
+import HospitalSignin from './components/authenticationRelated/HPSignin';
+import HospitalSignup from './components/authenticationRelated/HPSignup';
 import HospitalDashboard from './pages/admin/dashboard/dashboard';
 import HospitalPersonelAccount from './pages/admin/dashboard/dashboard';
 import PatientAuthentication from './pages/admin/authentication/AdminAuthentication';
-import PatientSignin from './components/authenticationRelated/AdminSignin';
-import PatientSignup from './components/authenticationRelated/AdminSignup';
+import PatientSignin from './components/authenticationRelated/PatientSignin';
+import PatientSignup from './components/authenticationRelated/PatientSignup';
 import PatientAccount from './pages/admin/dashboard/dashboard';
 import AdminForgotPassword from './components/authenticationRelated/AdminForgotPassword';
 import HospitalForgotPassword from './components/authenticationRelated/HospitalForgotPassword';
 import PatientForgotPassword from './components/authenticationRelated/PatientForgotPassword';
+import Institutions from './pages/Institutions';
+import LandingPage from './pages/LandingPage';
 
 export var ResponseMessageContext = createContext();
 export var ResponseMessageContextSetter = createContext();
@@ -35,7 +37,10 @@ function App() {
           <Routes>
             
             {/* Admin routes  */}
-            <Route path='/' element={<Home/>}/>
+            <Route path='/' element={<Home/>}>
+              <Route path='' element={<LandingPage/>} />
+              <Route path='institutions/' element={<Institutions/>}/>
+            </Route>
             <Route path='/admin/' element={<AdminAuthentication/>}>
               <Route path='signin/' element={<AdminSignin/>}/>
               <Route path='signup/' element={<AdminSignup/>}/>
