@@ -23,7 +23,7 @@ const Navigation = () => {
                         <ALink to={'/'}>Home</ALink>
                         <ALink to={'/institutions'}>Institutions</ALink>
                         <ALink to={'/user/signup'}>Patients</ALink>
-                        <ALink to={'/user/signin'}>Sign in</ALink>
+                        <ALink to={'/user/signup'}>Create an account</ALink>
                     </Links>
                     <MobileMenuButton onClick={handleClick}>
                         <MenuIcon/>
@@ -35,7 +35,7 @@ const Navigation = () => {
                 <ALinkExtended to={'/'}>Home</ALinkExtended>
                 <ALinkExtended to={'/institutions'}>Institutions</ALinkExtended>
                 <ALinkExtended to={'/user/signup'}>Patients</ALinkExtended>
-                <ALinkExtended to={'/user/signin'}>Sign in</ALinkExtended>
+                <ALinkExtended to={'/user/signup'}>Create an account</ALinkExtended>
             </ExtendedLinks>}
         </MainContainer>
     )
@@ -73,9 +73,9 @@ export const SectionContainer = styled.div`
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 90px;
     margin: 0 auto;
     position: relative;
+    padding: 5px 90px;
 
     @media (max-width: 1920px) {
         

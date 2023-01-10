@@ -1,12 +1,10 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -16,19 +14,24 @@ import { ResponseMessageContext, ResponseMessageContextSetter } from '../../App'
 import { Alert, FormControl, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-// import { Helmet } from 'react-helmet-async';
 
-const AdminSignin = () => {
+const SigninForm = ({
+    formData, 
+    setFormData, 
+    tokenName, 
+    userInfo, 
+    destination, 
+    signupLocation, 
+    forgotPasswordLocation,
+    backendLink,
+    formTitle
+}) => {
   const responseMessage = React.useContext(ResponseMessageContext);
   const setResponseMessage = React.useContext(ResponseMessageContextSetter);
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = React.useState('');
-  const [formData, setFormData] = React.useState({
-    email: '',
-    password: ''
-  });
 
   setTimeout(()=>{
     setResponseMessage({
@@ -56,7 +59,7 @@ const AdminSignin = () => {
       return;
     } else {
       setErrorMessage('');
-      axios.post('http://localhost:5050/api/mfss/admin/signin', formData)
+      axios.post(`http://localhost:5050/api/mfss/${backendLink}`, formData)
       .then(response => {
         if(response.data.token){
           setFormData({
@@ -65,10 +68,10 @@ const AdminSignin = () => {
           })
 
           const {token, id, firstName, lastName, email, phone} = response.data;
-          localStorage.setItem('admnTok', token);
-          localStorage.setItem('usr', JSON.stringify({id, firstName, lastName, email, phone}));
+          localStorage.setItem(`${tokenName}`, token);
+          localStorage.setItem(`${userInfo}`, JSON.stringify({id, firstName, lastName, email, phone}));
 
-          navigate('/admin/dashboard');
+          navigate(`${destination}`);
         } else {
           setErrorMessage(response.data.message);
         }
@@ -78,47 +81,24 @@ const AdminSignin = () => {
       })
     }
   }
-
-  function Copyright(props) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        {'Copyright © '}
-        <Link color="inherit" href="/">
-          Medicase
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
-      </Typography>
-    );
-  }
   
   const theme = createTheme();
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <Helmet>
-        <title>Medicase - Admin Sign In </title>
-      </Helmet> */}
-
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 0,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
           {responseMessage.visible && <Alert sx={{marginTop: 5, marginBottom: 5}} severity="success">{responseMessage.message}</Alert>}
-          <Typography component="h1" variant="h3">
-            Admin
-          </Typography>
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            {formTitle} sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             {errorMessage && <Alert sx={{marginTop: 5}} severity="error">{errorMessage}</Alert>}
@@ -169,22 +149,21 @@ const AdminSignin = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/admin/forgotPassword" variant="body2">
+                <Link href={`${forgotPasswordLocation}`} variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/admin/signup" variant="body2">
+                <Link href={`${signupLocation}`} variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
 }
 
-export default AdminSignin
+export default SigninForm
