@@ -94,10 +94,13 @@ const SigninForm = ({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            background: 'white',
+            padding: '20px 15px',
+
           }}
         >
           {responseMessage.visible && <Alert sx={{marginTop: 5, marginBottom: 5}} severity="success">{responseMessage.message}</Alert>}
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" color='black' textAlign='left'>
             {formTitle} sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>

@@ -14,7 +14,7 @@ const Navigation = () => {
 
     return (
         <MainContainer>
-            <SectionContainer style={{backgroundColor: 'white'}}>
+            <NavigationContainer style={{backgroundColor: '#e6ffee'}}>
                 <LeftSide>
                     <Logo to={'/'}>MEDICASE</Logo>
                 </LeftSide>
@@ -29,7 +29,7 @@ const Navigation = () => {
                         <MenuIcon/>
                     </MobileMenuButton>
                 </RightSide>
-            </SectionContainer>
+            </NavigationContainer>
             {menuOpen && 
             <ExtendedLinks>
                 <ALinkExtended to={'/'}>Home</ALinkExtended>
@@ -65,7 +65,7 @@ export const MainContainer = styled.div`
     }
 `;
 
-export const SectionContainer = styled.div`
+const NavigationContainer = styled.div`
     max-width: 1360px;
     width: 100%;
     display: flex;
@@ -91,6 +91,7 @@ export const SectionContainer = styled.div`
 
     @media (max-width: 480px) {
         padding: 5px 20px;
+        
     }
 `;
 
@@ -214,7 +215,7 @@ const Logo = styled(Link)`
     }
 
     @media (max-width: 480px) {
-
+        font-size: 1.5rem;
     }
 `;
 

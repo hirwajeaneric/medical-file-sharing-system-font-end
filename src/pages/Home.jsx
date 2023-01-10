@@ -17,7 +17,7 @@ const Home = () => {
 const MainContainer = styled.div`
   width: 100%;
   height: 100%;
-  background: #e6f9ff;
+  background: #006622;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
