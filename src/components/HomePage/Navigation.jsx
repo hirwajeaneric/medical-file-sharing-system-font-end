@@ -14,7 +14,7 @@ const Navigation = () => {
 
     return (
         <MainContainer>
-            <NavigationContainer style={{backgroundColor: '#e6ffee'}}>
+            <NavigationContainer style={{backgroundColor: '#b3ffcb'}}>
                 <LeftSide>
                     <Logo to={'/'}>MEDICASE</Logo>
                 </LeftSide>
@@ -22,7 +22,7 @@ const Navigation = () => {
                     <Links>
                         <ALink to={'/'}>Home</ALink>
                         <ALink to={'/institutions'}>Institutions</ALink>
-                        <ALink to={'/user/signup'}>Patients</ALink>
+                        <ALink to={'/user/account'}>Patient</ALink>
                         <ALink to={'/user/signup'}>Create an account</ALink>
                     </Links>
                     <MobileMenuButton onClick={handleClick}>
@@ -32,10 +32,10 @@ const Navigation = () => {
             </NavigationContainer>
             {menuOpen && 
             <ExtendedLinks>
-                <ALinkExtended to={'/'}>Home</ALinkExtended>
-                <ALinkExtended to={'/institutions'}>Institutions</ALinkExtended>
-                <ALinkExtended to={'/user/signup'}>Patients</ALinkExtended>
-                <ALinkExtended to={'/user/signup'}>Create an account</ALinkExtended>
+                <ALinkExtended to={'/'} onClick={handleClick}>Home</ALinkExtended>
+                <ALinkExtended to={'/institutions'} onClick={handleClick}>Institutions</ALinkExtended>
+                <ALinkExtended to={'/user/account'} onClick={handleClick}>Patient</ALinkExtended>
+                <ALinkExtended to={'/user/signup'} onClick={handleClick}>Create an account</ALinkExtended>
             </ExtendedLinks>}
         </MainContainer>
     )
@@ -145,7 +145,7 @@ const ExtendedLinks = styled.div`
     display: none;
     z-index: 10;
     postion: fixed;
-    background: orange;
+    background: white;
     width: 100%;
     height: 50vh;
     flex-direction: column;
@@ -169,7 +169,7 @@ const ExtendedLinks = styled.div`
     }
 `;
 
-const ALinkExtended = styled(NavLink)`
+const ALinkExtended = styled(Link)`
     text-decoration: none;
     color: black;
     padding: 8px 12px;
@@ -192,12 +192,12 @@ const ALink = styled(NavLink)`
 
     &.active {
         padding-bottom: -0.2rem;
-        border-bottom: 0.2rem solid orange;
+        border-bottom: 0.2rem solid blue;
     }
 `;
 
 
-const Logo = styled(Link)`
+export const Logo = styled(Link)`
     text-decoration: none;
     color: blue;
     font-size: 2rem;

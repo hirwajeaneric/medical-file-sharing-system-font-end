@@ -20,9 +20,15 @@ const Sponsors = () => {
 }
 
 const LogoContainer = styled.div`
-
+  display; flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  
   img {
-    height: 50px; 
+    height: 60px; 
+    margin-left: 40px;
   }
 
   @media (max-width: 1920px) {
@@ -30,7 +36,9 @@ const LogoContainer = styled.div`
   }
 
   @media (max-width: 1080px) {
-      
+    img {
+      margin-bottom: 40px;
+    }
   }
 
   @media (max-width: 768px) {
@@ -38,12 +46,16 @@ const LogoContainer = styled.div`
   }
 
   @media (max-width: 480px) {
-    
+    img {
+      margin-left: 70px;
+      margin-bottom: 20px;
+    } 
   }
 `;
 
-export const SectionHeader = styled.h2`
-  
+export const SectionHeader = styled.h1`
+  margin-bottom: 4rem;
+
   @media (max-width: 1920px) {
       
   }
@@ -53,7 +65,8 @@ export const SectionHeader = styled.h2`
   }
 
   @media (max-width: 768px) {
-    
+    margin-bottom: 2rem;
+    text-align: center;
   }
 
   @media (max-width: 480px) {
@@ -65,28 +78,28 @@ export const VerticallyFlexedContainer = styled.div`
   max-width: 1360px;
   width: 100%;
   display: flex;
-  flex-direction: colum;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
   position: relative;
-  padding: 5px 90px;
+  padding: 70px 90px;
 
   @media (max-width: 1920px) {
       
   }
 
   @media (max-width: 1080px) {
-      padding: 5px 90px;
+      50px 90px;
   }
 
   @media (max-width: 768px) {
-      padding: 5px 60px;
+      padding: 40px 60px;
   }
 
   @media (max-width: 480px) {
-      padding: 5px 20px;
+      padding: 60px 20px;
   }
 `;
 
