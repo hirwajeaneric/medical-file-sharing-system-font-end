@@ -1,13 +1,12 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-const dashboard = () => {
+const AdminAuthentication = () => {
   return (
     <div>
-      <h1>User account</h1>
-      <Outlet/>  
+      <Outlet/>
     </div>
   )
 }
 
-export default dashboard
+export default AdminAuthentication
