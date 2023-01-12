@@ -13,7 +13,7 @@ const Navigation = () => {
   
 
     return (
-        <MainContainer>
+        <MainContainer style={{ background: '#b3ffcb'}}>
             <NavigationContainer style={{backgroundColor: '#b3ffcb'}}>
                 <LeftSide>
                     <Logo to={'/'}>MEDICASE</Logo>
