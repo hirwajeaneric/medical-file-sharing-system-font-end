@@ -17,6 +17,10 @@ export const Description = styled.p`
 `;
 
 export const MultiStepForm = styled.div`
+    margin-top: 40px;
+    background-color: white;
+    padding: 40px;
+    width: 100%;
 
 
     @media (max-width: 1080px) {
@@ -113,6 +117,22 @@ export const FormItems = styled.div`
 `;
 
 export const FormInput = styled.div`
+    
+
+    @media (max-width: 1080px) {
+
+    }
+
+    @media (max-width: 768px) {
+
+    }
+
+    @media (max-width: 480px) {
+
+    }
+`;
+
+export const FormControlButtonsTwo = styled.div`
     
 
     @media (max-width: 1080px) {
