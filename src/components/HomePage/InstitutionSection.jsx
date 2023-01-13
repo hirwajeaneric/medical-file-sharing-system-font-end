@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import ResponseMessages from '../OtherComponents/ResponseMessages'
-import { Description, FormBody, FormContainer, FormControlButtonsTwo, FormHead, FormInput, MultiStepForm } from './InstitutionsComponents'
+import { Description, FormBody, FormContainer, FormControlButtonsTwo, FormHead, FormInput, FormSectionTitle, MultiStepForm } from './InstitutionsComponents'
 import { MainContainer } from './Navigation'
-import { SectionHeader, VerticallyFlexedContainer } from './Sponsors'
+import { SectionHeader, VerticallyFlexedContainer } from './Sponsors';
+import axios from 'axios';
 
 const InstitutionSection = () => {
   const [personalInfo, setPersonalInfo] = useState({
@@ -19,15 +20,12 @@ const InstitutionSection = () => {
     institutionId: "Pending",
     institutionName: "Pending",
   });
-
   const [personalInfoError, setPersonalInfoError] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    password: "",
     phone: ""
   });
-
   const [institutionApplication, setInstitutionApplication] = useState({
     directorId: "",
     institutionType: "",
@@ -41,41 +39,37 @@ const InstitutionSection = () => {
     location: "",
     numberOfPersonnel: ""
   })
-
   const [institutionApplicationError, setInstitutionApplicationError] = useState({
-    directorId: "",
-    institutionId: "",
     institutionType: "",
     institutionName: "",
-    sendDate: "",
-    applicationBody: "",
-    systemAdminId: "",
-    location: "",
     numberOfPersonnel: ""
   })
-
   const [errorMessage, setErrorMessage] = useState('');
-
   const [successMessage, setSuccessMessage] = useState({
-    visible: true, 
+    visible: false, 
     message: ''
   });
-  
+  const [errorMessageTwo, setErrorMessageTwo] = useState('');
+  const [successMessageTwo, setSuccessMessageTwo] = useState({
+    visible: false, 
+    message: ''
+  });
+  const [open, setOpen] = useState({formOne: true, formTwo: false});
   const [certificate, setCertificate] = useState('');
-  
   const [certificateError, setCertificateError] = useState('');
-
+  const [director, setDirector] = useState('');
   const [locations, setLocations] = useState({
     province: '',
     district: '',
     sector: '',
   })
-
   const [locationErrors, setLocationErrors] = useState({
     province: '',
     district: '',
     sector: '',
   })
+  const [savingProgress, setSavingProgress] = useState('');
+  const [savingProgressTwo, setSavingProgressTwo] = useState('');
 
   const handleCertificateUpload = (e) => {
     const {files} = e.target;
@@ -96,8 +90,86 @@ const InstitutionSection = () => {
 
   const submitPersonalInfo = (e) => {
     e.preventDefault();
+    
+    if (personalInfo.firstName===''){
+      setPersonalInfoError({...personalInfoError, firstName: 'First name is required'})
+      return;
+    } else if (personalInfo.lastName===''){
+      setPersonalInfoError({...personalInfoError, lastName: 'Last name is required'})
+      return;
+    } else if (personalInfo.email===''){
+      setPersonalInfoError({...personalInfoError, email: 'Email is required'})
+      return;
+    } else if (personalInfo.phone===''){
+      setPersonalInfoError({...personalInfoError, phone: 'Phone is required'})
+      return;
+    } else if (certificate===''){
+      setCertificateError('Certificate attachment is required')
+      return;
+    } else {
+
+      setPersonalInfoError({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: ""
+      });
+
+      setLocationErrors({
+        province: '',
+        district: '',
+        sector: '',
+      })
+
+      setCertificateError('');
+
+      setErrorMessage('');
+
+      axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/createUser`, personalInfo)
+      .then(response => {
+        if (response.status === 201) {
+          setSavingProgress('Saving in progress ...');
+          
+          setTimeout(()=>{
+            setSavingProgress('');
+
+            setSuccessMessage({
+              message: response.data.message,
+              visible: true
+            });
+
+            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByEmail?email=${response.data.info.email}`)
+            .then(response=>{
+              setDirector(response.data[0]._id)
+            })
+            .catch(error => setErrorMessage(error))
+
+            setOpen({formOne: false, formTwo: true});
+          }, 5000);
+        }
+      })
+      .catch(error => {
+        setErrorMessage(error);
+      })
+    } 
   }
 
+  // Removing the success message
+  setTimeout(()=>{
+    if (successMessage.visible) {
+      setSuccessMessage({
+        visible: false,
+        message: ''
+      })
+    } else if (successMessageTwo.visible) {
+      setSuccessMessageTwo({
+        visible: false,
+        message: ''
+      })
+    } 
+  },10000)
+
+  // Function to save hospital application
   const submitInstitutionApplication = (e) => {
     e.preventDefault();
 
@@ -106,15 +178,68 @@ const InstitutionSection = () => {
         "Content-Type":"multipart/form-data"
       }
     }
+    
+    if (institutionApplication.institutionName ===''){
+      setInstitutionApplicationError({...institutionApplicationError, institutionName: 'Institution name is required'})
+      return;
+    } else if (institutionApplication.institutionType===''){
+      setInstitutionApplicationError({...institutionApplicationError, institutionType: 'Institution type is required'})
+      return;
+    } else if (institutionApplication.numberOfPersonnel===''){
+      setInstitutionApplicationError({...institutionApplicationError, numberOfPersonnel: 'The number Personnel is required'})
+      return;
+    } else if (locations.province===''){
+      setLocationErrors({...locationErrors, location: 'Province is required'})
+      return;
+    } else if (locations.district===''){
+      setLocationErrors({...locationErrors, district: 'District is required'})
+      return;
+    } else if (locations.sector===''){
+      setLocationErrors({...locationErrors, location: 'Sector is required'})
+      return;
+    } else {
 
+      institutionApplication.directorId = director
+      institutionApplication.institutionId = "Default"
+      institutionApplication.sendDate = new Date().toDateString()
+      institutionApplication.status = "Pending"
+      institutionApplication.location = locations.province+", "+locations.district+", "+locations.sector
+      
+      setInstitutionApplicationError({
+        institutionType: "",
+        institutionName: "",
+        numberOfPersonnel: ""
+      });
+
+      setErrorMessageTwo('');
+
+      axios.post(`http://localhost:5050/api/mfss/applicationForInstitution/add`, institutionApplication, config)
+      .then(response => {
+        if (response.status === 201) {
+          setSavingProgressTwo('Saving in progress ...');
+          
+          setTimeout(()=>{
+            setSavingProgressTwo('');
+
+            setSuccessMessageTwo({
+              message: response.data.message,
+              visible: true
+            });
+
+            setOpen({formOne: false, formTwo: false});
+          }, 5000);
+        }
+      })
+      .catch(error => {
+        setErrorMessage(error);
+      })
+    }
 
   }
 
   return (
     <MainContainer>
       <VerticallyFlexedContainer style={{backgroundColor: '#006622' }}>
-        {errorMessage && <ResponseMessages type='error' message={errorMessage}/>}
-        {successMessage.visible && <ResponseMessages type='success' message={successMessage.message}/>}
         <SectionHeader style={{color: 'white' }}>REGISTER INSTITUTION</SectionHeader>
         <Description>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui, earum alias at ratione suscipit consectetur laborum quidem deleniti minima fuga eos ex! Sequi, non porro laboriosam libero aliquam tempore cumque.
@@ -122,8 +247,14 @@ const InstitutionSection = () => {
         </Description> 
         <MultiStepForm>
           <FormContainer onSubmit={submitPersonalInfo}>
-            <FormHead>Information about institution representative</FormHead>
-            <FormBody>
+            <FormSectionTitle>
+              <FormHead>Information about institution representative</FormHead>
+              {savingProgress && <p>{savingProgress}</p>}
+              {errorMessage && <ResponseMessages type='error' message={errorMessage}/>}
+              {successMessage.visible && <ResponseMessages type='success' message={successMessage.message}/>}
+            </FormSectionTitle>
+            <hr/>
+            {open.formOne && <FormBody>
               <FormInput>
                 <label htmlFor="firstName">First name</label>
                 <input type="text" name="firstName" id="firstName" value={personalInfo.firstName} onChange={handlePersonalInfo} placeholder='First Name'/>
@@ -145,13 +276,18 @@ const InstitutionSection = () => {
                 {personalInfoError.phone && <p>{personalInfoError.phone}</p>}
               </FormInput>
               <FormControlButtonsTwo>
-                <button type='submit'>Save</button>
+                <button type='submit'>SAVE</button>
               </FormControlButtonsTwo>
-            </FormBody>
+            </FormBody>}
           </FormContainer>
           <FormContainer onSubmit={submitInstitutionApplication}>
-            <FormHead>Information about the institution</FormHead>
-            <FormBody>
+            <FormSectionTitle>
+              <FormHead>Information about the institution</FormHead>
+              {savingProgressTwo && <p>{savingProgressTwo}</p>}
+              {errorMessageTwo && <ResponseMessages type='error' message={errorMessageTwo}/>}
+            </FormSectionTitle>
+            <hr/>
+            {open.formTwo && <FormBody>
               <FormInput>
                 <label htmlFor="institutionName">Institution Name</label>
                 <input type="text" name="institutionName" id="institutionName" value={institutionApplication.institutionName} onChange={handleInstitutionApplicationInfo} placeholder='Institution Name'/>
@@ -164,7 +300,7 @@ const InstitutionSection = () => {
                   <option value='hospital'>Hospital</option>
                   <option value='pharmacy'>Pharmacy</option>
                 </select>
-                {institutionApplicationError.institutionType && <p>{institutionApplication.institutionType}</p>}
+                {institutionApplicationError.institutionType && <p>{institutionApplicationError.institutionType}</p>}
               </FormInput>
               <FormInput>
                 <label htmlFor="numberOfPersonnel">Number of Personnel</label>
@@ -208,14 +344,15 @@ const InstitutionSection = () => {
                 {locationErrors.sector && <p>{locationErrors.sector}</p>}
               </FormInput>
               <FormInput>
-                <label htmlFor="certificate">Certificate</label>
-                <input type="file" name="certificate" id="certificate" value={certificate} onChange={handleCertificateUpload}/>
+                <label htmlFor="certificate">Certificate (PDF)</label>
+                <input type="file" name="certificate" accept="application/pdf" id="certificate" value={certificate} onChange={handleCertificateUpload}/>
                 {certificateError && <p>{certificateError}</p>}
               </FormInput>
               <FormControlButtonsTwo>
-                <button type='submit'>Save</button>
+                <button type='submit'>SAVE</button>
               </FormControlButtonsTwo>
-            </FormBody>
+            </FormBody>}
+            {successMessageTwo.visible && <ResponseMessages type='success' message={successMessageTwo.message}/>}
           </FormContainer>
         </MultiStepForm>
       </VerticallyFlexedContainer>
