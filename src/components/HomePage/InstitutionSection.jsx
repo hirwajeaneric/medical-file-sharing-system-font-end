@@ -1,75 +1,42 @@
-import React, { useState } from 'react'
-import ResponseMessages from '../OtherComponents/ResponseMessages'
-import { Description, FormBody, FormContainer, FormControlButtonsTwo, FormHead, FormInput, FormSectionTitle, MultiStepForm } from './InstitutionsComponents'
+import React, { useState } from 'react';
+import axios from 'axios';
+import ResponseMessages from '../OtherComponents/ResponseMessages';
 import { MainContainer } from './Navigation'
 import { SectionHeader, VerticallyFlexedContainer } from './Sponsors';
-import axios from 'axios';
+import { fetchProvinces, fetchDistricts,fetchSectors } from '../../assets/locationHandler';
+import { Description, FormBody, FormContainer, FormControlButtonsTwo, FormHead, FormInput, FormSectionTitle, MultiStepForm } from './InstitutionsComponents'
 
 const InstitutionSection = () => {
-  const [personalInfo, setPersonalInfo] = useState({
-    firstName: "",
-    lastName: "",
-    userCode: "000000",
-    email: "",
-    password: "",
-    phone: "",
-    role: "Representative",
-    isActive: "false",
-    applicationDate: new Date().toDateString(),
-    joinDate: "",
-    institutionId: "Pending",
-    institutionName: "Pending",
-  });
-  const [personalInfoError, setPersonalInfoError] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: ""
-  });
-  const [institutionApplication, setInstitutionApplication] = useState({
-    directorId: "",
-    institutionType: "",
-    institutionId: "",
-    institutionName: "",
-    sendDate: "",
-    status: "Pending",
-    applicationDate: new Date().toDateString(),
-    applicationBody: "",
-    systemAdminId: "",
-    location: "",
-    numberOfPersonnel: ""
-  })
-  const [institutionApplicationError, setInstitutionApplicationError] = useState({
-    institutionType: "",
-    institutionName: "",
-    numberOfPersonnel: ""
-  })
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState({
-    visible: false, 
-    message: ''
-  });
-  const [errorMessageTwo, setErrorMessageTwo] = useState('');
-  const [successMessageTwo, setSuccessMessageTwo] = useState({
-    visible: false, 
-    message: ''
-  });
-  const [open, setOpen] = useState({formOne: true, formTwo: false});
+  
+  // States
+  const [institutionApplication, setInstitutionApplication] = useState({ directorId: "", institutionType: "", institutionId: "", institutionName: "", sendDate: "", status: "Pending", applicationDate: new Date().toDateString(), applicationBody: "", systemAdminId: "", location: "", numberOfPersonnel: "" });
+  const [institutionApplicationError, setInstitutionApplicationError] = useState({ institutionType: "", institutionName: "", numberOfPersonnel: ""})
+  
+  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date().toDateString(), joinDate: "", institutionId: "Pending", institutionName: "Pending", });
+  const [personalInfoError, setPersonalInfoError] = useState({firstName: "", lastName: "", email: "", phone: ""});
+  
   const [certificate, setCertificate] = useState('');
   const [certificateError, setCertificateError] = useState('');
+  
   const [director, setDirector] = useState('');
-  const [locations, setLocations] = useState({
-    province: '',
-    district: '',
-    sector: '',
-  })
-  const [locationErrors, setLocationErrors] = useState({
-    province: '',
-    district: '',
-    sector: '',
-  })
+  
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState({visible: false, message: ''});
+  const [errorMessageTwo, setErrorMessageTwo] = useState('');
+  const [successMessageTwo, setSuccessMessageTwo] = useState({visible: false, message: ''});
+  
+  const [open, setOpen] = useState({formOne: true, formTwo: false});
+  
   const [savingProgress, setSavingProgress] = useState('');
   const [savingProgressTwo, setSavingProgressTwo] = useState('');
+
+  const [locations, setLocations] = useState({province: 'Kigali',district: 'Gasabo',sector: ''})
+  const [locationErrors, setLocationErrors] = useState({province: '',district: '',sector: '',})
+  const [demoDistricts, setDemoDistricts] = useState([]);
+  const [demoSectors, setDemoSectors] = useState([]);
+
+
+  // Input handlers
 
   const handleCertificateUpload = (e) => {
     const {files} = e.target;
@@ -88,9 +55,11 @@ const InstitutionSection = () => {
     setInstitutionApplication({...institutionApplication, [input.name]: input.value});
   };  
 
+
+  // Save applicant
   const submitPersonalInfo = (e) => {
     e.preventDefault();
-    
+
     if (personalInfo.firstName===''){
       setPersonalInfoError({...personalInfoError, firstName: 'First name is required'})
       return;
@@ -103,26 +72,10 @@ const InstitutionSection = () => {
     } else if (personalInfo.phone===''){
       setPersonalInfoError({...personalInfoError, phone: 'Phone is required'})
       return;
-    } else if (certificate===''){
-      setCertificateError('Certificate attachment is required')
-      return;
     } else {
 
-      setPersonalInfoError({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: ""
-      });
-
-      setLocationErrors({
-        province: '',
-        district: '',
-        sector: '',
-      })
-
-      setCertificateError('');
-
+      setPersonalInfoError({firstName: "",lastName: "",email: "",phone: ""});
+      setLocationErrors({province: '',district: '',sector: '',})
       setErrorMessage('');
 
       axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/createUser`, personalInfo)
@@ -132,11 +85,7 @@ const InstitutionSection = () => {
           
           setTimeout(()=>{
             setSavingProgress('');
-
-            setSuccessMessage({
-              message: response.data.message,
-              visible: true
-            });
+            setSuccessMessage({ message: response.data.message, visible: true });
 
             axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByEmail?email=${response.data.info.email}`)
             .then(response=>{
@@ -155,28 +104,21 @@ const InstitutionSection = () => {
   }
 
   // Removing the success message
-  setTimeout(()=>{
+  setTimeout(() => {
     if (successMessage.visible) {
-      setSuccessMessage({
-        visible: false,
-        message: ''
-      })
+      setSuccessMessage({ visible: false, message: '' })
     } else if (successMessageTwo.visible) {
-      setSuccessMessageTwo({
-        visible: false,
-        message: ''
-      })
+      setSuccessMessageTwo({ visible: false, message: '' })
     } 
-  },10000)
+  },10000);
+
 
   // Function to save hospital application
   const submitInstitutionApplication = (e) => {
     e.preventDefault();
 
     const config = {
-      headers: {
-        "Content-Type":"multipart/form-data"
-      }
+      headers: { "Content-Type":"multipart/form-data" }
     }
     
     if (institutionApplication.institutionName ===''){
@@ -189,13 +131,16 @@ const InstitutionSection = () => {
       setInstitutionApplicationError({...institutionApplicationError, numberOfPersonnel: 'The number Personnel is required'})
       return;
     } else if (locations.province===''){
-      setLocationErrors({...locationErrors, location: 'Province is required'})
+      setLocationErrors({...locationErrors, province: 'Province is required'})
       return;
     } else if (locations.district===''){
       setLocationErrors({...locationErrors, district: 'District is required'})
       return;
     } else if (locations.sector===''){
-      setLocationErrors({...locationErrors, location: 'Sector is required'})
+      setLocationErrors({...locationErrors, sector: 'You must choose location'})
+      return;
+    } else if (certificate===''){
+      setCertificateError('Certificate attachment is required')
       return;
     } else {
 
@@ -204,13 +149,10 @@ const InstitutionSection = () => {
       institutionApplication.sendDate = new Date().toDateString()
       institutionApplication.status = "Pending"
       institutionApplication.location = locations.province+", "+locations.district+", "+locations.sector
-      
-      setInstitutionApplicationError({
-        institutionType: "",
-        institutionName: "",
-        numberOfPersonnel: ""
-      });
+      institutionApplication.certificate = certificate
 
+      setInstitutionApplicationError({ institutionType: "", institutionName: "", numberOfPersonnel: ""});
+      setCertificateError('');
       setErrorMessageTwo('');
 
       axios.post(`http://localhost:5050/api/mfss/applicationForInstitution/add`, institutionApplication, config)
@@ -220,19 +162,13 @@ const InstitutionSection = () => {
           
           setTimeout(()=>{
             setSavingProgressTwo('');
-
-            setSuccessMessageTwo({
-              message: response.data.message,
-              visible: true
-            });
-
+            setSuccessMessageTwo({ message: response.data.message, visible: true });
             setOpen({formOne: false, formTwo: false});
           }, 5000);
+
         }
       })
-      .catch(error => {
-        setErrorMessage(error);
-      })
+      .catch(error => setErrorMessage(error))
     }
 
   }
@@ -309,43 +245,38 @@ const InstitutionSection = () => {
               </FormInput>
               <FormInput>
                 <label htmlFor="province">Province</label>
-                <select name="province" id="province" onChange={handleLocation}>
+                <select name="province" id="province" onClick={()=>setDemoDistricts(fetchDistricts(locations.province)[0])} onChange={handleLocation}>
                   <option value=''>Choose province</option>
-                  <option value="Kigali City">Kigali City</option>
-                  <option value="northernProvice">Northern Province</option>
-                  <option value="southernProvince">Southern Province</option>
-                  <option value="easternProvince">Eastern Province</option>
-                  <option value="WesternProvince">Western Province</option>
+                  {fetchProvinces().map((province, index)=>
+                    <option value={province.name} key={index}>{province.name}</option>
+                  )}
                 </select>
                 {locationErrors.province && <p>{locationErrors.province}</p>}
               </FormInput>
               <FormInput>
                 <label htmlFor="district">District</label>
-                <select name="district" id="district" onChange={handleLocation}>
+                <select name="district" id="district" onClick={()=> setDemoDistricts(fetchDistricts(locations.province)[0])} onChange={handleLocation}>
                   <option value=''>Choose District</option>
-                  <option value="Kigali City">Kigali City</option>
-                  <option value="northernProvice">Northern Province</option>
-                  <option value="southernProvince">Southern Province</option>
-                  <option value="easternProvince">Eastern Province</option>
-                  <option value="WesternProvince">Western Province</option>
+                  {demoDistricts.map((district, index) =>
+                    <option key={index}>{district.name}</option>
+                  )}
+
                 </select>
                 {locationErrors.district && <p>{locationErrors.district}</p>}
               </FormInput>
               <FormInput>
                 <label htmlFor="sector">Sector</label>
-                <select name="sector" id="sector" onChange={handleLocation}>
+                <select name="sector" id="sector" onClick={()=>setDemoSectors(fetchSectors(locations.province, locations.district)[0])} onChange={handleLocation}>
                   <option value=''>Choose Sector</option>
-                  <option value="Kigali City">Kigali City</option>
-                  <option value="northernProvice">Northern Province</option>
-                  <option value="southernProvince">Southern Province</option>
-                  <option value="easternProvince">Eastern Province</option>
-                  <option value="WesternProvince">Western Province</option>
+                  {demoSectors.map((sector, index) => 
+                    <option value={sector.name} key={index}>{sector.name}</option>
+                  )}
                 </select>
                 {locationErrors.sector && <p>{locationErrors.sector}</p>}
               </FormInput>
               <FormInput>
                 <label htmlFor="certificate">Certificate (PDF)</label>
-                <input type="file" name="certificate" accept="application/pdf" id="certificate" value={certificate} onChange={handleCertificateUpload}/>
+                <input type="file" name="certificate" accept=".pdf" id="certificate" onChange={handleCertificateUpload}/>
                 {certificateError && <p>{certificateError}</p>}
               </FormInput>
               <FormControlButtonsTwo>

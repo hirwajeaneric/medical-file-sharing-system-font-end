@@ -23,7 +23,6 @@ export const MultiStepForm = styled.div`
     background-color: white;
     padding: 0px 40px 40px;
     width: 100%;
-    // box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
     @media (max-width: 1080px) {
@@ -125,7 +124,11 @@ export const FormInput = styled.div`
     }
 
     @media (max-width: 480px) {
+        width: 100%;
 
+        input, select {
+            width: 100%;
+        }
     }
 `;
 
@@ -152,7 +155,7 @@ export const FormControlButtonsTwo = styled.div`
     }
 
     @media (max-width: 480px) {
-
+        width: 100%;
     }
 `;
 
@@ -176,19 +179,3 @@ export const FormSectionTitle = styled.div`
 
     }
 `;
-
-// export const FormItems = styled.div`
-    
-
-//     @media (max-width: 1080px) {
-
-//     }
-
-//     @media (max-width: 768px) {
-
-//     }
-
-//     @media (max-width: 480px) {
-
-//     }
-// `;
