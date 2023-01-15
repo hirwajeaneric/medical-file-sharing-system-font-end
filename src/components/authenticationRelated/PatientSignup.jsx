@@ -9,22 +9,16 @@ import { fetchDistricts, fetchProvinces, fetchSectors } from '../../assets/locat
 const PatientSignup = () => {
   //States
   const [guardian, setGuardian] = useState({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
-  const [guardianError, setGuardianError] = useState({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" })
+  const [guardianError, setGuardianError] = useState({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
   
-  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date().toDateString(), guardians: "" });
-  const [personalInfoError, setPersonalInfoError] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date().toDateString(), guardians: ""});
-  
-  const [patient, setPatient] = useState('');
+  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date().toDateString()});
+  const [personalInfoError, setPersonalInfoError] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date().toDateString()});
+
   
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState({visible: false, message: ''});
-  const [errorMessageTwo, setErrorMessageTwo] = useState('');
   const [successMessageTwo, setSuccessMessageTwo] = useState({visible: false, message: ''});
-  
-  const [open, setOpen] = useState({formOne: true, formTwo: true});
-  
   const [savingProgress, setSavingProgress] = useState('');
-  const [savingProgressTwo, setSavingProgressTwo] = useState('');
 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
@@ -64,39 +58,78 @@ const PatientSignup = () => {
     e.preventDefault();
 
     if (personalInfo.firstName===''){
-      setPersonalInfoError({...personalInfoError, firstName: 'First name is required'})
+      setPersonalInfoError({...personalInfoError, firstName: 'Required*'})
       return;
     } else if (personalInfo.lastName===''){
-      setPersonalInfoError({...personalInfoError, lastName: 'Last name is required'})
+      setPersonalInfoError({...personalInfoError, lastName: 'Required*'})
       return;
     } else if (personalInfo.email===''){
-      setPersonalInfoError({...personalInfoError, email: 'Email is required'})
+      setPersonalInfoError({...personalInfoError, email: 'Required*'})
       return;
     } else if (personalInfo.phone===''){
-      setPersonalInfoError({...personalInfoError, phone: 'Phone is required'})
+      setPersonalInfoError({...personalInfoError, phone: 'Required*'})
+      return;
+    } else if (personalInfo.password ===''){
+      setPersonalInfoError({...personalInfoError, password: 'Required*'})
+      return;
+    } else if (confirmPassword ===''){
+      setPersonalInfoError({...confirmPasswordError, confirmPasswordError: 'Required*'})
+      return;
+    } else if (personalInfo.placeOfBirth===''){
+      setPersonalInfoError({...personalInfoError, placeOfBirth: 'Required*'})
+      return;
+    } else if (personalInfo.dateOfBirth===''){
+      setPersonalInfoError({...personalInfoError, dateOfBirth: 'Required*'})
+      return;
+    } else if (personalInfo.gender ===''){
+      setPersonalInfoError({...personalInfoError, gender: 'Required*'})
+      return;
+    } else if (locations.province===''){
+      setLocationErrors({...locationErrors, province: 'Required*'})
+      return;
+    } else if (locations.district===''){
+      setLocationErrors({...locationErrors, district: 'Required*'})
+      return;
+    } else if (locations.sector===''){
+      setLocationErrors({...locationErrors, sector: 'Required*'})
+      return;
+    } else if (guardian.nameOfMaleGuardian ===''){
+      setGuardianError({...guardianError, nameOfMaleGuardian: 'Required*'})
+      return;
+    } else if (guardian.nameOfFemaleGuardian ===''){
+      setGuardianError({...guardianError, nameOfFemaleGuardian: 'Required*'})
+      return;
+    } else if (guardian.phoneOfMaleGuardian ===''){
+      setGuardianError({...guardianError, phoneOfFemaleGuardian: 'Required*'})
+      return;
+    } else if (guardian.phoneOfFemaleGuardian ===''){
+      setGuardianError({...guardianError, phoneOfFemaleGuardian: 'Required*'})
       return;
     } else {
-
-      setPersonalInfoError({firstName: "",lastName: "",email: "",phone: ""});
+      setGuardianError({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
+      setPersonalInfoError({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date().toDateString()});
       setLocationErrors({province: '',district: '',sector: '',})
       setErrorMessage('');
 
-      axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/createUser`, personalInfo)
+      personalInfo.residence = locations.province+" "+locations.district+" "+locations.sector;
+
+      axios.post(`http://localhost:5050/api/mfss/patient/signup`, personalInfo)
       .then(response => {
         if (response.status === 201) {
           setSavingProgress('Saving in progress ...');
           
           setTimeout(()=>{
-            setSavingProgress('');
-            setSuccessMessage({ message: response.data.message, visible: true });
+            guardian.patientId = response.data.patient._id;
 
-            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByEmail?email=${response.data.info.email}`)
+            axios.get(`http://localhost:5050/api/mfss/guardian/add`, guardian)
             .then(response=>{
-              setPatient(response.data[0]._id)
+              setSavingProgress('');
+              if (response.data.status === 201)
+                setSuccessMessage({message: "User account created!", visible: true})
+              else
+                setErrorMessage('Unable to register user!')
             })
             .catch(error => setErrorMessage(error))
-
-            setOpen({formOne: false, formTwo: true});
           }, 5000);
         }
       })
@@ -115,67 +148,12 @@ const PatientSignup = () => {
     } 
   },10000);
 
-
-  // Function to save hospital application
-  const submitGuardian = (e) => {
-    e.preventDefault();
-
-    const config = {
-      headers: { "Content-Type":"multipart/form-data" }
-    }
-    
-    if (guardian.institutionName ===''){
-      setGuardianError({...guardianError, institutionName: 'Institution name is required'})
-      return;
-    } else if (guardian.institutionType===''){
-      setGuardianError({...guardianError, institutionType: 'Institution type is required'})
-      return;
-    } else if (guardian.numberOfPersonnel===''){
-      setGuardianError({...guardianError, numberOfPersonnel: 'The number Personnel is required'})
-      return;
-    } else if (locations.province===''){
-      setLocationErrors({...locationErrors, province: 'Province is required'})
-      return;
-    } else if (locations.district===''){
-      setLocationErrors({...locationErrors, district: 'District is required'})
-      return;
-    } else if (locations.sector===''){
-      setLocationErrors({...locationErrors, sector: 'You must choose location'})
-      return;
-    } else {
-
-      guardian.patientId = patient
-      guardian.institutionId = "Default"
-      guardian.sendDate = new Date().toDateString()
-      guardian.status = "Pending"
-      guardian.location = locations.province+", "+locations.district+", "+locations.sector
-
-      setGuardianError({ institutionType: "", institutionName: "", numberOfPersonnel: ""});
-      setErrorMessageTwo('');
-
-      axios.post(`http://localhost:5050/api/mfss/applicationForInstitution/add`, guardian, config)
-      .then(response => {
-        if (response.status === 201) {
-          setSavingProgressTwo('Saving in progress ...');
-          
-          setTimeout(()=>{
-            setSavingProgressTwo('');
-            setSuccessMessageTwo({ message: response.data.message, visible: true });
-            setOpen({formOne: false, formTwo: false});
-          }, 5000);
-
-        }
-      })
-      .catch(error => setErrorMessage(error))
-    }
-
-  }
   return (
     <MainContainer style={{backgroundColor: '#006622' }}>
       <VerticallyFlexedContainer style={{backgroundColor: '#006622' }}>
         <SectionHeader style={{color: 'white' }}>CREATE AN ACCOUNT</SectionHeader>
         <MultiStepForm style={{marginTop: '0px'}}>
-          <FormContainer onSubmit={submitUserInfo}>
+          <FormContainer>
             <FormSectionTitle>
               <FormHead>Patient's information</FormHead>
               {savingProgress && <p>{savingProgress}</p>}
@@ -183,7 +161,7 @@ const PatientSignup = () => {
               {successMessage.visible && <ResponseMessages type='success' message={successMessage.message}/>}
             </FormSectionTitle>
             <hr/>
-            {open.formOne && <FormBody>
+            <FormBody>
               <FormInput>
                 <label htmlFor="firstName">First name</label>
                 <input type="text" name="firstName" id="firstName" value={personalInfo.firstName} onChange={handlePersonalInfo} placeholder='First Name'/>
@@ -273,37 +251,36 @@ const PatientSignup = () => {
                 <input type="date" name="dateOfBirth" id="dateOfBirth" value={personalInfo.dateOfBirth} onChange={handlePersonalInfo} />
                 {personalInfoError.dateOfBirth && <p>{personalInfoError.dateOfBirth}</p>}
               </FormInput>
-            </FormBody>}
+            </FormBody>
             <FormSectionTitle>
               <FormHead>Information about guardians</FormHead>
-              {savingProgressTwo && <p>{savingProgressTwo}</p>}
-              {errorMessageTwo && <ResponseMessages type='error' message={errorMessageTwo}/>}
             </FormSectionTitle>
             <hr/>
-            {open.formTwo && <FormBody>
+            <FormBody>
               <FormInput>
-                <label htmlFor="institutionName">Institution Name</label>
-                <input type="text" name="institutionName" id="institutionName" value={guardian.institutionName} onChange={handleGuardianInfo} placeholder='Institution Name'/>
-                {guardianError.institutionName && <p>{guardianError.institutionName}</p>}
+                <label htmlFor="nameOfMaleGuardian">Name of Male Guardian</label>
+                <input type="text" name="nameOfMaleGuardian" id="nameOfMaleGuardian" value={guardian.nameOfMaleGuardian} onChange={handleGuardianInfo} placeholder='Name of male guardian'/>
+                {guardianError.nameOfMaleGuardian && <p>{guardianError.nameOfMaleGuardian}</p>}
               </FormInput>
               <FormInput>
-                <label htmlFor="institutionType">Institution Type</label>
-                <select name="institutionType" id="institutionType" onChange={handleGuardianInfo}>
-                  <option value=''>Choose Institution</option>
-                  <option value='hospital'>Hospital</option>
-                  <option value='pharmacy'>Pharmacy</option>
-                </select>
-                {guardianError.institutionType && <p>{guardianError.institutionType}</p>}
+                <label htmlFor="phoneOfMaleGuardian">Phone number of Male Guardian</label>
+                <input type="text" name="phoneOfMaleGuardian" id="phoneOfMaleGuardian" value={guardian.phoneOfMaleGuardian} onChange={handleGuardianInfo} placeholder='Phone number of Male guardian'/>
+                {guardianError.phoneOfMaleGuardian && <p>{guardianError.phoneOfMaleGuardian}</p>}
               </FormInput>
               <FormInput>
-                <label htmlFor="numberOfPersonnel">Number of Personnel</label>
-                <input type="text" name="numberOfPersonnel" id="numberOfPersonnel" value={guardian.numberOfPersonnel} onChange={handleGuardianInfo} placeholder='Number of Personnel'/>
-                {guardianError.numberOfPersonnel && <p>{guardianError.numberOfPersonnel}</p>}
+                <label htmlFor="nameOfFemaleGuardian">Name of Female Guardian</label>
+                <input type="text" name="nameOfFemaleGuardian" id="nameOfFemaleGuardian" value={guardian.nameOfFemaleGuardian} onChange={handleGuardianInfo} placeholder='Name of female guardian'/>
+                {guardianError.nameOfFemaleGuardian && <p>{guardianError.nameOfFemaleGuardian}</p>}
+              </FormInput>
+              <FormInput>
+                <label htmlFor="phoneOfFemaleGuardian">Phone of Female Guardian</label>
+                <input type="text" name="phoneOfFemaleGuardian" id="phoneOfFemaleGuardian" value={guardian.phoneOfFemaleGuardian} onChange={handleGuardianInfo} placeholder='Phone number of male guardian'/>
+                {guardianError.phoneOfFemaleGuardian && <p>{guardianError.phoneOfFemaleGuardian}</p>}
               </FormInput>
               <FormControlButtonsTwo>
-                <button type='submit'>SAVE</button>
+                <button type='submit' onClick={submitUserInfo}>SAVE</button>
               </FormControlButtonsTwo>
-            </FormBody>}
+            </FormBody>
             {successMessageTwo.visible && <ResponseMessages type='success' message={successMessageTwo.message}/>}
           </FormContainer>
         </MultiStepForm>
