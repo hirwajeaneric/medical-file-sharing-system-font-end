@@ -10,7 +10,7 @@ import HospitalSignin from './components/authenticationRelated/HPSignin';
 import HospitalSignup from './components/authenticationRelated/HPSignup';
 import HospitalDashboard from './pages/admin/dashboard/dashboard';
 import HospitalPersonelAccount from './pages/admin/dashboard/dashboard';
-import PatientAuthentication from './pages/admin/authentication/AdminAuthentication';
+import PatientAuthentication from './pages/patient/authentication/Authentication';
 import PatientSignin from './components/authenticationRelated/PatientSignin';
 import PatientSignup from './components/authenticationRelated/PatientSignup';
 import PatientAccount from './pages/admin/dashboard/dashboard';
