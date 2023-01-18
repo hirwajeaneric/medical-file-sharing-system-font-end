@@ -1,9 +1,16 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom';
+import Footer from '../../../components/HomePage/Footer';
+import Navigation from '../../../components/HomePage/Navigation';
 
-const authentication = () => {
+const Authentication = () => {
   return (
-    <div>Patient Authentication</div>
+    <>
+      <Navigation />
+      <Outlet />
+      <Footer />
+    </>
   )
 }
 
-export default authentication
+export default Authentication
