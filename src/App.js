@@ -4,21 +4,31 @@ import Home from './pages/Home';
 import AdminAuthentication from './pages/admin/authentication/AdminAuthentication';
 import AdminSignin from './components/authenticationRelated/AdminSignin';
 import AdminSignup from './components/authenticationRelated/AdminSignup';
-import Dashboard from './pages/admin/dashboard/dashboard';
+import Dashboard from './pages/admin/dashboard/Dashboard';
 import HospitalAuthentication from './pages/admin/authentication/AdminAuthentication';
 import HospitalSignin from './components/authenticationRelated/HPSignin';
 import HospitalSignup from './components/authenticationRelated/HPSignup';
-import HospitalDashboard from './pages/admin/dashboard/dashboard';
-import HospitalPersonelAccount from './pages/admin/dashboard/dashboard';
+import HospitalDashboard from './pages/admin/dashboard/Dashboard';
+import HospitalPersonelAccount from './pages/admin/dashboard/Dashboard';
 import PatientAuthentication from './pages/patient/authentication/Authentication';
 import PatientSignin from './components/authenticationRelated/PatientSignin';
 import PatientSignup from './components/authenticationRelated/PatientSignup';
-import PatientAccount from './pages/admin/dashboard/dashboard';
+import PatientAccount from './pages/admin/dashboard/Dashboard';
 import AdminForgotPassword from './components/authenticationRelated/AdminForgotPassword';
 import HospitalForgotPassword from './components/authenticationRelated/HospitalForgotPassword';
 import PatientForgotPassword from './components/authenticationRelated/PatientForgotPassword';
 import Institutions from './pages/Institutions';
 import LandingPage from './pages/LandingPage';
+import DashBoardHome from './pages/admin/dashboard/DashBoardHome';
+import Reports from './pages/admin/dashboard/Reports';
+import Patients from './pages/admin/dashboard/Patients';
+import Records from './pages/admin/dashboard/Records';
+import Doctors from './pages/admin/dashboard/Doctors';
+import Nurses from './pages/admin/dashboard/Nurses';
+import Hospitals from './pages/admin/dashboard/Hospitals';
+import Pharmacies from './pages/admin/dashboard/Pharmacies';
+import Requests from './pages/admin/dashboard/Requests';
+import Account from './pages/admin/dashboard/Account';
 
 export var ResponseMessageContext = createContext();
 export var ResponseMessageContextSetter = createContext();
@@ -47,6 +57,16 @@ function App() {
               <Route path='forgotPassword/' element={<AdminForgotPassword/>}/>
             </Route>
             <Route path='/admin/dashboard/' element={<Dashboard/>}>
+              <Route path='' element={<DashBoardHome />} />
+              <Route path='reports' element={<Reports />} />
+              <Route path='patients' element={<Patients />} />
+              <Route path='records' element={<Records />} />
+              <Route path='doctors' element={<Doctors />} />
+              <Route path='nurses' element={<Nurses />} />
+              <Route path='hospitals' element={<Hospitals />} />
+              <Route path='pharmacies' element={<Pharmacies />} />
+              <Route path='requests' element={<Requests />} />
+              <Route path='account' element={<Account />} />
             </Route>
 
             {/* Hospital and hospital Personel routes  */}

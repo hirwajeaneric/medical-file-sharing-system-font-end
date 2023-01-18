@@ -5,8 +5,12 @@ import { MainContainer } from '../HomePage/Navigation';
 import { SectionHeader, VerticallyFlexedContainer } from '../HomePage/Sponsors';
 import { FormBody, FormContainer, FormControlButtonsTwo, FormHead, FormInput, FormSectionTitle, MultiStepForm } from '../HomePage/InstitutionsComponents';
 import { fetchDistricts, fetchProvinces, fetchSectors } from '../../assets/locationHandler';
+import { useNavigate } from 'react-router-dom';
 
 const PatientSignup = () => {
+  //Other declarations
+  const navigate = useNavigate();
+
   //States
   const [guardian, setGuardian] = useState({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
   const [guardianError, setGuardianError] = useState({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
@@ -106,12 +110,19 @@ const PatientSignup = () => {
       setGuardianError({...guardianError, phoneOfFemaleGuardian: 'Required*'})
       return;
     } else {
+
       setGuardianError({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
       setPersonalInfoError({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date().toDateString()});
       setLocationErrors({province: '',district: '',sector: '',})
       setErrorMessage('');
 
-      personalInfo.residence = locations.province+" "+locations.district+" "+locations.sector;
+      personalInfo.residence = locations.province+", "+locations.district+", "+locations.sector;
+
+      console.log('This is what we are going to save for a patient: ');
+      console.log(personalInfo);
+
+      console.log('This is what we are going to save for guardians: ');
+      console.log(guardian);
 
       axios.post(`http://localhost:5050/api/mfss/patient/signup`, personalInfo)
       .then(response => {
@@ -121,14 +132,16 @@ const PatientSignup = () => {
           setTimeout(()=>{
             guardian.patientId = response.data.patient._id;
 
-            axios.get(`http://localhost:5050/api/mfss/guardian/add`, guardian)
+            axios.post(`http://localhost:5050/api/mfss/guardian/add`, guardian)
             .then(response=>{
               setSavingProgress('');
-              if (response.data.status === 201)
+              if (response.status === 201){
                 setSuccessMessage({message: "User account created!", visible: true})
-              else
+                console.log(response.status);
+              } else{
                 setErrorMessage('Unable to register user!')
-            })
+              }
+          })
             .catch(error => setErrorMessage(error))
           }, 5000);
         }
@@ -143,10 +156,11 @@ const PatientSignup = () => {
   setTimeout(() => {
     if (successMessage.visible) {
       setSuccessMessage({ visible: false, message: '' })
+      navigate('/');
     } else if (successMessageTwo.visible) {
       setSuccessMessageTwo({ visible: false, message: '' })
     } 
-  },10000);
+  },4000);
 
   return (
     <MainContainer style={{backgroundColor: '#006622' }}>
@@ -176,9 +190,9 @@ const PatientSignup = () => {
                 <label htmlFor="gender">Gender</label>
                 <select name="gender" id="gender" onChange={handlePersonalInfo}>
                   <option value=''>Choose Gender</option>
-                  <option value=''>Male</option>
-                  <option value=''>Female</option>
-                  <option value=''>Other</option>
+                  <option value='male'>Male</option>
+                  <option value='female'>Female</option>
+                  <option value='other'>Other</option>
                 </select>
                 {personalInfoError.gender && <p>{personalInfoError.gender}</p>}
               </FormInput>
