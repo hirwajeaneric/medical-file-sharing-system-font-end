@@ -124,6 +124,7 @@ export const MenuPopup = styled.div`
     flex-direction: column;
     position: fixed;
     top: 60px;
+    z-index: 10;
     right: 40px;
     gap: 10px;
     border-radius: 10px;

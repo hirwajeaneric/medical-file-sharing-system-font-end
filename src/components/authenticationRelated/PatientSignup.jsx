@@ -147,7 +147,9 @@ const PatientSignup = () => {
         }
       })
       .catch(error => {
-        setErrorMessage(error);
+        if (error.response && error.response.status >= 400 && error.response.status <= 500){
+          setErrorMessage(error.response.data.message);
+        }
       })
     } 
   }
