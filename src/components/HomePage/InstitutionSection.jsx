@@ -13,7 +13,7 @@ const InstitutionSection = () => {
   const [institutionApplicationError, setInstitutionApplicationError] = useState({ institutionType: "", institutionName: "", numberOfPersonnel: ""})
   
   const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date().toDateString(), joinDate: "", institutionId: "Pending", institutionName: "Pending", });
-  const [personalInfoError, setPersonalInfoError] = useState({firstName: "", lastName: "", email: "", phone: ""});
+  const [personalInfoError, setPersonalInfoError] = useState({firstName: "", lastName: "", email: "", phone: "", password: ""});
   
   const [certificate, setCertificate] = useState('');
   const [certificateError, setCertificateError] = useState('');
@@ -26,6 +26,9 @@ const InstitutionSection = () => {
   const [successMessageTwo, setSuccessMessageTwo] = useState({visible: false, message: ''});
   
   const [open, setOpen] = useState({formOne: true, formTwo: false});
+
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
   
   const [savingProgress, setSavingProgress] = useState('');
   const [savingProgressTwo, setSavingProgressTwo] = useState('');
@@ -55,6 +58,15 @@ const InstitutionSection = () => {
     setInstitutionApplication({...institutionApplication, [input.name]: input.value});
   };  
 
+  const handleConfirmPassword = ({currentTarget: input}) => {
+    setConfirmPassword(input.value);
+
+    if (personalInfo.password !== input.value) {
+      setConfirmPasswordError('Passwords do not match');
+    } else {
+      setConfirmPasswordError('')
+    }
+  };
 
   // Save applicant
   const submitPersonalInfo = (e) => {
@@ -72,13 +84,16 @@ const InstitutionSection = () => {
     } else if (personalInfo.phone===''){
       setPersonalInfoError({...personalInfoError, phone: 'Phone is required'})
       return;
+    } else if (personalInfo.password===''){
+      setPersonalInfoError({...personalInfoError, password: 'Password is required'})
+      return
     } else {
 
       setPersonalInfoError({firstName: "",lastName: "",email: "",phone: ""});
       setLocationErrors({province: '',district: '',sector: '',})
       setErrorMessage('');
 
-      axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/createUser`, personalInfo)
+      axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/signup`, personalInfo)
       .then(response => {
         if (response.status === 201) {
           setSavingProgress('Saving in progress ...');
@@ -210,6 +225,16 @@ const InstitutionSection = () => {
                 <label htmlFor="phone">Phone</label>
                 <input type="text" name="phone" id="phone" value={personalInfo.phone} onChange={handlePersonalInfo} placeholder='Phone'/>
                 {personalInfoError.phone && <p>{personalInfoError.phone}</p>}
+              </FormInput>
+              <FormInput>
+                <label htmlFor="password">Create Password</label>
+                <input type="password" name="password" id="password" value={personalInfo.password} onChange={handlePersonalInfo} placeholder='Password'/>
+                {personalInfoError.password && <p>{personalInfoError.password}</p>}
+              </FormInput>
+              <FormInput>
+                <label htmlFor="confirmPassword">Confirm Password</label>
+                <input type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword} onChange={handleConfirmPassword} placeholder='Confirm password'/>
+                {confirmPasswordError && <p>{confirmPasswordError}</p>}
               </FormInput>
               <FormControlButtonsTwo>
                 <button type='submit'>SAVE</button>
