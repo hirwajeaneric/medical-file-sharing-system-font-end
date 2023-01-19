@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import AdminAuthentication from './pages/admin/authentication/AdminAuthentication';
 import AdminSignin from './components/authenticationRelated/AdminSignin';
@@ -29,11 +29,14 @@ import Hospitals from './pages/admin/dashboard/Hospitals';
 import Pharmacies from './pages/admin/dashboard/Pharmacies';
 import Requests from './pages/admin/dashboard/Requests';
 import Account from './pages/admin/dashboard/Account';
+import Admin from './pages/admin/Admin';
 
 export var ResponseMessageContext = createContext();
 export var ResponseMessageContextSetter = createContext();
 
 function App() {
+
+  const adminToken = localStorage.getItem('admnTok');
 
   const [responseMessage, setResponseMessage] = useState({
     message: '',
@@ -46,28 +49,50 @@ function App() {
         <Router>
           <Routes>
             
-            {/* Admin routes  */}
+            {/* Home  */}
             <Route path='/' element={<Home/>}>
               <Route path='' element={<LandingPage/>} />
               <Route path='institutions/' element={<Institutions/>}/>
             </Route>
-            <Route path='/admin/' element={<AdminAuthentication/>}>
-              <Route path='signin/' element={<AdminSignin/>}/>
-              <Route path='signup/' element={<AdminSignup/>}/>
-              <Route path='forgotPassword/' element={<AdminForgotPassword/>}/>
+
+            {/* Admin routes  */} 
+            <Route path='/admin/' element={<Admin/>}>
+              {adminToken &&
+                <Route path='dashboard' element={<Dashboard/>}>
+                  <Route path='' element={<DashBoardHome />} />
+                  <Route path='reports' element={<Reports />} />
+                  <Route path='patients' element={<Patients />} />
+                  <Route path='records' element={<Records />} />
+                  <Route path='doctors' element={<Doctors />} />
+                  <Route path='nurses' element={<Nurses />} />
+                  <Route path='hospitals' element={<Hospitals />} />
+                  <Route path='pharmacies' element={<Pharmacies />} />
+                  <Route path='requests' element={<Requests />} />
+                  <Route path='account' element={<Account />} />
+                </Route>
+              }
+
+              <Route path='auth' element={<AdminAuthentication/>}>
+                <Route path='' element={<AdminSignin/>}/>
+                <Route path='signin' element={<AdminSignin/>}/>
+                <Route path='signup' element={<AdminSignup/>}/>
+                <Route path='forgotPassword' element={<AdminForgotPassword/>}/>
+              </Route>
+
+              {/* <Route path='dashboard' exact element={<Navigate replace to='/admin/auth/signin/' />} >
+                <Route path='' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                <Route path='records' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                <Route path='doctors' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                <Route path='nurses' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                <Route path='pharmacies' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                <Route path='hospitals' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                <Route path='requests' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                <Route path='account' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+              </Route> */}
             </Route>
-            <Route path='/admin/dashboard/' element={<Dashboard/>}>
-              <Route path='' element={<DashBoardHome />} />
-              <Route path='reports' element={<Reports />} />
-              <Route path='patients' element={<Patients />} />
-              <Route path='records' element={<Records />} />
-              <Route path='doctors' element={<Doctors />} />
-              <Route path='nurses' element={<Nurses />} />
-              <Route path='hospitals' element={<Hospitals />} />
-              <Route path='pharmacies' element={<Pharmacies />} />
-              <Route path='requests' element={<Requests />} />
-              <Route path='account' element={<Account />} />
-            </Route>
+
 
             {/* Hospital and hospital Personel routes  */}
             <Route path='/hp/' element={<HospitalAuthentication/>}>

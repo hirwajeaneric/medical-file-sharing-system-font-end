@@ -81,11 +81,13 @@ const AdminSignup = () => {
             password: ''
           })
 
-          navigate('/admin/signin');
+          navigate('/admin/auth/signin');
         }
       })
       .catch(error => {
-        setErrorMessage(error);
+        if (error.response && error.response.status >= 400 && error.response.status <= 500){
+          setErrorMessage(error.response.data.message);
+        }
       })
     }
 
@@ -223,7 +225,7 @@ const AdminSignup = () => {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="/admin/signin" variant="body2">
+                <Link href="/admin/auth/signin" variant="body2">
                   {"Aleardy have an account? Sign In"}
                 </Link>
               </Grid>

@@ -58,7 +58,7 @@ const AdminSignin = () => {
       setErrorMessage('');
       axios.post('http://localhost:5050/api/mfss/admin/signin', formData)
       .then(response => {
-        if(response.data.token){
+        if (response.status === 200 && response.data.token) {
           setFormData({
             email: '',
             password: ''
@@ -69,12 +69,12 @@ const AdminSignin = () => {
           localStorage.setItem('usr', JSON.stringify({id, firstName, lastName, email, phone}));
 
           navigate('/admin/dashboard');
-        } else {
-          setErrorMessage(response.data.message);
-        }
+        } 
       })
       .catch(error => {
-        setErrorMessage(error);
+        if (error.response && error.response.status >= 400 && error.response.status <= 500){
+          setErrorMessage(error.response.data.message);
+        }
       })
     }
   }
@@ -169,12 +169,12 @@ const AdminSignin = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/admin/forgotPassword" variant="body2">
+                <Link href="/admin/auth/forgotPassword" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/admin/signup" variant="body2">
+                <Link href="/admin/auth/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

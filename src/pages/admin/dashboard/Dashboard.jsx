@@ -23,7 +23,7 @@ const Dashboard = () => {
     setOpenPopup(!openPopup);
     localStorage.removeItem('admnTok');
     localStorage.removeItem('usr');
-    navigate('/admin/signin')
+    navigate('/admin/auth/signin')
   }  
 
   return (
