@@ -1,8 +1,7 @@
 import React from 'react';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import { Box, IconButton, Tooltip } from '@mui/material';
+import { Box } from '@mui/material';
 import TableActions from './TableActions';
-import { Preview } from '@mui/icons-material';
 
 const columns = [
     {   
@@ -54,18 +53,7 @@ const columns = [
         headerName: 'Actions',
         type: 'actions',
         width: 120,
-        // renderCell: (params) => <TableActions {...{params, viewPath: '' , editPath: '/lec/dash/claim-edit'}} />
-        renderCell: (params) => (
-            <Box>
-                <Tooltip>
-                    <IconButton onClick={()=>{
-                        console.log('Clicked on: '+params.row._id);
-                    }}>
-                        <Preview />
-                    </IconButton>
-                </Tooltip>
-            </Box>
-        )
+        renderCell: (params) => <TableActions params= {params} />
     },
 ]
 

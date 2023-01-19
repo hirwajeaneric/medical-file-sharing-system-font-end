@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import AdminAuthentication from './pages/admin/authentication/AdminAuthentication';
 import AdminSignin from './components/authenticationRelated/AdminSignin';
@@ -31,91 +31,108 @@ import Requests from './pages/admin/dashboard/Requests';
 import Account from './pages/admin/dashboard/Account';
 import Admin from './pages/admin/Admin';
 
+// Contexts declaration 
 export var ResponseMessageContext = createContext();
 export var ResponseMessageContextSetter = createContext();
 
+export var ShowModalContext = createContext();
+export var ShowModalContextSetter = createContext();
+
+export var PopupPayLoadContext = createContext();
+export var PopupPayLoadContextSetter = createContext();
+
+
 function App() {
-
+  // States
   const adminToken = localStorage.getItem('admnTok');
-
-  const [responseMessage, setResponseMessage] = useState({
-    message: '',
-    visible: false
-  });
+  const [responseMessage, setResponseMessage] = useState({ message: '', visible: false });
+  const [showModal, setShowModal] = useState(false);
+  const [popupPayLoad, setPopupPayLoad] = useState({ type: '', id: ''});
 
   return (
     <ResponseMessageContext.Provider value={responseMessage}>
       <ResponseMessageContextSetter.Provider value={setResponseMessage}>
-        <Router>
-          <Routes>
-            
-            {/* Home  */}
-            <Route path='/' element={<Home/>}>
-              <Route path='' element={<LandingPage/>} />
-              <Route path='institutions/' element={<Institutions/>}/>
-            </Route>
+        <ShowModalContext.Provider value={showModal}>
+          <ShowModalContextSetter.Provider value={setShowModal}>
+            <PopupPayLoadContext.Provider value={popupPayLoad}>
+              <PopupPayLoadContextSetter.Provider value={setPopupPayLoad}>
+                
+                {/* Routing  */}
+                <Router>
+                  <Routes>
+                    
+                    {/* Home  */}
+                    <Route path='/' element={<Home/>}>
+                      <Route path='' element={<LandingPage/>} />
+                      <Route path='institutions/' element={<Institutions/>}/>
+                    </Route>
 
-            {/* Admin routes  */} 
-            <Route path='/admin/' element={<Admin/>}>
-              {adminToken &&
-                <Route path='dashboard' element={<Dashboard/>}>
-                  <Route path='' element={<DashBoardHome />} />
-                  <Route path='reports' element={<Reports />} />
-                  <Route path='patients' element={<Patients />} />
-                  <Route path='records' element={<Records />} />
-                  <Route path='doctors' element={<Doctors />} />
-                  <Route path='nurses' element={<Nurses />} />
-                  <Route path='hospitals' element={<Hospitals />} />
-                  <Route path='pharmacies' element={<Pharmacies />} />
-                  <Route path='requests' element={<Requests />} />
-                  <Route path='account' element={<Account />} />
-                </Route>
-              }
+                    {/* Admin routes  */} 
+                    <Route path='/admin/' element={<Admin/>}>
+                      {adminToken &&
+                        <Route path='dashboard' element={<Dashboard/>}>
+                          <Route path='' element={<DashBoardHome />} />
+                          <Route path='reports' element={<Reports />} />
+                          <Route path='patients' element={<Patients />} />
+                          <Route path='records' element={<Records />} />
+                          <Route path='doctors' element={<Doctors />} />
+                          <Route path='nurses' element={<Nurses />} />
+                          <Route path='hospitals' element={<Hospitals />} />
+                          <Route path='pharmacies' element={<Pharmacies />} />
+                          <Route path='requests' element={<Requests />} />
+                          <Route path='account' element={<Account />} />
+                        </Route>
+                      }
 
-              <Route path='auth' element={<AdminAuthentication/>}>
-                <Route path='' element={<AdminSignin/>}/>
-                <Route path='signin' element={<AdminSignin/>}/>
-                <Route path='signup' element={<AdminSignup/>}/>
-                <Route path='forgotPassword' element={<AdminForgotPassword/>}/>
-              </Route>
+                      <Route path='auth' element={<AdminAuthentication/>}>
+                        <Route path='' element={<AdminSignin/>}/>
+                        <Route path='signin' element={<AdminSignin/>}/>
+                        <Route path='signup' element={<AdminSignup/>}/>
+                        <Route path='forgotPassword' element={<AdminForgotPassword/>}/>
+                      </Route>
 
-              {/* <Route path='dashboard' exact element={<Navigate replace to='/admin/auth/signin/' />} >
-                <Route path='' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                <Route path='records' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                <Route path='doctors' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                <Route path='nurses' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                <Route path='pharmacies' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                <Route path='hospitals' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                <Route path='requests' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                <Route path='account' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-              </Route> */}
-            </Route>
+                      {/* <Route path='dashboard' exact element={<Navigate replace to='/admin/auth/signin/' />} >
+                        <Route path='' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                        <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                        <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                        <Route path='records' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                        <Route path='doctors' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                        <Route path='nurses' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                        <Route path='pharmacies' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                        <Route path='hospitals' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                        <Route path='requests' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                        <Route path='account' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                      </Route> */}
+                    </Route>
 
 
-            {/* Hospital and hospital Personel routes  */}
-            <Route path='/hp/' element={<HospitalAuthentication/>}>
-              <Route path='signin/' element={<HospitalSignin/>}/>
-              <Route path='signup/' element={<HospitalSignup/>}/>
-              <Route path='forgotPassword/' element={<HospitalForgotPassword/>}/>
-            </Route>
-            <Route path='/hp/dashboard/' element={<HospitalDashboard/>}>
-            </Route>
-            <Route path='/hp/user/' element={<HospitalPersonelAccount/>}>
-            </Route>
-            
-            {/* User routes  */}
-            <Route path='/user/' element={<PatientAuthentication/>}>
-              <Route path='signin/' element={<PatientSignin/>}/>
-              <Route path='signup/' element={<PatientSignup/>}/>
-              <Route path='forgotPassword/' element={<PatientForgotPassword/>}/>
-            </Route>
-            <Route path='/user/account/' element={<PatientAccount/>}>
-            </Route>
+                    {/* Hospital and hospital Personel routes  */}
+                    <Route path='/hp/' element={<HospitalAuthentication/>}>
+                      <Route path='signin/' element={<HospitalSignin/>}/>
+                      <Route path='signup/' element={<HospitalSignup/>}/>
+                      <Route path='forgotPassword/' element={<HospitalForgotPassword/>}/>
+                    </Route>
+                    <Route path='/hp/dashboard/' element={<HospitalDashboard/>}>
+                    </Route>
+                    <Route path='/hp/user/' element={<HospitalPersonelAccount/>}>
+                    </Route>
+                    
+                    {/* User routes  */}
+                    <Route path='/user/' element={<PatientAuthentication/>}>
+                      <Route path='signin/' element={<PatientSignin/>}/>
+                      <Route path='signup/' element={<PatientSignup/>}/>
+                      <Route path='forgotPassword/' element={<PatientForgotPassword/>}/>
+                    </Route>
+                    <Route path='/user/account/' element={<PatientAccount/>}>
+                    </Route>
 
-          </Routes>
-        </Router>
+                  </Routes>
+                </Router>
+
+              </PopupPayLoadContextSetter.Provider>
+            </PopupPayLoadContext.Provider>
+          </ShowModalContextSetter.Provider>  
+        </ShowModalContext.Provider>
       </ResponseMessageContextSetter.Provider>
     </ResponseMessageContext.Provider>
   );

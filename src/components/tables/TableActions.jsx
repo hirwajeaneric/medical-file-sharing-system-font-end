@@ -1,34 +1,26 @@
-import { Preview, Edit } from '@mui/icons-material'
+import { Preview } from '@mui/icons-material'
 import { Box, IconButton, Tooltip } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
+import { ShowModalContextSetter, PopupPayLoadContextSetter } from '../../App';
 
-const TableActions = ({params, viewPath, editPath, removeCommand}) => {
-  return (
-    <>
-        {viewPath && 
-            <Box>
-                <Tooltip title='View Details'>
-                    <IconButton onClick={()=>{
-                        window.location.href=`${viewPath}/${params.row._id}`
-                    }}>
-                    <Preview />
-                    </IconButton>
-                </Tooltip>
-            </Box>
-        }
-        {editPath && 
-            <Box>
-                <Tooltip title='Edit'>
-                    <IconButton onClick={()=>{
-                        window.location.href=`${editPath}/${params.row._id}`
-                        }}>
-                        <Edit />
-                    </IconButton>
-                </Tooltip>
-            </Box>
-        }
-    </>
-)
+const TableActions = ({params}) => {
+    const setShowModal = useContext(ShowModalContextSetter);
+    const setPayLoad = useContext(PopupPayLoadContextSetter);
+
+    const openModal = ()=> {
+      setShowModal(prev => !prev);
+      setPayLoad({ type: 'applicationForInstitution', id: params.row._id})
+    };
+
+    return (
+        <Box>
+            <Tooltip title='View / Edit'>
+                <IconButton onClick={openModal}>
+                <Preview />
+                </IconButton>
+            </Tooltip>
+        </Box>
+    )
 }
   
 export default TableActions

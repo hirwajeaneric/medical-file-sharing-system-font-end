@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiBuilding, BiBuildingHouse, BiFileBlank, BiFileFind,   BiHomeAlt, BiMenuAltLeft, BiPaperPlane, BiUserCheck, BiUserCircle, BiUserPlus, BiUserX } from 'react-icons/bi'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { DashboardContainer, HospitalName, MainContent, MenuButton, MenuPopup, Mfss, NavigationComponents, NavItem, NavItemContainer, NavItemContainerHome, OutletSpace, SideBar, TitleContainer, TopBar, User } from '../../../components/Dashboard/DashboardComponents'
@@ -6,7 +6,12 @@ import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
+  const [userIdentity, setUserIdentity] = useState({});
+
+  useEffect(()=>{
+    setUserIdentity(JSON.parse(localStorage.getItem('usr')));
+  },[])
 
   const [isOpen, setIsOpen] = useState(true);
   const [openPopup, setOpenPopup] = useState(false);
@@ -33,7 +38,7 @@ const Dashboard = () => {
           <MedicalInformationIcon />
           {isOpen && <Mfss>MFSS</Mfss>}
         </TitleContainer>
-        {isOpen && <HospitalName>Admin</HospitalName>}
+        {isOpen && <HospitalName>{localStorage.getItem('admnTok') && 'Admin'}</HospitalName>}
         <NavigationComponents>
           <NavItemContainerHome to={''}>
             <BiHomeAlt />
@@ -84,13 +89,13 @@ const Dashboard = () => {
           </MenuButton>
           <User>
             <BiUserCircle/>
-            <p>John Doe</p>
+            <p>{userIdentity.firstName+" "+userIdentity.lastName}</p>
             <button onClick={popup}>
               <KeyboardArrowDownIcon />
             </button>
             {openPopup && 
               <MenuPopup>
-                <p>Hirwa Jean Eric</p>
+                <p>{userIdentity.firstName+" "+userIdentity.lastName}</p>
                 <button onClick={()=> {
                   navigate('account');
                   setOpenPopup(!openPopup);
@@ -102,7 +107,7 @@ const Dashboard = () => {
         <OutletSpace>
           <Outlet />
         </OutletSpace>
-      </MainContent>  
+      </MainContent> 
     </DashboardContainer>
   )
 }

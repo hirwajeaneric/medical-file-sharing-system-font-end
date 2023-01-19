@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import { Container, PageBody, PageTitle } from '../../../components/Dashboard/DashboardHome'
-import RequestsTable from '../../../components/tables/RequestsTable';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios';
+import { Container, DetailsPopup, PageBody, PageTitle, PopupBody } from '../../../components/Dashboard/DashboardHome'
+import { ShowModalContext, ShowModalContextSetter} from '../../../App';
+import { PopupPayLoadContext } from '../../../App';
+import RequestsTable from '../../../components/tables/RequestsTable';
+import RequestDetails from './RequestDetails';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const Requests = () => {
   
+  // States 
+  const showModal = useContext(ShowModalContext);
+  const setShowModal = useContext(ShowModalContextSetter);
   const [requests, setRequests] = useState([]);
-  
+  const popupPayLoad = useContext(PopupPayLoadContext);
+
+  // Data fetch 
   useEffect(()=>{
     axios.get('http://localhost:5050/api/mfss/applicationForInstitution/list')
     .then(response => {
@@ -20,6 +29,31 @@ const Requests = () => {
     })
   },[])
 
+
+  // Popup utilities 
+  const modalRef = useRef();
+
+  const closeModal = e => {
+    if(modalRef.current === e.target) {
+      setShowModal(false);
+    }
+  };
+
+  const keyPress = useCallback(
+    e => {
+      if (e.key === 'Escape' && showModal) {
+        setShowModal(false);
+      }
+    },
+    [setShowModal, showModal]
+  )
+
+  useEffect(()=>{
+    document.addEventListener('keydown', keyPress);
+    return () =>  document.removeEventListener('keydown', keyPress);
+  },[keyPress]);
+
+
   return (
     <Container>
       <PageTitle>Requests</PageTitle>
@@ -27,6 +61,18 @@ const Requests = () => {
       <PageBody>
         <RequestsTable data={requests}/>
       </PageBody>
+
+      {/* Popup */}
+      {showModal ? 
+        <DetailsPopup onClick={closeModal} ref={modalRef}>
+          <PopupBody showModal={showModal}>
+            <CloseRoundedIcon aria-label='Close modal' onClick={()=> setShowModal(prev => !prev)} style={{ cursor: 'pointer'}} />
+            <RequestDetails popupPayLoad={popupPayLoad} />
+          </PopupBody>
+        </DetailsPopup>
+      :
+        null
+      }
     </Container>
   )
 }
