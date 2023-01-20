@@ -13,20 +13,13 @@ const RequestDetails = ({popupPayLoad}) => {
     const [open, setOpen] = React.useState(false);
     const [application, setApplication] = useState({})
     const [applicant, setApplicant] = useState({});
-    const [notification, setNotification] = useState({
-        severity: '',
-        message: ''
-    });
+    const [institution, setInstitution] = useState({ name: "", type: "", location: "", directorId: "", directorName: "", specialization: "", joinDate: "", logo: "", isApproved: "", certificate: "", numberOfPersonnel: "" });
+    const [notification, setNotification] = useState({ severity: '', message: '' });
 
-    const handleClick = () => {
-        setOpen(true);
-    };
+    const handleClick = () => setOpen(true);
 
     const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
+        if (reason === 'clickaway') { return; }
         setOpen(false);
     };
 
@@ -35,7 +28,7 @@ const RequestDetails = ({popupPayLoad}) => {
         axios.get(`http://localhost:5050/api/mfss/applicationForInstitution/findById?id=${popupPayLoad.id}`)
         .then(response=>{
             setApplication(response.data);
-            
+
             axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${response.data.directorId}`)
             .then(response=>{
                 setApplicant(response.data);
@@ -50,31 +43,74 @@ const RequestDetails = ({popupPayLoad}) => {
     },[popupPayLoad.id, application.directorId])
 
     // Approve 
-    const approve = (e) => {
+    const approve = async (e) => {
         e.preventDefault();
         
         application.status = 'Approved';
         application.respondDate = new Date().toDateString();
 
-        axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
+        await axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         .then(response=>{
             
             /** Create new hospital. */
+            institution.name = response.data.payload.institutionName
+            institution.type =  response.data.payload.institutionType 
+            institution.location = response.data.payload.location
+            institution.directorId =  response.data.payload.directorId
+            institution.directorName = response.data.payload.directorName
+            institution.specialization = ""
+            institution.joinDate = new Date().toDateString()
+            institution.logo = ""
+            institution.isApproved = true
+            institution.certificate = response.data.payload.certificate
+            institution.numberOfPersonnel = response.data.payload.numberOfPersonnel
+
+            axios.post(`http://localhost:5050/api/mfss/institution/add`, institution)
+            .then(response => {
+                if (response.status === 201) {
+                    axios.get(`http://localhost:5050/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
+                    .then(response => {
+                        setInstitution(response.data);
+                    })
+                    .catch(error => {
+                        console.log("Server error :: "+error);
+                    })
+                }  
+            })
+            .catch(error => {
+                if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                    setNotification({ severity: 'error', message: error.response.data.message});
+                }
+            })
 
             /** Update Applicant information. */
+            applicant.userCode = ''
+            applicant.institutionId = institution._id
+            applicant.institutionCode = ''
+            applicant.isActive = true
 
-            if (response.status === 201) {
-                setNotification({severity: 'success', message: response.data.message});
-                setOpen(true);
-            }
+            axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/update?id=${applicant._id}`)
+            .then(response => {
+                if (response.status === 201) {
+                    setNotification({severity: 'success', message: "Request approved!"});
+                    setOpen(true);
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                    setNotification({ severity: 'error', message: error.response.data.message});
+                }
+            })
         })
         .catch(error => {
             if (error.response && error.response.status >= 400 && error.response.status <= 500){
                 setNotification({ severity: 'error', message: error.response.data.message});
-              }
+            }
         })
     }
 
+
+    // Rejecting the application 
     const reject = (e) => {
         e.preventDefault();
 
@@ -91,9 +127,8 @@ const RequestDetails = ({popupPayLoad}) => {
         .catch(error => {
             if (error.response && error.response.status >= 400 && error.response.status <= 500){
                 setNotification({ severity: 'error', message: error.response.data.message});
-              }
+            }
         })
-
     }
 
     return (
