@@ -107,14 +107,14 @@ function App() {
 
 
                     {/* Hospital and hospital Personel routes  */}
-                    <Route path='/hp/' element={<HospitalAuthentication/>}>
+                    <Route path='/hp/:name' element={<HospitalAuthentication/>}>
                       <Route path='signin/' element={<HospitalSignin/>}/>
                       <Route path='signup/' element={<HospitalSignup/>}/>
                       <Route path='forgotPassword/' element={<HospitalForgotPassword/>}/>
                     </Route>
-                    <Route path='/hp/dashboard/' element={<HospitalDashboard/>}>
+                    <Route path='/hp/:name/dashboard/' element={<HospitalDashboard/>}>
                     </Route>
-                    <Route path='/hp/user/' element={<HospitalPersonelAccount/>}>
+                    <Route path='/hp/:name/user/:userCode' element={<HospitalPersonelAccount/>}>
                     </Route>
                     
                     {/* User routes  */}
