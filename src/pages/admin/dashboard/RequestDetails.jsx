@@ -65,36 +65,64 @@ const RequestDetails = ({popupPayLoad}) => {
             institution.certificate = response.data.payload.certificate
             institution.numberOfPersonnel = response.data.payload.numberOfPersonnel
 
-            axios.post(`http://localhost:5050/api/mfss/institution/add`, institution)
+            console.log("We are going to save this institution: ");
+            console.log(institution);
+
+            axios.post(`http://localhost:5050/api/mfss/institution/approve`, institution)
             .then(response => {
+                console.log("Institution saved with code: "+response.status);
+                console.log("Institution certificate is: "+institution.certificate);
+
                 if (response.status === 201) {
                     axios.get(`http://localhost:5050/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
                     .then(response => {
+
+                        console.log("Recorded institution: "+response.data);
                         setInstitution(response.data);
+
+                        /** Update Applicant information. */
+                        const institutionFirstThreeLetters = [];
+                        for (var prop in institution.name) {
+                            if (prop < 4) 
+                                institutionFirstThreeLetters.push(institution.name[prop]);
+                        };
+
+                        const institutionIdLastThreeLetters = [];
+                        for (var i in institution._id) {
+                            if (i === institution.length-3) 
+                            institutionIdLastThreeLetters.push(institution.name[i]);
+                        };
+
+                        let employeeNumber = 1;
+
+                        var userCode = institutionFirstThreeLetters.join("").toUpperCase()+""+employeeNumber.toString().padStart(3, '0');
+                        var institutionCode = institutionFirstThreeLetters.join("").toUpperCase()+""+institutionIdLastThreeLetters.join("").toUpperCase();
+
+                        applicant.userCode = userCode
+                        applicant.institutionId = institution._id
+                        applicant.institutionCode = institutionCode
+                        applicant.isActive = true
+
+                        console.log("Updated applicant info: ");
+                        console.log(applicant);
+
+                        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/update?id=${applicant._id}`)
+                        .then(response => {
+                            if (response.status === 201) {
+                                setNotification({severity: 'success', message: "Request approved!"});
+                                setOpen(true);
+                            }
+                        })
+                        .catch(error => {
+                            if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                                setNotification({ severity: 'error', message: error.response.data.message});
+                            }
+                        })
                     })
                     .catch(error => {
                         console.log("Server error :: "+error);
                     })
                 }  
-            })
-            .catch(error => {
-                if (error.response && error.response.status >= 400 && error.response.status <= 500){
-                    setNotification({ severity: 'error', message: error.response.data.message});
-                }
-            })
-
-            /** Update Applicant information. */
-            applicant.userCode = ''
-            applicant.institutionId = institution._id
-            applicant.institutionCode = ''
-            applicant.isActive = true
-
-            axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/update?id=${applicant._id}`)
-            .then(response => {
-                if (response.status === 201) {
-                    setNotification({severity: 'success', message: "Request approved!"});
-                    setOpen(true);
-                }
             })
             .catch(error => {
                 if (error.response && error.response.status >= 400 && error.response.status <= 500){
