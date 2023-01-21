@@ -12,7 +12,7 @@ const InstitutionSection = () => {
   const [institutionApplication, setInstitutionApplication] = useState({ directorId: "", institutionType: "", institutionId: "", institutionName: "", sendDate: "", status: "Pending", applicationDate: new Date().toDateString(), applicationBody: "", systemAdminId: "", location: "", numberOfPersonnel: "" });
   const [institutionApplicationError, setInstitutionApplicationError] = useState({ institutionType: "", institutionName: "", numberOfPersonnel: ""})
   
-  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date().toDateString(), joinDate: "", institutionId: "Pending", institutionName: "Pending", });
+  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date().toDateString(), institutionId: "Pending", institutionName: "Pending", });
   const [personalInfoError, setPersonalInfoError] = useState({firstName: "", lastName: "", email: "", phone: "", password: ""});
   
   const [certificate, setCertificate] = useState('');
@@ -73,19 +73,19 @@ const InstitutionSection = () => {
     e.preventDefault();
 
     if (personalInfo.firstName===''){
-      setPersonalInfoError({...personalInfoError, firstName: 'First name is required'})
+      setPersonalInfoError({ ...personalInfoError, firstName: 'First name is required' })
       return;
     } else if (personalInfo.lastName===''){
-      setPersonalInfoError({...personalInfoError, lastName: 'Last name is required'})
+      setPersonalInfoError({ ...personalInfoError, lastName: 'Last name is required' })
       return;
     } else if (personalInfo.email===''){
-      setPersonalInfoError({...personalInfoError, email: 'Email is required'})
+      setPersonalInfoError({ ...personalInfoError, email: 'Email is required' })
       return;
     } else if (personalInfo.phone===''){
-      setPersonalInfoError({...personalInfoError, phone: 'Phone is required'})
+      setPersonalInfoError({ ...personalInfoError, phone: 'Phone is required' })
       return;
     } else if (personalInfo.password===''){
-      setPersonalInfoError({...personalInfoError, password: 'Password is required'})
+      setPersonalInfoError({ ...personalInfoError, password: 'Password is required' })
       return
     } else {
 
