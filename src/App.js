@@ -1,24 +1,26 @@
-import React, { createContext, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { createContext, useEffect, useState } from 'react';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import axios from 'axios';
+
+// Home pages
 import Home from './pages/Home';
-import AdminAuthentication from './pages/admin/authentication/AdminAuthentication';
-import AdminSignin from './components/authenticationRelated/AdminSignin';
-import AdminSignup from './components/authenticationRelated/AdminSignup';
-import Dashboard from './pages/admin/dashboard/Dashboard';
-import HospitalAuthentication from './pages/admin/authentication/AdminAuthentication';
-import HospitalSignin from './components/authenticationRelated/HPSignin';
-import HospitalSignup from './components/authenticationRelated/HPSignup';
-import HospitalDashboard from './pages/admin/dashboard/Dashboard';
-import HospitalPersonelAccount from './pages/admin/dashboard/Dashboard';
+import Institutions from './pages/Institutions';
+import LandingPage from './pages/LandingPage';
+
+// Patient pages
 import PatientAuthentication from './pages/patient/authentication/Authentication';
 import PatientSignin from './components/authenticationRelated/PatientSignin';
 import PatientSignup from './components/authenticationRelated/PatientSignup';
 import PatientAccount from './pages/admin/dashboard/Dashboard';
 import AdminForgotPassword from './components/authenticationRelated/AdminForgotPassword';
-import HospitalForgotPassword from './components/authenticationRelated/HospitalForgotPassword';
 import PatientForgotPassword from './components/authenticationRelated/PatientForgotPassword';
-import Institutions from './pages/Institutions';
-import LandingPage from './pages/LandingPage';
+
+// System Admin pages
+import Admin from './pages/admin/Admin';
+import AdminAuthentication from './pages/admin/authentication/AdminAuthentication';
+import AdminSignin from './components/authenticationRelated/AdminSignin';
+import AdminSignup from './components/authenticationRelated/AdminSignup';
+import Dashboard from './pages/admin/dashboard/Dashboard';
 import DashBoardHome from './pages/admin/dashboard/DashBoardHome';
 import Reports from './pages/admin/dashboard/Reports';
 import Patients from './pages/admin/dashboard/Patients';
@@ -29,7 +31,24 @@ import Hospitals from './pages/admin/dashboard/Hospitals';
 import Pharmacies from './pages/admin/dashboard/Pharmacies';
 import Requests from './pages/admin/dashboard/Requests';
 import Account from './pages/admin/dashboard/Account';
-import Admin from './pages/admin/Admin';
+
+// Institution pages
+import InstitutionPersonnel from './pages/institutionPersonel/InstitutionPersonnel';
+import InstitutionAuthentication from './pages/institutionPersonel/authentication/InstitutionAuthentication';
+import InstitutionSignin from './components/authenticationRelated/InsSignin';
+import InstitutionSignup from './components/authenticationRelated/InsSignup';
+import InstitutionForgotPassword from './components/authenticationRelated/InstitutionForgotPassword';
+import InstitutionDashboard from './pages/institutionPersonel/dashboard/Dashboard';
+import InstitutionDashBoardHome from './pages/institutionPersonel/dashboard/DashBoardHome';
+import InstitutionReports from './pages/institutionPersonel/dashboard/Reports';
+import InstitutionIndividuals from './pages/institutionPersonel/dashboard/Personnel';
+import InstitutionPatients from './pages/institutionPersonel/dashboard/Patients';
+import InstitutionRecords from './pages/institutionPersonel/dashboard/Records';
+import InstitutionDoctors from './pages/institutionPersonel/dashboard/Doctors';
+import InstitutionNurses from './pages/institutionPersonel/dashboard/Nurses';
+import InstitutionPharmacists from './pages/institutionPersonel/dashboard/Pharmacists';
+import InstitutionAccount from './pages/institutionPersonel/dashboard/Account';
+import ErrorPage from './pages/ErrorPage';
 
 // Contexts declaration 
 export var ResponseMessageContext = createContext();
@@ -43,11 +62,30 @@ export var PopupPayLoadContextSetter = createContext();
 
 
 function App() {
-  // States
+  // Local data
   const adminToken = localStorage.getItem('admnTok');
+  const insttToken = localStorage.getItem('insttTok');
+  const patToken = localStorage.getItem('patTok');
+  
+  // States
   const [responseMessage, setResponseMessage] = useState({ message: '', visible: false });
   const [showModal, setShowModal] = useState(false);
   const [popupPayLoad, setPopupPayLoad] = useState({ type: '', id: ''});
+  const [institutions, setInstitutions] = useState([]);
+
+  // Fetching available institutions
+  useEffect(()=>{
+    axios.get(`http://localhost:5050/api/mfss/institution/list`)
+    .then(response => {
+      const listOfInstitutions = [];
+      response.data.forEach((institution) => {
+        listOfInstitutions.push(institution.name.toLowerCase().trim().replace(/\s/g, ''))
+      })
+      setInstitutions(listOfInstitutions)
+    })
+    .catch(error => console.log("Server error :: "+error))
+  },[])
+
 
   return (
     <ResponseMessageContext.Provider value={responseMessage}>
@@ -68,9 +106,9 @@ function App() {
                     </Route>
 
                     {/* Admin routes  */} 
-                    <Route path='/admin/' element={<Admin/>}>
+                    <Route path='/admin/' element={<Admin/>} errorElement={<ErrorPage />}>
                       {adminToken &&
-                        <Route path='dashboard' element={<Dashboard/>}>
+                        <Route path='dashboard' element={<Dashboard/> } errorElement={<ErrorPage />}>
                           <Route path='' element={<DashBoardHome />} />
                           <Route path='reports' element={<Reports />} />
                           <Route path='patients' element={<Patients />} />
@@ -91,7 +129,7 @@ function App() {
                         <Route path='forgotPassword' element={<AdminForgotPassword/>}/>
                       </Route>
 
-                      {/* <Route path='dashboard' exact element={<Navigate replace to='/admin/auth/signin/' />} >
+                      <Route path='dashboard' exact element={<Navigate replace to='/admin/auth/signin/' />} >
                         <Route path='' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                         <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                         <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
@@ -102,30 +140,60 @@ function App() {
                         <Route path='hospitals' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                         <Route path='requests' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                         <Route path='account' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                      </Route> */}
+                      </Route>
                     </Route>
 
 
-                    {/* Hospital and hospital Personel routes  */}
-                    <Route path='/hp/:name' element={<HospitalAuthentication/>}>
-                      <Route path='signin/' element={<HospitalSignin/>}/>
-                      <Route path='signup/' element={<HospitalSignup/>}/>
-                      <Route path='forgotPassword/' element={<HospitalForgotPassword/>}/>
-                    </Route>
-                    <Route path='/hp/:name/dashboard/' element={<HospitalDashboard/>}>
-                    </Route>
-                    <Route path='/hp/:name/user/:userCode' element={<HospitalPersonelAccount/>}>
-                    </Route>
+                    {/* Institution and institution Personel routes  */}
+                    {institutions && institutions.map((institution, index) => (
+                      <Route key={index} path={`/${institution}/`} element={<InstitutionPersonnel/>} errorElement={<ErrorPage />}>
+                        {insttToken &&
+                          <Route path='dashboard' element={<InstitutionDashboard/>}>
+                            <Route path='' element={<InstitutionDashBoardHome />} />
+                            <Route path='reports' element={<InstitutionReports />} />
+                            <Route path='patients' element={<InstitutionPatients />} />
+                            <Route path='records' element={<InstitutionRecords />} />
+                            <Route path='personnel' element={<InstitutionIndividuals />} />
+                            <Route path='doctors' element={<InstitutionDoctors />} />
+                            <Route path='nurses' element={<InstitutionNurses />} />
+                            <Route path='pharmacists' element={<InstitutionPharmacists />} />
+                            <Route path='account' element={<InstitutionAccount />} />
+                          </Route>
+                        }
+                        
+                        <Route path='auth' element={<InstitutionAuthentication/>}>
+                          <Route path='' element={<InstitutionSignin/>}/>
+                          <Route path='signin' element={<InstitutionSignin/>}/>
+                          <Route path='signup' element={<InstitutionSignup/>}/>
+                          <Route path='forgotPassword' element={<InstitutionForgotPassword/>}/>
+                        </Route>
+
+                        <Route path='dashboard' exact element={<Navigate replace to={`/${institution}/auth/signin`} />}>
+                          <Route path='' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
+                          <Route path='reports' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
+                          <Route path='patients' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
+                          <Route path='records' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
+                          <Route path='personnel' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
+                          <Route path='doctors' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
+                          <Route path='nurses' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
+                          <Route path='pharmacists' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
+                          <Route path='account' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
+                        </Route>
+                      </Route>
+                      ))
+                    }
                     
-                    {/* User routes  */}
+                    {/* User/Patient routes  */}
+                    {patToken && 
+                      <Route path='/user/account/' element={<PatientAccount/>}>
+                      
+                      </Route>
+                    }
                     <Route path='/user/' element={<PatientAuthentication/>}>
                       <Route path='signin/' element={<PatientSignin/>}/>
                       <Route path='signup/' element={<PatientSignup/>}/>
                       <Route path='forgotPassword/' element={<PatientForgotPassword/>}/>
                     </Route>
-                    <Route path='/user/account/' element={<PatientAccount/>}>
-                    </Route>
-
                   </Routes>
                 </Router>
 
