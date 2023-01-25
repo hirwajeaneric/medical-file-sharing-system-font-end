@@ -8,7 +8,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
   
-const RequestDetails = ({popupPayLoad}) => {
+const PersonnelDetails = ({popupPayLoad}) => {
 
     const [open, setOpen] = React.useState(false);
     const [application, setApplication] = useState({})
@@ -227,4 +227,4 @@ const RequestDetails = ({popupPayLoad}) => {
     )
 }
 
-export default RequestDetails
+export default PersonnelDetails

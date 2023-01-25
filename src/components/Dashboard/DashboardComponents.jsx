@@ -368,10 +368,10 @@ export const OutletSpace = styled.div`
     }
 
     @media (max-width: 768px) {
-        
+        padding: 7px;
     }
 
     @media (max-width: 480px) {
-        
+        padding: 5px;
     }
 `;

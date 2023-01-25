@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BiBuilding, BiBuildingHouse, BiFileBlank, BiFileFind,   BiHomeAlt, BiMenuAltLeft, BiPaperPlane, BiUserCheck, BiUserCircle, BiUserPlus, BiUserX } from 'react-icons/bi'
+import { BiFileBlank, BiHomeAlt, BiMenuAltLeft, BiPaperPlane, BiUserCheck, BiUserCircle, BiUserX } from 'react-icons/bi'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { DashboardContainer, HospitalName, MainContent, MenuButton, MenuPopup, Mfss, NavigationComponents, NavItem, NavItemContainer, NavItemContainerHome, OutletSpace, SideBar, TitleContainer, TopBar, User } from '../../../components/Dashboard/DashboardComponents'
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
@@ -45,10 +45,14 @@ const Dashboard = () => {
             <BiHomeAlt />
             {isOpen && <NavItem>Dashboard</NavItem>}
           </NavItemContainerHome>
-          <NavItemContainer to={'reports'}>
-            <BiPaperPlane />
-            {isOpen && <NavItem>Reports</NavItem>}
-          </NavItemContainer>
+          {userIdentity.role === 'Representative' &&
+            <>
+              <NavItemContainer to={'reports'}>
+                <BiPaperPlane />
+                {isOpen && <NavItem>Reports</NavItem>}
+              </NavItemContainer>
+            </>
+          }
           <NavItemContainer to={'patients'}>
             <BiUserCircle />
             {isOpen && <NavItem>Patients</NavItem>}
@@ -57,26 +61,14 @@ const Dashboard = () => {
             <BiFileBlank />
             {isOpen && <NavItem>Records</NavItem>}
           </NavItemContainer>
-          <NavItemContainer to={'doctors'}>
-            <BiUserCheck />
-            {isOpen && <NavItem>Doctors</NavItem>}
-          </NavItemContainer>
-          <NavItemContainer to={'nurses'}>
-            <BiUserPlus />
-            {isOpen && <NavItem>Nurses</NavItem>}
-          </NavItemContainer>
-          <NavItemContainer to={'hospitals'}>
-            <BiBuilding />
-            {isOpen && <NavItem>Hospitals</NavItem>}
-          </NavItemContainer>
-          <NavItemContainer to={'pharmacies'}>
-            <BiBuildingHouse />
-            {isOpen && <NavItem>Pharmacies</NavItem>}
-          </NavItemContainer>
-          <NavItemContainer to={'requests'}>
-            <BiFileFind/>
-            {isOpen && <NavItem>Requests</NavItem>}
-          </NavItemContainer>
+          {userIdentity.role === 'Representative' && 
+            <>
+              <NavItemContainer to={'personnel'}>
+                <BiUserCheck />
+                {isOpen && <NavItem>Personnel</NavItem>}
+              </NavItemContainer>
+            </>
+          }
           <NavItemContainer to={'account'}>
             <BiUserX />
             {isOpen && <NavItem>My account</NavItem>}
