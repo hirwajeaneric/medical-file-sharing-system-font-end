@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ResponseMessageContext, ResponseMessageContextSetter } from '../../App';
 import { Alert, FormControl, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
@@ -19,56 +19,50 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 // import { Helmet } from 'react-helmet-async';
 
 const InsSignin = () => {
+  // Hooks
+  const params = useParams();
+  const navigate = useNavigate();
+
+  // Contexts
   const responseMessage = React.useContext(ResponseMessageContext);
   const setResponseMessage = React.useContext(ResponseMessageContextSetter);
+  
+  // States
   const [showPassword, setShowPassword] = React.useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = React.useState('');
-  const [formData, setFormData] = React.useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = React.useState({ userCode: '', password: '', institutionCode: params.institution });
 
-  setTimeout(()=>{
-    setResponseMessage({
-      message: '',
-      visible: false
-    })
-  }, 5000);
+  // Close response message
+  setTimeout(()=>{ setResponseMessage({ message: '', visible: false }) }, 5000);
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const handleChange = ({currentTarget: input}) => {
-    setFormData({...formData, [input.name]: input.value})
-  };
-
+  // Functions
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => { event.preventDefault() };
+  const handleChange = ({currentTarget: input}) => { setFormData({...formData, [input.name]: input.value}) };
   const handleSubmit = (event) => {
     event.preventDefault();
     
-    if (formData.email === '') {
-      setErrorMessage('Email is required');
+    if (formData.userCode === '') {
+      setErrorMessage('User code is required');
       return;
     } else if (formData.password === '') {
       setErrorMessage('Password is required');
       return;
     } else {
       setErrorMessage('');
-      axios.post('http://localhost:5050/api/mfss/admin/signin', formData)
+      axios.post('http://localhost:5050/api/mfss/institutionPersonnel/signin', formData)
       .then(response => {
         if (response.status === 200 && response.data.token) {
           setFormData({
-            email: '',
+            userCode: '',
             password: ''
           })
 
-          const {token, id, firstName, lastName, email, phone} = response.data;
-          localStorage.setItem('admnTok', token);
-          localStorage.setItem('usr', JSON.stringify({id, firstName, lastName, email, phone}));
+          const {token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName} = response.data;
+          localStorage.setItem('insttTok', token);
+          localStorage.setItem('instPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName}));
 
-          navigate('/admin/dashboard');
+          window.location.replace(`/${params.institution}/dashboard`);
         } 
       })
       .catch(error => {
@@ -83,9 +77,7 @@ const InsSignin = () => {
     return (
       <Typography variant="body2" color="text.secondary" align="center" {...props}>
         {'Copyright © '}
-        <Link color="inherit" href="/">
-          Medicase
-        </Link>{' '}
+        <Link color="inherit" href="/">Medicase</Link>{' '}
         {new Date().getFullYear()}
         {'.'}
       </Typography>
@@ -102,35 +94,26 @@ const InsSignin = () => {
 
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          
           {responseMessage.visible && <Alert sx={{marginTop: 5, marginBottom: 5}} severity="success">{responseMessage.message}</Alert>}
-          <Typography component="h1" variant="h3">
-            Admin
-          </Typography>
+          
+          <Typography component="h1" variant="h3">MEDICASE</Typography>
+          
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
+          
+          <Typography component="h1" variant="h5">Sign in to your institution</Typography>
+          
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             {errorMessage && <Alert sx={{marginTop: 5}} severity="error">{errorMessage}</Alert>}
-            <Typography component='p' marginTop={2}>Email address</Typography>
-            <TextField
-              margin="none"
-              required
-              fullWidth
-              name="email"
+            <Typography component='p' marginTop={2}>User Code</Typography>
+            <TextField margin="none" required fullWidth
+              name="userCode"
               onChange={handleChange}
-              value={formData.email || ''}
-              autoComplete="email"
+              value={formData.userCode || ''}
+              autoComplete="userCode"
               autoFocus
               size='small'
             />
@@ -159,24 +142,10 @@ const InsSignin = () => {
                 }
               />
             </FormControl>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>Sign In</Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/admin/auth/forgotPassword" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/admin/auth/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <Link href={`/${params.institution}/auth/forgotPassword`} variant="body2">Forgot password?</Link>
               </Grid>
             </Grid>
           </Box>

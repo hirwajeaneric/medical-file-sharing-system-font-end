@@ -13,7 +13,7 @@ const RequestDetails = ({popupPayLoad}) => {
     const [open, setOpen] = React.useState(false);
     const [application, setApplication] = useState({})
     const [applicant, setApplicant] = useState({});
-    const [institution, setInstitution] = useState({ name: "", type: "", location: "", directorId: "", directorName: "", specialization: "", joinDate: "", logo: "", isApproved: "", certificate: "", numberOfPersonnel: "" });
+    const [institution, setInstitution] = useState({ name: "", type: "", location: "", directorId: "", directorName: "", specialization: "", joinDate: "", logo: "", isApproved: "", certificate: "", numberOfPersonnel: "", institutionCode: ""});
     const [notification, setNotification] = useState({ severity: '', message: '' });
 
     const handleClick = () => setOpen(true);
@@ -69,11 +69,14 @@ const RequestDetails = ({popupPayLoad}) => {
                 institution.isApproved = true
                 institution.certificate = response.data.payload.certificate
                 institution.numberOfPersonnel = response.data.payload.numberOfPersonnel
+                institution.institutionCode = response.data.payload.institutionName.replace(/\s/g, '').toLowerCase() ;
 
+                // Record new institution
                 axios.post(`http://localhost:5050/api/mfss/institution/approve`, institution)
                 .then(response => {
                     setTimeout(()=>{
                         if (response.status === 201) {
+                            // Fetch the recorded institution using the certificate provided.
                             axios.get(`http://localhost:5050/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
                             .then(response => {
 
@@ -83,21 +86,19 @@ const RequestDetails = ({popupPayLoad}) => {
                                     if (prop < 4) 
                                         institutionFirstThreeLetters.push(institution.name[prop]);
                                 };
-    
+
                                 const institutionIdLastThreeLetters = [];
                                 for (var i in institution._id) {
                                     if (i === institution.length-3) 
                                     institutionIdLastThreeLetters.push(institution.name[i]);
                                 };
-    
+
                                 let employeeNumber = 1;
-    
                                 var userCode = institutionFirstThreeLetters.join("").toUpperCase()+""+employeeNumber.toString().padStart(3, '0');
-                                var institutionCode = institutionFirstThreeLetters.join("").toUpperCase()+""+institutionIdLastThreeLetters.join("").toUpperCase();
     
                                 applicant.userCode = userCode
                                 applicant.institutionId = response.data[0]._id
-                                applicant.institutionCode = institutionCode
+                                applicant.institutionCode = institution.institutionCode
                                 applicant.institutionName = response.data[0].name
                                 applicant.isActive = true
     

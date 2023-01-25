@@ -284,7 +284,7 @@ const InstitutionSection = () => {
                   <option value=''>Choose District</option>
                   {demoDistricts.map((district, index) =>
                     <option key={index}>{district.name}</option>
-                  )}
+                  )}  
 
                 </select>
                 {locationErrors.district && <p>{locationErrors.district}</p>}

@@ -1,6 +1,5 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
-import axios from 'axios';
 
 // Home pages
 import Home from './pages/Home';
@@ -62,6 +61,7 @@ export var PopupPayLoadContextSetter = createContext();
 
 
 function App() {
+
   // Local data
   const adminToken = localStorage.getItem('admnTok');
   const insttToken = localStorage.getItem('insttTok');
@@ -71,21 +71,6 @@ function App() {
   const [responseMessage, setResponseMessage] = useState({ message: '', visible: false });
   const [showModal, setShowModal] = useState(false);
   const [popupPayLoad, setPopupPayLoad] = useState({ type: '', id: ''});
-  const [institutions, setInstitutions] = useState([]);
-
-  // Fetching available institutions
-  useEffect(()=>{
-    axios.get(`http://localhost:5050/api/mfss/institution/list`)
-    .then(response => {
-      const listOfInstitutions = [];
-      response.data.forEach((institution) => {
-        listOfInstitutions.push(institution.name.toLowerCase().trim().replace(/\s/g, ''))
-      })
-      setInstitutions(listOfInstitutions)
-    })
-    .catch(error => console.log("Server error :: "+error))
-  },[])
-
 
   return (
     <ResponseMessageContext.Provider value={responseMessage}>
@@ -102,11 +87,11 @@ function App() {
                     {/* Home  */}
                     <Route path='/' element={<Home/>}>
                       <Route path='' element={<LandingPage/>} />
-                      <Route path='institutions/' element={<Institutions/>}/>
+                      <Route path='institutions' element={<Institutions/>}/>
                     </Route>
 
                     {/* Admin routes  */} 
-                    <Route path='/admin/' element={<Admin/>} errorElement={<ErrorPage />}>
+                    <Route path='/admin/' element={<Admin/>}>
                       {adminToken &&
                         <Route path='dashboard' element={<Dashboard/> } errorElement={<ErrorPage />}>
                           <Route path='' element={<DashBoardHome />} />
@@ -143,46 +128,28 @@ function App() {
                       </Route>
                     </Route>
 
-
                     {/* Institution and institution Personel routes  */}
-                    {institutions && institutions.map((institution, index) => (
-                      <Route key={index} path={`/${institution}/`} element={<InstitutionPersonnel/>} errorElement={<ErrorPage />}>
-                        {insttToken &&
-                          <Route path='dashboard' element={<InstitutionDashboard/>}>
-                            <Route path='' element={<InstitutionDashBoardHome />} />
-                            <Route path='reports' element={<InstitutionReports />} />
-                            <Route path='patients' element={<InstitutionPatients />} />
-                            <Route path='records' element={<InstitutionRecords />} />
-                            <Route path='personnel' element={<InstitutionIndividuals />} />
-                            <Route path='doctors' element={<InstitutionDoctors />} />
-                            <Route path='nurses' element={<InstitutionNurses />} />
-                            <Route path='pharmacists' element={<InstitutionPharmacists />} />
-                            <Route path='account' element={<InstitutionAccount />} />
-                          </Route>
-                        }
-                        
-                        <Route path='auth' element={<InstitutionAuthentication/>}>
-                          <Route path='' element={<InstitutionSignin/>}/>
-                          <Route path='signin' element={<InstitutionSignin/>}/>
-                          <Route path='signup' element={<InstitutionSignup/>}/>
-                          <Route path='forgotPassword' element={<InstitutionForgotPassword/>}/>
-                        </Route>
-
-                        <Route path='dashboard' exact element={<Navigate replace to={`/${institution}/auth/signin`} />}>
-                          <Route path='' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
-                          <Route path='reports' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
-                          <Route path='patients' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
-                          <Route path='records' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
-                          <Route path='personnel' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
-                          <Route path='doctors' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
-                          <Route path='nurses' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
-                          <Route path='pharmacists' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
-                          <Route path='account' exact element={<Navigate replace to={`/${institution}/auth/signin`} />} />
-                        </Route>
+                    <Route path={`/:institution`} element={<InstitutionPersonnel/>}>
+                      <Route exact path='*' element={<ErrorPage />} />
+                      <Route exact path='dashboard' element={insttToken ? <InstitutionDashboard/> : <Navigate replace to={`../auth/signin`} />}>
+                        <Route path='' element={insttToken ? <InstitutionDashBoardHome /> : <Navigate replace to={`auth/signin`} />} />
+                        <Route path='reports' element={insttToken ? <InstitutionReports /> : <Navigate replace to={`auth/signin`} />} />
+                        <Route path='patients' element={insttToken ? <InstitutionPatients /> : <Navigate replace to={`auth/signin`} />} />
+                        <Route path='records' element={insttToken ? <InstitutionRecords /> : <Navigate replace to={`auth/signin`} />} />
+                        <Route path='personnel' element={insttToken ? <InstitutionIndividuals /> : <Navigate replace to={`auth/signin`} />} />
+                        <Route path='doctors' element={insttToken ? <InstitutionDoctors /> : <Navigate replace to={`auth/signin`} />} />
+                        <Route path='nurses' element={insttToken ? <InstitutionNurses /> : <Navigate replace to={`auth/signin`} />} />
+                        <Route path='pharmacists' element={insttToken ? <InstitutionPharmacists /> : <Navigate replace to={`auth/signin`} />} />
+                        <Route path='account' element={insttToken ? <InstitutionAccount /> : <Navigate replace to={`auth/signin`} />} />
                       </Route>
-                      ))
-                    }
-                    
+                      <Route path='auth' element={<InstitutionAuthentication/>}>
+                        <Route path='' element={<InstitutionSignin/>}/>
+                        <Route path='signin' element={<InstitutionSignin/>}/>
+                        <Route path='signup' element={<InstitutionSignup/>}/>
+                        <Route path='forgotPassword' element={<InstitutionForgotPassword/>}/>
+                      </Route>
+                    </Route>
+
                     {/* User/Patient routes  */}
                     {patToken && 
                       <Route path='/user/account/' element={<PatientAccount/>}>
@@ -194,6 +161,10 @@ function App() {
                       <Route path='signup/' element={<PatientSignup/>}/>
                       <Route path='forgotPassword/' element={<PatientForgotPassword/>}/>
                     </Route>
+
+                    {/* Error page */}
+                    <Route path='*' element={<Navigate to='/' />} />   
+
                   </Routes>
                 </Router>
 
