@@ -41,7 +41,9 @@ export const MainContent = styled.div`
 
 
 /** 
- * TOP BAR COMPONENTS 
+ * 
+ * TOP BAR COMPONENTS
+ *  
  * */
 
 export const TopBar = styled.div`
@@ -361,17 +363,18 @@ export const NavItem = styled.p`
 
 export const OutletSpace = styled.div`
     padding: 25px;
-    
+    overflow-y: scroll;
+    height: 100%;
 
     @media (max-width: 1080px) {
         
     }
 
     @media (max-width: 768px) {
-        
+        padding: 7px;
     }
 
     @media (max-width: 480px) {
-        
+        padding: 5px;
     }
 `;

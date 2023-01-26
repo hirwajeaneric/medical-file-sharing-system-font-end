@@ -17,7 +17,7 @@ import { Alert, FormControl, IconButton, InputAdornment, OutlinedInput } from '@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-const AdminSignup = () => {
+const InsSignup = () => {
   const navigate = useNavigate();
   
   const [showPassword, setShowPassword] = React.useState(false);
@@ -237,4 +237,4 @@ const AdminSignup = () => {
   );
 }
 
-export default AdminSignup
+export default InsSignup

@@ -32,11 +32,54 @@ export const PageTitle = styled.h3`
     }
 `;
 
+export const PageHeaderContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;    
+
+    @media (max-width: 1080px) {
+        
+    }
+
+    @media (max-width: 768px) {
+        
+    }
+
+    @media (max-width: 480px) {
+        
+    }
+`;
+
 export const PageBody = styled.div`
     padding: 20px;
     background: white;
     margin-top: 20px;
     border-radius: 5px;
+
+    @media (max-width: 1080px) {
+        
+    }
+
+    @media (max-width: 768px) {
+        
+    }
+
+    @media (max-width: 480px) {
+        
+    }
+`;
+
+export const FormTwo = styled.form`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    // gap: 20px;
 
     @media (max-width: 1080px) {
         
