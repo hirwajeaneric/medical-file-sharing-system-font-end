@@ -33,7 +33,7 @@ const Dashboard = () => {
 
   return (
     <DashboardContainer>
-      <SideBar >
+      <SideBar  style={{ background: '#003366' }}>
         <TitleContainer>
           <MedicalInformationIcon />
           {isOpen && <Mfss>MFSS</Mfss>}

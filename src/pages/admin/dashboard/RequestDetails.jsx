@@ -112,6 +112,7 @@ const RequestDetails = ({popupPayLoad}) => {
                                 .catch(error => {
                                     if (error.response && error.response.status >= 400 && error.response.status <= 500){
                                         setNotification({ severity: 'error', message: error.response.data.message});
+                                        setOpen(true);
                                     }
                                 })
                             })

@@ -9,7 +9,7 @@ const TableActions = ({params}) => {
 
     const openModal = ()=> {
       setShowModal(prev => !prev);
-      setPayLoad({ type: 'applicationForInstitution', id: params.row._id})
+      setPayLoad({ type: 'id', id: params.row._id})
     };
 
     return (

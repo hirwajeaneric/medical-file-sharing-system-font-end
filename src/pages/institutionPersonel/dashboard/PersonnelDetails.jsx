@@ -11,9 +11,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 const PersonnelDetails = ({popupPayLoad}) => {
 
     const [open, setOpen] = React.useState(false);
-    const [application, setApplication] = useState({})
-    const [applicant, setApplicant] = useState({});
-    const [institution, setInstitution] = useState({ name: "", type: "", location: "", directorId: "", directorName: "", specialization: "", joinDate: "", logo: "", isApproved: "", certificate: "", numberOfPersonnel: "" });
+    const [userInfo, setUserInfo] = useState({ firstName: "", lastName: "", userCode: "", email: "", password: "", phone: "", role: "", isActive: "true", institutionId: "", institutionName: "", institutionCode: "" });
     const [notification, setNotification] = useState({ severity: '', message: '' });
 
     const handleClick = () => setOpen(true);
@@ -25,196 +23,130 @@ const PersonnelDetails = ({popupPayLoad}) => {
 
     // Fetch Data 
     useEffect(()=>{
-        axios.get(`http://localhost:5050/api/mfss/applicationForInstitution/findById?id=${popupPayLoad.id}`)
-        .then(response=>{
-            setApplication(response.data);
-
-            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${response.data.directorId}`)
-            .then(response=>{
-                setApplicant(response.data);
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${popupPayLoad.id}`)
+        .then(response => {
+            setUserInfo(response.data);
         })
         .catch(error => {
-            console.log(error)
+            console.log(error);
         })
-    },[popupPayLoad.id, application.directorId])
+    },[popupPayLoad.id])
 
-    // Approve 
-    const approve = async (e) => {
+    // Activate account
+    const activateAccount = async (e) => {
         e.preventDefault();
-    
-        application.status = 'Approved';
-        application.respondDate = new Date().toDateString();
-
-        setNotification({severity: 'info', message: "Processing ..."});
-        setOpen(true);
-                    
-
-        await axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
-        .then(response=>{
-
-            setTimeout(()=>{
-                /** Create new hospital. */
-                institution.name = response.data.payload.institutionName
-                institution.type =  response.data.payload.institutionType 
-                institution.location = response.data.payload.location
-                institution.directorId =  response.data.payload.directorId
-                institution.directorName = applicant.firstName+" "+applicant.lastName
-                institution.specialization = ""
-                institution.joinDate = new Date().toDateString()
-                institution.logo = ""
-                institution.isApproved = true
-                institution.certificate = response.data.payload.certificate
-                institution.numberOfPersonnel = response.data.payload.numberOfPersonnel
-
-                axios.post(`http://localhost:5050/api/mfss/institution/approve`, institution)
-                .then(response => {
-                    setTimeout(()=>{
-                        if (response.status === 201) {
-                            axios.get(`http://localhost:5050/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
-                            .then(response => {
-
-                                /** Update Applicant information. */
-                                const institutionFirstThreeLetters = [];
-                                for (var prop in institution.name) {
-                                    if (prop < 4) 
-                                        institutionFirstThreeLetters.push(institution.name[prop]);
-                                };
-    
-                                const institutionIdLastThreeLetters = [];
-                                for (var i in institution._id) {
-                                    if (i === institution.length-3) 
-                                    institutionIdLastThreeLetters.push(institution.name[i]);
-                                };
-    
-                                let employeeNumber = 1;
-    
-                                var userCode = institutionFirstThreeLetters.join("").toUpperCase()+""+employeeNumber.toString().padStart(3, '0');
-                                var institutionCode = institutionFirstThreeLetters.join("").toUpperCase()+""+institutionIdLastThreeLetters.join("").toUpperCase();
-    
-                                applicant.userCode = userCode
-                                applicant.institutionId = response.data[0]._id
-                                applicant.institutionCode = institutionCode
-                                applicant.institutionName = response.data[0].name
-                                applicant.isActive = true
-    
-                                axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/updateInstitution?id=${applicant._id}`, applicant)
-                                .then(response => {
-                                    if (response.status === 201) {
-                                        setNotification({severity: 'success', message: "Request approved!"});
-                                        setOpen(true);
-                                    }
-                                })
-                                .catch(error => {
-                                    if (error.response && error.response.status >= 400 && error.response.status <= 500){
-                                        setNotification({ severity: 'error', message: error.response.data.message});
-                                    }
-                                })
-                            })
-                            .catch(error => {
-                                console.log("Server error :: "+error);
-                            })
-                        }
-                    },3000)  
-                })
-                .catch(error => {
-                    if (error.response && error.response.status >= 400 && error.response.status <= 500){
-                        setNotification({ severity: 'error', message: error.response.data.message});
-                    }
-                })
-            },5000)
+        
+        userInfo.isActive = 'true';
+        
+        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/updateInstitution?id=${popupPayLoad.id}`, userInfo)
+        .then(response => {
+            if (response.status === 201) {
+                setNotification({severity: 'success', message: "Account updated!"});
+                setOpen(true);
+                setTimeout(()=>{
+                    window.location.reload();
+                },5000)
+            }
         })
         .catch(error => {
             if (error.response && error.response.status >= 400 && error.response.status <= 500){
                 setNotification({ severity: 'error', message: error.response.data.message});
+                setOpen(true);
             }
         })
     }
 
 
-    // Rejecting the application 
-    const reject = (e) => {
+    // Desactivate account 
+    const desactivateAccount = (e) => {
         e.preventDefault();
 
-        application.status = 'Rejected';
-        application.respondDate = new Date().toDateString();
-
-        axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
-        .then(response=>{
+        userInfo.isActive = 'false';
+        
+        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/updateInstitution?id=${popupPayLoad.id}`, userInfo)
+        .then(response => {
             if (response.status === 201) {
-                setNotification({severity: 'success', message: response.data.message});
+                setNotification({severity: 'success', message: "Account updated!"});
                 setOpen(true);
+                setTimeout(()=>{
+                    window.location.reload();
+                },5000)
             }
         })
         .catch(error => {
             if (error.response && error.response.status >= 400 && error.response.status <= 500){
                 setNotification({ severity: 'error', message: error.response.data.message});
+                setOpen(true);
             }
         })
+    }
+
+    // Delete account 
+    const deleteAccount = (e) => {
+        e.preventDefault();
+        
+        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/delete?id=${popupPayLoad.id}`)
+        .then(response => {
+            if (response.status === 201) {
+                setNotification({severity: 'success', message: "Account deleted!"});
+                setOpen(true);
+                setTimeout(()=>{
+                    window.location.reload();
+                },5000)
+            }
+        })
+        .catch(error => {
+            if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                setNotification({ severity: 'error', message: error.response.data.message});
+                setOpen(true);
+            }
+        })
+
     }
 
     return (
         <>
-            <h2 style={{ margin: '20px 0'}}>Application for Institution</h2>
+            <h2 style={{ margin: '20px 0'}}>Personnel Information</h2>
             <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
             <div style={{marginTop: '20px', fontSize: '90%'}}>
                 <DetailDiv>
-                    <p><strong>Institution Type: </strong></p>
-                    <p>{application.institutionType}</p>
+                    <p><strong>First Name: </strong></p>
+                    <p>{userInfo.firstName}</p>
                 </DetailDiv>
                 <DetailDiv>
-                    <p><strong>Institution Name: </strong></p>
-                    <p>{application.institutionName}</p>
+                    <p><strong>Last Name: </strong></p>
+                    <p>{userInfo.lastName}</p>
                 </DetailDiv>
                 <DetailDiv>
-                    <p><strong>Location of institution: </strong></p>
-                    <p>{application.location}</p>
+                    <p><strong>Email: </strong></p>
+                    <p>{userInfo.email}</p>
                 </DetailDiv>
                 <DetailDiv>
-                    <p><strong>Number of personnel: </strong></p>
-                    <p>{application.numberOfPersonnel}</p>
+                    <p><strong>Phone: </strong></p>
+                    <p>{userInfo.phone}</p>
                 </DetailDiv>
                 <DetailDiv>
-                    <p><strong>Application Date: </strong></p>
-                    <p>{application.sendDate}</p>
+                    <p><strong>Join Date: </strong></p>
+                    <p>{userInfo.joinDate}</p>
                 </DetailDiv>
                 <hr style={{height: '1px', background: '#b3b3cc', border: 'none', marginBottom: '20px'}}/>
                 <DetailDiv>
-                    <p><strong>Applicant: </strong></p>
-                    <p>{applicant.firstName+" "+applicant.lastName}</p>
+                    <p><strong>User Code: </strong></p>
+                    <p>{userInfo.userCode}</p>
                 </DetailDiv>
                 <DetailDiv>
-                    <p><strong>Applicant Role: </strong></p>
-                    <p>{applicant.role}</p>
+                    <p><strong>Role: </strong></p>
+                    <p>{userInfo.role}</p>
                 </DetailDiv>
                 <DetailDiv>
-                    <p><strong>Applicant Phone number: </strong></p>
-                    <p>{applicant.phone}</p>
-                </DetailDiv>
-                <DetailDiv>
-                    <p><strong>Applicant Email: </strong></p>
-                    <p>{applicant.email}</p>
+                    <p><strong>Is Active: </strong></p>
+                    <p>{userInfo.isActive}</p>
                 </DetailDiv>
                 <hr style={{height: '1px', background: '#b3b3cc', border: 'none',  marginBottom: '20px'}}/>
                 <DetailDiv>
-                    <p><strong>Application Status: </strong></p>
-                    <p>{application.status}</p>
-                </DetailDiv>
-                <DetailDiv>
-                    <p><strong>Respond Date: </strong></p>
-                    <p>{application.respondDate}</p>
-                </DetailDiv>
-                <DetailDiv>
-                    <p><strong>Certificate: </strong></p>
-                    <a href={`http://localhost:5050/api/mfss/uploads/${application.certificate}`}>Work Certificate</a>
-                </DetailDiv>
-                <hr style={{height: '1px', background: '#b3b3cc', border: 'none',  marginBottom: '20px'}}/>
-                <DetailDiv>
-                    <Button variant='contained' size="small" onClick={approve}>Approve</Button>
-                    <Button variant='contained' size="small" color='secondary' onClick={reject}>Reject</Button>
+                    <Button variant='contained' size="small" onClick={activateAccount}>Active account</Button>
+                    <Button variant='contained' size="small" color='secondary' onClick={desactivateAccount}>Desactive account</Button>
+                    <Button variant='contained' size="small" color='error' onClick={deleteAccount}>Delete account</Button>
                 </DetailDiv>
             </div>
 
