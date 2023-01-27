@@ -3,8 +3,12 @@ import axios from 'axios'
 import { Button } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Container, PageBody, PageHeaderContainer, PageTitle } from '../../../components/Dashboard/DashboardHome'
-import { ARecord, LeftHalf, RecordsContainer, RightHalf, TwoSidedParagraphContainer } from '../../../components/Dashboard/PatientDetailsComponents'
-import { FcFolder, FcOpenedFolder } from "react-icons/fc";
+import { AFile, ARecord, LeftHalf, ListOfFiles, RecordDescriptionHeader, RecordsContainer, RightHalf, TwoSidedParagraphContainer } from '../../../components/Dashboard/PatientDetailsComponents'
+import { FcFile, FcFolder, FcOpenedFolder } from "react-icons/fc";
+import { ImFileText2 } from 'react-icons/im';
+import { AiOutlineFileText } from 'react-icons/ai';
+import { GoFile } from 'react-icons/go';
+import { BsFillFileEarmarkPostFill } from 'react-icons/bs'
 
 const PatientDetails = () => {
     // Hooks
@@ -16,6 +20,7 @@ const PatientDetails = () => {
     const [guardians, setGuardians] = useState({ patientId: "", nameOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfMaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
     const [records, setRecords] = useState([]);
     // const [files, setFiles] = useState([]);
+    const [showDetails, setShowDetails] = useState(true);
 
     /**
      * 
@@ -51,6 +56,12 @@ const PatientDetails = () => {
     //     .catch(error => { console.log(error) })
     // },[params.id])
 
+
+    // Functions
+
+    const handleDetailsSpace = () => {
+        setShowDetails(!showDetails);
+    }
 
     return (
         <Container>
@@ -102,79 +113,113 @@ const PatientDetails = () => {
                 </RightHalf>
             </PageBody>
             <PageBody>
-                <PageHeaderContainer>
+                <PageHeaderContainer style={{ marginBottom: '20px'}}>
                     <PageTitle>Records and Files</PageTitle>
                     <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients`)}>Add record</Button>
                 </PageHeaderContainer>
                 <RecordsContainer>
-                    <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap' }}>
-                        <ARecord>
+                    <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap', width: showDetails ? '100%' :'51%' }}>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord><ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
-                        <ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
+                            <FcFolder/>
+                            <p>Monday 10, 2023</p>
+                        </ARecord>
+                        <ARecord onClick={handleDetailsSpace}>
                             <FcFolder/>
                             <p>Monday 10, 2023</p>
                         </ARecord>
                     </LeftHalf>
-                    <RightHalf>
-
-                    </RightHalf>
+                    {!showDetails && 
+                        <RightHalf style={{ background: '#e0ebeb', borderRadius: '5px' }}>
+                            <RecordDescriptionHeader>
+                                <LeftHalf>
+                                    <p>Created on: <strong>January 22, 2023</strong></p>
+                                    <p>By: <strong>Mukankusi Denyse</strong></p>
+                                </LeftHalf>
+                                <RightHalf>
+                                    <p>Created at: <strong>King Faisal Hospital</strong></p>
+                                    <p>Status: <strong>open</strong></p>
+                                </RightHalf>
+                            </RecordDescriptionHeader>
+                            <ListOfFiles>
+                                <AFile to=''>
+                                    <BsFillFileEarmarkPostFill />
+                                    <p>Prescriptions</p>
+                                </AFile>
+                                <AFile>
+                                    <AiOutlineFileText />
+                                    <p>Lorem ipsum</p>
+                                </AFile>
+                                <AFile>
+                                    <GoFile />
+                                    <p>Lorem ipsum</p>
+                                </AFile>
+                                <AFile>
+                                    <ImFileText2 />
+                                    <p>Lorem ipsum</p>
+                                </AFile>
+                                <AFile>
+                                    <FcFile />
+                                    <p>Lorem ipsum</p>
+                                </AFile>
+                            </ListOfFiles>
+                        </RightHalf>
+                    }
                 </RecordsContainer>
             </PageBody>
         </Container>

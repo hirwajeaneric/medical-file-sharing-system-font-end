@@ -13,7 +13,7 @@ export const LeftHalf = styled.div`
     }
 
     @media (max-width: 768px) {
-        
+        width: 100%;
     }
 
     @media (max-width: 480px) {
@@ -33,7 +33,7 @@ export const RightHalf = styled.div`
     }
 
     @media (max-width: 768px) {
-        
+        width: 100%;
     }
 
     @media (max-width: 480px) {
@@ -87,11 +87,15 @@ export const RecordsContainer = styled.div`
     }
 `;
 
-export const ARecord = styled(Link)`
+export const ARecord = styled.button`
     text-decoration: none;
     font-size: 85%;
     tex-align: left;
-    
+    padding: 0px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
     svg {
         font-size: 100px;
     }    
@@ -113,11 +117,18 @@ export const ARecord = styled(Link)`
     }
 `;
 
-export const PageBody = styled.div`
-    padding: 20px;
+export const RecordDescriptionHeader = styled.div`
+    padding: 7px;
     background: white;
-    margin-top: 20px;
+    margin: 5px;
     border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 85%;
+    width: 98%;
 
     @media (max-width: 1080px) {
         
@@ -132,14 +143,43 @@ export const PageBody = styled.div`
     }
 `;
 
-export const FormTwo = styled.form`
+export const ListOfFiles = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     flex-wrap: wrap;
     width: 100%;
-    // gap: 20px;
+    gap: 10px;
+    padding: 10px;
+    min-height: 400px;
+
+    @media (max-width: 1080px) {
+        
+    }
+
+    @media (max-width: 768px) {
+        
+    }
+
+    @media (max-width: 480px) {
+        
+    }
+`;
+
+export const AFile = styled(Link)`
+    text-decoration: none;
+    font-size: 85%;
+    tex-align: center;
+    color: black;
+
+    svg {
+        font-size: 50px;
+    }    
+
+    p {
+        color: black;
+    }
 
     @media (max-width: 1080px) {
         
