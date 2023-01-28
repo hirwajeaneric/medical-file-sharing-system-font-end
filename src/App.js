@@ -50,6 +50,8 @@ import InstitutionPharmacists from './pages/institutionPersonel/dashboard/Pharma
 import InstitutionAccount from './pages/institutionPersonel/dashboard/Account';
 import ErrorPage from './pages/ErrorPage';
 import PatientDetails from './pages/institutionPersonel/dashboard/PatientDetails';
+import PatientFilesAndRecords from './pages/institutionPersonel/dashboard/PatientFilesAndRecords';
+import NewFile from './pages/institutionPersonel/dashboard/NewFile';
 
 // Contexts declaration 
 export var ResponseMessageContext = createContext();
@@ -60,6 +62,9 @@ export var ShowModalContextSetter = createContext();
 
 export var PopupPayLoadContext = createContext();
 export var PopupPayLoadContextSetter = createContext();
+
+export var RecordDetailsContext = createContext();
+export var RecordDetailsContextSetter = createContext();
 
 
 function App() {
@@ -73,6 +78,7 @@ function App() {
   const [responseMessage, setResponseMessage] = useState({ message: '', visible: false });
   const [showModal, setShowModal] = useState(false);
   const [popupPayLoad, setPopupPayLoad] = useState({ type: '', id: ''});
+  const [recordDetails, setRecordDetails] = useState('');
 
   return (
     <ResponseMessageContext.Provider value={responseMessage}>
@@ -81,99 +87,104 @@ function App() {
           <ShowModalContextSetter.Provider value={setShowModal}>
             <PopupPayLoadContext.Provider value={popupPayLoad}>
               <PopupPayLoadContextSetter.Provider value={setPopupPayLoad}>
-                
-                {/* Routing  */}
-                <Router>
-                  <Routes>
-                    
-                    {/* Home  */}
-                    <Route path='/' element={<Home/>}>
-                      <Route path='' element={<LandingPage/>} />
-                      <Route path='institutions' element={<Institutions/>}/>
-                    </Route>
-
-                    {/* Admin routes  */} 
-                    <Route path='/admin/' element={<Admin/>}>
-                      {adminToken &&
-                        <Route path='dashboard' element={<Dashboard/> } errorElement={<ErrorPage />}>
-                          <Route path='' element={<DashBoardHome />} />
-                          <Route path='reports' element={<Reports />} />
-                          <Route path='patients' element={<Patients />} />
-                          <Route path='records' element={<Records />} />
-                          <Route path='doctors' element={<Doctors />} />
-                          <Route path='nurses' element={<Nurses />} />
-                          <Route path='hospitals' element={<Hospitals />} />
-                          <Route path='pharmacies' element={<Pharmacies />} />
-                          <Route path='requests' element={<Requests />} />
-                          <Route path='account' element={<Account />} />
+                <RecordDetailsContext.Provider value={recordDetails}>
+                  <RecordDetailsContextSetter.Provider value={setRecordDetails}>
+                    {/* Routing  */}
+                    <Router>
+                      <Routes>
+                        
+                        {/* Home  */}
+                        <Route path='/' element={<Home/>}>
+                          <Route path='' element={<LandingPage/>} />
+                          <Route path='institutions' element={<Institutions/>}/>
                         </Route>
-                      }
 
-                      <Route path='auth' element={<AdminAuthentication/>}>
-                        <Route path='' element={<AdminSignin/>}/>
-                        <Route path='signin' element={<AdminSignin/>}/>
-                        <Route path='signup' element={<AdminSignup/>}/>
-                        <Route path='forgotPassword' element={<AdminForgotPassword/>}/>
-                      </Route>
+                        {/* Admin routes  */} 
+                        <Route path='/admin/' element={<Admin/>}>
+                          {adminToken &&
+                            <Route path='dashboard' element={<Dashboard/> } errorElement={<ErrorPage />}>
+                              <Route path='' element={<DashBoardHome />} />
+                              <Route path='reports' element={<Reports />} />
+                              <Route path='patients' element={<Patients />} />
+                              <Route path='records' element={<Records />} />
+                              <Route path='doctors' element={<Doctors />} />
+                              <Route path='nurses' element={<Nurses />} />
+                              <Route path='hospitals' element={<Hospitals />} />
+                              <Route path='pharmacies' element={<Pharmacies />} />
+                              <Route path='requests' element={<Requests />} />
+                              <Route path='account' element={<Account />} />
+                            </Route>
+                          }
 
-                      <Route path='dashboard' exact element={<Navigate replace to='/admin/auth/signin/' />} >
-                        <Route path='' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                        <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                        <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                        <Route path='records' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                        <Route path='doctors' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                        <Route path='nurses' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                        <Route path='pharmacies' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                        <Route path='hospitals' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                        <Route path='requests' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                        <Route path='account' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                      </Route>
-                    </Route>
+                          <Route path='auth' element={<AdminAuthentication/>}>
+                            <Route path='' element={<AdminSignin/>}/>
+                            <Route path='signin' element={<AdminSignin/>}/>
+                            <Route path='signup' element={<AdminSignup/>}/>
+                            <Route path='forgotPassword' element={<AdminForgotPassword/>}/>
+                          </Route>
 
-                    {/* Institution and institution Personel routes  */}
-                    <Route path={`/:institution`} element={<InstitutionPersonnel/>}>
-                      <Route exact path='*' element={<ErrorPage />} />
-                      <Route exact path='dashboard' element={insttToken ? <InstitutionDashboard/> : <Navigate replace to={`../auth/signin`} />}>
-                        <Route path='' element={insttToken ? <InstitutionDashBoardHome /> : <Navigate replace to={`auth/signin`} />} />
-                        <Route path='reports' element={insttToken ? <InstitutionReports /> : <Navigate replace to={`auth/signin`} />} />
-                        <Route path='patients' element={insttToken ? <ListPatients /> : <Navigate replace to={`auth/signin`} />} >
-                          <Route path='' element={insttToken ? <InstitutionPatients /> : <Navigate replace to={`auth/signin`} />} />
-                          <Route path='new' element={insttToken ? <AddPatient /> : <Navigate replace to={`auth/signin`} />} />
-                          <Route path=':id' element={insttToken ? <PatientDetails /> : <Navigate replace to={`auth/signin`} />} />
+                          <Route path='dashboard' exact element={<Navigate replace to='/admin/auth/signin/' />} >
+                            <Route path='' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='records' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='doctors' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='nurses' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='pharmacies' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='hospitals' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='requests' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='account' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                          </Route>
                         </Route>
-                        <Route path='records' element={insttToken ? <InstitutionRecords /> : <Navigate replace to={`auth/signin`} />} />
-                        <Route path='personnel' element={insttToken ? <InstitutionIndividuals /> : <Navigate replace to={`auth/signin`} />}>
-                          <Route path='' element={insttToken ? <ListOfPersonnel /> : <Navigate replace to={`auth/signin`} />} />
+
+                        {/* Institution and institution Personel routes  */}
+                        <Route path={`/:institution`} element={<InstitutionPersonnel/>}>
+                          <Route exact path='*' element={<ErrorPage />} />
+                          <Route exact path='dashboard' element={insttToken ? <InstitutionDashboard/> : <Navigate replace to={`../auth/signin`} />}>
+                            <Route path='' element={insttToken ? <InstitutionDashBoardHome /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='reports' element={insttToken ? <InstitutionReports /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='patients' element={insttToken ? <ListPatients /> : <Navigate replace to={`auth/signin`} />} >
+                              <Route path='' element={insttToken ? <InstitutionPatients /> : <Navigate replace to={`auth/signin`} />} />
+                              <Route path='new' element={insttToken ? <AddPatient /> : <Navigate replace to={`auth/signin`} />} />
+                              <Route path=':id' element={insttToken ? <PatientFilesAndRecords /> : <Navigate replace to={`auth/signin`} />}>
+                                <Route path='' element={insttToken ? <PatientDetails /> : <Navigate replace to={`auth/signin`} />} />
+                                <Route path='new' element={insttToken ? <NewFile /> : <Navigate replace to={`auth/signin`} />} />
+                              </Route>
+                            </Route>
+                            <Route path='records' element={insttToken ? <InstitutionRecords /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='personnel' element={insttToken ? <InstitutionIndividuals /> : <Navigate replace to={`auth/signin`} />}>
+                              <Route path='' element={insttToken ? <ListOfPersonnel /> : <Navigate replace to={`auth/signin`} />} />
+                            </Route>
+                            <Route path='pharmacists' element={insttToken ? <InstitutionPharmacists /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='account' element={insttToken ? <InstitutionAccount /> : <Navigate replace to={`auth/signin`} />} />
+                          </Route>
+                          <Route path='auth' element={<InstitutionAuthentication/>}>
+                            <Route path='' element={<InstitutionSignin/>}/>
+                            <Route path='signin' element={<InstitutionSignin/>}/>
+                            <Route path='signup' element={<InstitutionSignup/>}/>
+                            <Route path='forgotPassword' element={<InstitutionForgotPassword/>}/>
+                          </Route>
                         </Route>
-                        <Route path='pharmacists' element={insttToken ? <InstitutionPharmacists /> : <Navigate replace to={`auth/signin`} />} />
-                        <Route path='account' element={insttToken ? <InstitutionAccount /> : <Navigate replace to={`auth/signin`} />} />
-                      </Route>
-                      <Route path='auth' element={<InstitutionAuthentication/>}>
-                        <Route path='' element={<InstitutionSignin/>}/>
-                        <Route path='signin' element={<InstitutionSignin/>}/>
-                        <Route path='signup' element={<InstitutionSignup/>}/>
-                        <Route path='forgotPassword' element={<InstitutionForgotPassword/>}/>
-                      </Route>
-                    </Route>
 
-                    {/* User/Patient routes  */}
-                    {patToken && 
-                      <Route path='/user/account/' element={<PatientAccount/>}>
-                      
-                      </Route>
-                    }
-                    <Route path='/user/' element={<PatientAuthentication/>}>
-                      <Route path='signin/' element={<PatientSignin/>}/>
-                      <Route path='signup/' element={<PatientSignup/>}/>
-                      <Route path='forgotPassword/' element={<PatientForgotPassword/>}/>
-                    </Route>
+                        {/* User/Patient routes  */}
+                        {patToken && 
+                          <Route path='/user/account/' element={<PatientAccount/>}>
+                          
+                          </Route>
+                        }
+                        <Route path='/user/' element={<PatientAuthentication/>}>
+                          <Route path='signin/' element={<PatientSignin/>}/>
+                          <Route path='signup/' element={<PatientSignup/>}/>
+                          <Route path='forgotPassword/' element={<PatientForgotPassword/>}/>
+                        </Route>
 
-                    {/* Error page */}
-                    <Route path='*' element={<Navigate to='/' />} />   
+                        {/* Error page */}
+                        <Route path='*' element={<Navigate to='/' />} />   
 
-                  </Routes>
-                </Router>
-
+                      </Routes>
+                    </Router>
+                  </RecordDetailsContextSetter.Provider>
+                </RecordDetailsContext.Provider>
               </PopupPayLoadContextSetter.Provider>
             </PopupPayLoadContext.Provider>
           </ShowModalContextSetter.Provider>  

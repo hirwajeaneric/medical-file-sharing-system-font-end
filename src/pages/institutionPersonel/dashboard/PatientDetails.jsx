@@ -1,27 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { Button } from '@mui/material'
+import { Button, Snackbar } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Container, PageBody, PageHeaderContainer, PageTitle } from '../../../components/Dashboard/DashboardHome'
 import { AFile, ARecord, LeftHalf, ListOfFiles, RecordDescriptionHeader, RecordsContainer, RightHalf, TwoSidedParagraphContainer } from '../../../components/Dashboard/PatientDetailsComponents'
-import { FcFile, FcFolder, FcOpenedFolder } from "react-icons/fc";
-import { ImFileText2 } from 'react-icons/im';
-import { AiOutlineFileText } from 'react-icons/ai';
-import { GoFile } from 'react-icons/go';
-import { BsFillFileEarmarkPostFill } from 'react-icons/bs'
+import { FcFile, FcFolder } from "react-icons/fc";
+import MuiAlert from '@mui/material/Alert';
+import { RecordDetailsContextSetter } from '../../../App';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const PatientDetails = () => {
     // Hooks
     const navigate = useNavigate();
     const params = useParams();
+    const setRecordId = useContext(RecordDetailsContextSetter);
 
     // States
     const [patient, setPatient] = useState({ firstName: "", lastName: "", email: "", phone: "", password: "", residence: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: "" });
     const [guardians, setGuardians] = useState({ patientId: "", nameOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfMaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
     const [records, setRecords] = useState([]);
-    // const [files, setFiles] = useState([]);
-    const [showDetails, setShowDetails] = useState(true);
-
+    const [files, setFiles] = useState([]);
+    const [recordDetails, setRecordDetails] = useState({ firstName: "", lastName: "", patientId: "", email: "", hospitalName: "", hospitalId: "", recordOpener: "", recordCloser: "", openTime: "", closeTime: "", status: "", insuranceName: "", });
+    const [medicalPersonnel, setMedicalPersonnel] = useState({});
+    const [notification, setNotification] = useState({ severity: '', message: '' });
+    const [open, setOpen] = useState(false);
+    
     /**
      * 
      * Data fetching
@@ -31,16 +37,17 @@ const PatientDetails = () => {
     // Fetch Patient Info
     useEffect(() => {
         axios.get(`http://localhost:5050/api/mfss/patient/findById?id=${params.id}`)
-        .then(response => { setPatient(response.data);})
-        .catch(error => { console.log(error) })
-    },[params.id])
+        .then(response => { 
+            setPatient(response.data);
 
-    // Fetch Guardian Info
-    useEffect(()=>{
-        axios.get(`http://localhost:5050/api/mfss/guardian/findByPatientId?patientId=${params.id}`)
-        .then(response => { setGuardians(response.data); })
+            // Fetch Guardian Info
+            axios.get(`http://localhost:5050/api/mfss/guardian/findByPatientId?patientId=${patient._id}`)
+            .then(response => { setGuardians(response.data); })
+            .catch(error => { console.log(error) })
+        })
         .catch(error => { console.log(error) })
-    },[params.id])
+    },[params.id, patient._id])
+
 
     // Fetch Records for this patient
     useEffect(()=>{
@@ -49,19 +56,93 @@ const PatientDetails = () => {
         .catch(error => { console.log(error) })
     },[params.id])
 
-    // // Fetch files for this patients record
-    // useEffect(()=>{
-    //     axios.get(`http://localhost:5050/api/mfss/file/findByRecordId?recordId=${params.id}`)
-    //     .then(response => { setGuardians(response.data); })
-    //     .catch(error => { console.log(error) })
-    // },[params.id])
+    // Fetch files for this patients record
+    useEffect(()=>{
+        axios.get(`http://localhost:5050/api/mfss/file/findByRecordId?recordId=${recordDetails._id}`)
+        .then(response => { setFiles(response.data); })
+        .catch(error => { console.log(error) })
+    },[recordDetails._id])
 
+    // Fetch Medical Personnel information 
+    useEffect(()=> {
+        const personnel = JSON.parse(localStorage.getItem('instPe'));
+        setMedicalPersonnel(personnel);
+    },[])
 
-    // Functions
+    
+    /**
+     * 
+     * Functions
+     * 
+     * */
 
-    const handleDetailsSpace = () => {
-        setShowDetails(!showDetails);
+    // Open record
+    const openRecord = (e) => {
+        e.preventDefault();
+
+        const recordToBeSaved = {
+            firstName: patient.firstName, 
+            lastName: patient.lastName, 
+            patientId: patient._id, 
+            email: patient.email, 
+            hospitalName: medicalPersonnel.institutionName, 
+            hospitalId: medicalPersonnel.institutionId, 
+            recordOpener: medicalPersonnel.firstName+" "+medicalPersonnel.lastName, 
+            recordCloser: "", 
+            openTime: new Date().toDateString(), 
+            closeTime: "", 
+            status: "open", 
+            insuranceName: "", 
+        };
+
+        axios.post(`http://localhost:5050/api/mfss/record/new`, recordToBeSaved)
+        .then(response => {
+            if (response.status === 201) {
+                setNotification({severity: 'success', message: response.data.message});
+                setOpen(true);
+                setTimeout(()=> { window.location.reload() },5000)
+            }          
+        })
+        .catch(error => {
+            if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                setNotification({ severity: 'error', message: error.response.data.message});
+                setOpen(true);
+            }
+        })
     }
+
+    // Close record
+    const closeRecord = (e) => {
+        e.preventDefault();
+        
+        if (files.length === 0) {
+            setNotification({severity: 'error', message: "Can't close record, there are no files yet."});
+            setOpen(true);
+        } else {
+            recordDetails.recordCloser = medicalPersonnel.firstName+" "+medicalPersonnel.lastName; 
+            recordDetails.closeTime = new Date().toDateString();
+            recordDetails.status = "closed";
+
+            axios.put(`http://localhost:5050/api/mfss/record/update?id=${recordDetails._id}`, recordDetails)
+            .then(response => {
+                if (response.status === 201) {
+                    setNotification({severity: 'success', message: response.data.message});
+                    setOpen(true);
+                }          
+            })
+            .catch(error => {
+                if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                    setNotification({ severity: 'error', message: error.response.data.message});
+                    setOpen(true);
+                }
+            })
+        }
+    }
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') { return; }
+        setOpen(false)
+    };
 
     return (
         <Container>
@@ -70,7 +151,7 @@ const PatientDetails = () => {
                 <Button variant='contained' color='secondary' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients`)}>Back</Button>
             </PageHeaderContainer>
             <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
-            <PageBody style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flexWrap: 'wrap', gap: '10px', width: '100%'}}>
+            <PageBody style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', width: '100%'}}>
                 <LeftHalf style={{ color: 'black' }}>
                     <TwoSidedParagraphContainer>
                         <strong>Name:</strong>
@@ -92,136 +173,89 @@ const PatientDetails = () => {
                         <strong>Gender:</strong>
                         <p>&nbsp;{patient.gender}</p>
                     </TwoSidedParagraphContainer>
-                </LeftHalf>
-                <RightHalf>
                     <TwoSidedParagraphContainer>
                         <strong>Date of birth:</strong>
                         <p>&nbsp;{patient.dateOfBirth}</p>
+                    </TwoSidedParagraphContainer>
+                </LeftHalf>
+                <RightHalf>
+                    <TwoSidedParagraphContainer>
+                        <strong>Marital Status:</strong>
+                        <p>&nbsp;{patient.maritalStatus}</p>
                     </TwoSidedParagraphContainer>
                     <TwoSidedParagraphContainer>
                         <strong>Join Date:</strong>
                         <p>&nbsp;{patient.joinDate}</p>
                     </TwoSidedParagraphContainer>
                     <TwoSidedParagraphContainer>
-                        <strong>Marital Status:</strong>
-                        <p>&nbsp;{patient.maritalStatus}</p>
+                        <strong>Male guardian:</strong>
+                        <p>&nbsp;{guardians.nameOfMaleGuardian}</p>
                     </TwoSidedParagraphContainer>
-                    {/* <TwoSidedParagraphContainer>
-                        <strong>Name:</strong>
-                        <p>&nbsp;{patient.firstName+" "+patient.lastName}</p>
-                    </TwoSidedParagraphContainer> */}
+                    <TwoSidedParagraphContainer>
+                        <strong>Phone number of male guardian:</strong>
+                        <p>&nbsp;{guardians.phoneOfMaleGuardian}</p>
+                    </TwoSidedParagraphContainer>
+                    <TwoSidedParagraphContainer>
+                        <strong>Female guardian:</strong>
+                        <p>&nbsp;{guardians.nameOfFemaleGuardian}</p>
+                    </TwoSidedParagraphContainer>
+                    <TwoSidedParagraphContainer>
+                        <strong>Phone number of female guardian:</strong>
+                        <p>&nbsp;{guardians.phoneOfFemaleGuardian}</p>
+                    </TwoSidedParagraphContainer>
                 </RightHalf>
             </PageBody>
-            <PageBody>
+            <PageBody style={{ marginBottom: '40px' }}>
                 <PageHeaderContainer style={{ marginBottom: '20px'}}>
                     <PageTitle>Records and Files</PageTitle>
-                    <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients`)}>Add record</Button>
+                    <Button variant='contained' size='small' onClick={openRecord}>Add record</Button>
                 </PageHeaderContainer>
                 <RecordsContainer>
-                    <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap', width: showDetails ? '100%' :'51%' }}>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                        <ARecord onClick={handleDetailsSpace}>
-                            <FcFolder/>
-                            <p>Monday 10, 2023</p>
-                        </ARecord>
-                    </LeftHalf>
-                    {!showDetails && 
-                        <RightHalf style={{ background: '#e0ebeb', borderRadius: '5px' }}>
+                    <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap', width: '51%' }}>
+                        {records && records.map((record, index)=>(
+                            <ARecord key={index} onClick={() => setRecordDetails(record)}>
+                                <FcFolder/>
+                                <p>{record.openTime}</p>
+                            </ARecord>
+                        ))}
+                        {records.length < 1 && <p>No records available</p>} 
+                    </LeftHalf>                    
+                    <RightHalf style={{ background: '#e0ebeb', borderRadius: '5px' }}>
+                        {recordDetails.openTime && 
                             <RecordDescriptionHeader>
                                 <LeftHalf>
-                                    <p>Created on: <strong>January 22, 2023</strong></p>
-                                    <p>By: <strong>Mukankusi Denyse</strong></p>
-                                </LeftHalf>
-                                <RightHalf>
+                                    <p>Open date: <strong>{recordDetails.openTime}</strong></p>
+                                    <p>By: <strong>{recordDetails.recordOpener}</strong></p>
                                     <p>Created at: <strong>King Faisal Hospital</strong></p>
                                     <p>Status: <strong>open</strong></p>
+                                </LeftHalf>
+                                <RightHalf>
+                                    <p>Close date: <strong>{recordDetails.closeTime}</strong></p>
+                                    <p>By: <strong>{recordDetails.recordCloser}</strong></p>
+                                    <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>
+                                        <Button style={{ marginTop: '10px'}} variant='contained' size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}>Add New File</Button>
+                                        <Button style={{ marginTop: '10px'}} variant='contained' size='small' color='warning' onClick={closeRecord}>Close</Button>
+                                    </TwoSidedParagraphContainer>
                                 </RightHalf>
                             </RecordDescriptionHeader>
-                            <ListOfFiles>
-                                <AFile to=''>
-                                    <BsFillFileEarmarkPostFill />
-                                    <p>Prescriptions</p>
-                                </AFile>
-                                <AFile>
-                                    <AiOutlineFileText />
-                                    <p>Lorem ipsum</p>
-                                </AFile>
-                                <AFile>
-                                    <GoFile />
-                                    <p>Lorem ipsum</p>
-                                </AFile>
-                                <AFile>
-                                    <ImFileText2 />
-                                    <p>Lorem ipsum</p>
-                                </AFile>
-                                <AFile>
+                        }
+                        <ListOfFiles>
+                            {files.map((file, index)=> (
+                                <AFile key={index}>
                                     <FcFile />
-                                    <p>Lorem ipsum</p>
+                                    <p>{file.creationDate}</p>
                                 </AFile>
-                            </ListOfFiles>
-                        </RightHalf>
-                    }
+                            ))}
+                            {files.length < 1 && <p>No files</p>}
+                        </ListOfFiles>
+                    </RightHalf>
                 </RecordsContainer>
             </PageBody>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={notification.severity} sx={{ width: '100%' }}>
+                    {notification.message}
+                </Alert>
+            </Snackbar>
         </Container>
   )
 }
