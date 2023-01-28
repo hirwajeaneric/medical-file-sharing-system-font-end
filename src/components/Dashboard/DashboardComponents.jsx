@@ -47,7 +47,7 @@ export const MainContent = styled.div`
  * */
 
 export const TopBar = styled.div`
-    background: white;
+    background: #f0f5f5;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

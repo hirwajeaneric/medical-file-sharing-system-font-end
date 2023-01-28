@@ -2,9 +2,9 @@ import { Button } from '@mui/material'
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container, PageBody, PageHeaderContainer, PageTitle } from '../../../components/Dashboard/DashboardHome'
-import NewPersonnelForm from '../../../components/Dashboard/NewPersonnelForm';
+// import NewPersonnelForm from '../../../components/Dashboard/NewPersonnelForm';
 
-const NewPersonnel = () => {
+const AddPatient = () => {
   // Hooks
   const navigate = useNavigate();
   const params = useParams();
@@ -12,15 +12,15 @@ const NewPersonnel = () => {
   return (
     <Container>
       <PageHeaderContainer>
-        <PageTitle>Add personnel</PageTitle>
-        <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/personnel`)}>Back to list</Button>
+        <PageTitle>Record new patient</PageTitle>
+        <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients`)}>Back to list</Button>
       </PageHeaderContainer>
       <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
       <PageBody>
-        <NewPersonnelForm />
+        {/* <NewPersonnelForm /> */}
       </PageBody>
     </Container>
   )
 }
 
-export default NewPersonnel
+export default AddPatient

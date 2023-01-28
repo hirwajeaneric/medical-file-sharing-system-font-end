@@ -24,12 +24,8 @@ const PersonnelDetails = ({popupPayLoad}) => {
     // Fetch Data 
     useEffect(()=>{
         axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${popupPayLoad.id}`)
-        .then(response => {
-            setUserInfo(response.data);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        .then(response => { setUserInfo(response.data); })
+        .catch(error => { console.log(error); })
     },[popupPayLoad.id])
 
     // Activate account
@@ -43,9 +39,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account updated!"});
                 setOpen(true);
-                setTimeout(()=>{
-                    window.location.reload();
-                },5000)
+                setTimeout(()=>{ window.location.reload(); },5000)
             }
         })
         .catch(error => {
@@ -68,9 +62,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account updated!"});
                 setOpen(true);
-                setTimeout(()=>{
-                    window.location.reload();
-                },5000)
+                setTimeout(()=>{ window.location.reload(); },5000)
             }
         })
         .catch(error => {
@@ -90,9 +82,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account deleted!"});
                 setOpen(true);
-                setTimeout(()=>{
-                    window.location.reload();
-                },5000)
+                setTimeout(()=>{ window.location.reload(); },5000)
             }
         })
         .catch(error => {
