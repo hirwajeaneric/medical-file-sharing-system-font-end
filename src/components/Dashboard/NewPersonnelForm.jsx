@@ -37,7 +37,6 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
     
     const handleFormInputs = ({currentTarget: input })=>{ 
         setUserInfo({...userInfo, [input.name]: input.value}) 
-        console.log(userInfo);
     };
 
     const clearInputs = () => { setUserInfo({firstName: "", lastName: "", userCode: "", email: "", password: "", phone: "", role: "", isActive: "true", joinDate: new Date().toDateString(), institutionId: localData.institutionId, institutionName: localData.institutionName, institutionCode: localData.institutionCode })}
