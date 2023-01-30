@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { Button, Snackbar } from '@mui/material'
+import { Box, Button, Modal, Snackbar, Typography } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Container, PageBody, PageHeaderContainer, PageTitle } from '../../../components/Dashboard/DashboardHome'
 import { AFile, ARecord, LeftHalf, ListOfFiles, RecordDescriptionHeader, RecordsContainer, RightHalf, TwoSidedParagraphContainer } from '../../../components/Dashboard/PatientDetailsComponents'
@@ -9,6 +9,20 @@ import MuiAlert from '@mui/material/Alert';
 import { RecordDetailsContextSetter } from '../../../App';
 import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
 import moment from 'moment';
+import FileDetails from './FileDetails'
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '50vw',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    fontFamily: ('EB Garamond', 'serif')
+    
+    // p: 4,
+};
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -29,6 +43,12 @@ const PatientDetails = () => {
     const [medicalPersonnel, setMedicalPersonnel] = useState({});
     const [notification, setNotification] = useState({ severity: '', message: '' });
     const [open, setOpen] = useState(false);
+    const [file, setFile] = useState({creationDate: "", recordId: "", patientId: "", patientName: "", patientGender: "", patientAge: "", doctorId: "", nurseId: "", labTechId: "", type: "", prescriptions: "", exams: "", hospitalName: "", hospitalId: "", hospitalLocation: "", fileAttachment: "" })
+
+    // Popup states
+    const [openModal, setOpenModal] = useState(false);
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
     
     /**
      * 
@@ -200,7 +220,7 @@ const PatientDetails = () => {
             <PageBody style={{ marginBottom: '40px' }}>
                 <PageHeaderContainer style={{ marginBottom: '20px'}}>
                     <PageTitle>Records and Files</PageTitle>
-                    <Button variant='contained' size='small' onClick={openRecord}>Add record</Button>
+                    {medicalPersonnel.role === 'nurse' && <Button variant='contained' size='small' onClick={openRecord}>Add record</Button>}
                 </PageHeaderContainer>
                 <RecordsContainer>
                     <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap', width: '51%' }}>
@@ -227,8 +247,13 @@ const PatientDetails = () => {
                                     <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>
                                         {!recordDetails.closeTime && 
                                             <>
-                                                <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}><AiOutlinePlus />&nbsp;Add File</Button>
-                                                <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='warning' onClick={closeRecord}><AiOutlineClose />&nbsp;Close Record</Button>
+                                                {medicalPersonnel.role!=='nurse' && 
+                                                    <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}><AiOutlinePlus />&nbsp;Add File</Button>
+                                                }
+
+                                                {medicalPersonnel.role==='nurse' && 
+                                                    <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='warning' onClick={closeRecord}><AiOutlineClose />&nbsp;Close Record</Button>
+                                                }
                                             </>
                                         }
                                     </TwoSidedParagraphContainer>
@@ -237,7 +262,7 @@ const PatientDetails = () => {
                         }
                         <ListOfFiles>
                             {files.map((file, index)=> (
-                                <AFile key={index}>
+                                <AFile key={index} onClick={() => {handleOpenModal(); setFile(file);}}>
                                     <FcFile />
                                     <p>{file.type}<br/>{moment(`${file.creationDate}`).format("MMM Do YYYY")}<br/>{moment(`${file.creationDate}`).format("h:mm:ss a")}</p>
                                 </AFile>
@@ -252,6 +277,16 @@ const PatientDetails = () => {
                     {notification.message}
                 </Alert>
             </Snackbar>
+            <Modal
+            open={openModal}
+            onClose={handleCloseModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <FileDetails file={file}/>
+                </Box>
+            </Modal>
         </Container>
   )
 }
