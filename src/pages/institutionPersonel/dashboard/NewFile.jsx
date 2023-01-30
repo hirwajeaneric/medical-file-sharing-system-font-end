@@ -7,7 +7,6 @@ import MuiAlert from '@mui/material/Alert';
 import { NewFileForm } from '../../../components/Dashboard/NewFileComponents';
 import { RecordDetailsContext } from '../../../App';
 import { FormInput } from '../../../components/HomePage/InstitutionsComponents';
-import froala_editorMin, {} from 'froala-editor';
 import TestsForm from '../../../components/Dashboard/TestsForm';
 import PrescriptionForm from '../../../components/Dashboard/PrescriptionForm';
 
@@ -27,7 +26,11 @@ const NewFile = () => {
     const [open, setOpen] = useState(false);
     const [institutionInformation, setInstitutionInformation] = useState({});
     const [file, setFile] = useState({ creationDate: new Date().toDateString(), recordId: recordDetailsId, patientId: params.id, patientName: "", patientGender: "", patientAge: "", doctorId: "", nurseId: "", labTechId: "", type: "", prescriptions: "", exams: "", hospitalName: "", hospitalId: "", hospitalLocation: "", fileAttachment: "" });
-    const [attachment, setattachment] = useState('');
+    const [dataRows, setDataRows] = useState([]);
+    const [inputData, setInputData] = useState({ number: dataRows.length+1, requiredTest: '', results: '' });
+    const [prescriptionDataRows, setPrescriptionDataRows] = useState([]);
+    const [inputPrescriptionData, setInputPrescriptionData] = useState({ number: dataRows.length+1, prescriptionName: '', type: '', quantity: '' });
+    const [attachment, setAttachment] = useState('');
 
     /**
      * Data fetch
@@ -49,7 +52,6 @@ const NewFile = () => {
         axios.get(`http://localhost:5050/api/mfss/patient/findById?id=${params.id}`)
         .then(response => { setPatientInfo(response.data) })
         .catch(error => { console.log('Server error: '+error) });
-
     },[navigate, params.id, params.institution, recordDetailsId])
 
 
@@ -64,8 +66,16 @@ const NewFile = () => {
      * 
      * Functions
      */
+
+    const handleAttachment = (e) => {
+        const {files} = e.target;
+        setAttachment(files[0]);
+    }
+
     const handleSubmit = (e)=> {
         e.preventDefault();
+
+        const config = {headers: { "Content-Type":"multipart/form-data" }}
 
         if (!file.type === '') {
             setNotification({severity: 'warning', message: "You must choose the type of file you need."});
@@ -73,6 +83,7 @@ const NewFile = () => {
             return;
         } else {
 
+            // Pre-populated inputs done by the system itself
             file.hospitalName = institutionPersonnel.institutionName; 
             file.hospitalId= institutionPersonnel.institutionId;
             file.doctorId = institutionPersonnel.role === 'doctor' ? institutionPersonnel.id : "";
@@ -82,13 +93,37 @@ const NewFile = () => {
             file.patientGender = patientInfo.gender;
             file.patientAge = (new Date().getFullYear() - new Date(patientInfo.dateOfBirth).getFullYear()).toString();
             file.hospitalLocation = institutionInformation.location;
+            file.fileAttachment = attachment;
             
-            console.log("To be recorded: ");
-            console.log(file);
-    
-            axios.post(`http://localhost:5050/api/mfss/file/add`, file)
+            // Populating file data.
+            if ( inputData.requiredTest && inputData.results ){
+                dataRows.push(inputData);
+                setInputData({ number: dataRows.length+1, requiredTest: '', results: '' });
+            }
+
+            if ( inputPrescriptionData.prescriptionName ){
+                prescriptionDataRows.push(inputPrescriptionData);
+                setInputPrescriptionData({ number: prescriptionDataRows.length+1, prescriptionName: '', type:'', quantity: '' });
+            }
+
+            file.exams = file.type==='laboratory tests' ? JSON.stringify(dataRows) : '';
+            file.prescriptions = file.type==='medical prescritions' ? JSON.stringify(dataRows) : ''; 
+
+            // Clearing input fields
+            setDataRows([]);
+            setPrescriptionDataRows([]);
+            setInputData({ number: 1, requiredTest: '', results: '' });
+            setInputPrescriptionData({ number: 1, prescriptionName: '', type:'', quantity: '' })
+            setAttachment("");
+
+            const URL = file.fileAttachment ? 'http://localhost:5050/api/mfss/file/add' : 'http://localhost:5050/api/mfss/file/new';
+
+            axios.post(URL, file, file.fileAttachment && config )
             .then(response => { 
-                setFile(response.data); 
+                if (response.status === 201) {
+                    setNotification({ severity: 'success', message: "File created"});
+                    setOpen(true);
+                } 
             })
             .catch(error => { 
                 if (error.response && error.response.status >= 400 && error.response.status <= 500){
@@ -127,10 +162,13 @@ const NewFile = () => {
                     </FormInput>
                     {file.type ? (file.type ==='medical prescritions' ? <h2>Prescriptions</h2> : file.type === "laboratory tests" ? <h2>Laboratory Tests</h2> : "") : ""}
                     {file.type && <>
-                        {file.type==='laboratory tests' ? <TestsForm /> : <PrescriptionForm />}
+                        {file.type==='laboratory tests' ? 
+                            <TestsForm dataRows={dataRows} inputData={inputData} setInputData={setInputData}/> : 
+                            <PrescriptionForm prescriptionDataRows={prescriptionDataRows} inputPrescriptionData={inputPrescriptionData} setInputPrescriptionData={setInputPrescriptionData} />
+                        }
                         <FormInput>
                             <label htmlFor="fileAttachment">Add attachment:</label>
-                            <input type="file" name="fileAttachment" id="fileAttachment" />
+                            <input type="file" name="fileAttachment" id="fileAttachment" onChange={handleAttachment}/>
                         </FormInput>
                         <Button variant='contained' size='small' type='submit'>Save</Button>
                     </>}

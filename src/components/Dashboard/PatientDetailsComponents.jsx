@@ -95,6 +95,7 @@ export const ARecord = styled.button`
     background: transparent;
     border: none;
     cursor: pointer;
+    margin-bottom: 20px;
 
     svg {
         font-size: 100px;

@@ -2,22 +2,12 @@ import React from 'react';
 import { FileFormContainer, FileInputs, FormTable } from './NewFileComponents';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { RiDeleteBin5Line } from 'react-icons/ri';
-import { useState } from 'react';
 
-const TestsForm = () => {
-    // States
-    const [dataRows, setDataRows] = useState([]);
-
-    const [inputData, setInputData] = useState({
-        number: dataRows.length+1,
-        requiredTest: '',
-        results: ''
-    });
-
+const TestsForm = ({dataRows, inputData, setInputData}) => {
     // Functions
     const addColumn = (e) => {
         e.preventDefault();
-        if (inputData.requiredTest && inputData.results ){
+        if ( inputData.requiredTest && inputData.results ){
             dataRows.push(inputData);
             setInputData({ number: dataRows.length+1, requiredTest: '', results: '' });
         }   
@@ -54,7 +44,7 @@ const TestsForm = () => {
                 </thead>
                 <tbody>
                     {dataRows.map((row, index)=> (
-                        <tr>
+                        <tr key={index}>
                             <td>{row.number}</td>
                             <td>{row.requiredTest}</td>
                             <td>{row.results}</td>

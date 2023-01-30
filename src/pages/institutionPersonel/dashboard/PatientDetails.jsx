@@ -7,6 +7,8 @@ import { AFile, ARecord, LeftHalf, ListOfFiles, RecordDescriptionHeader, Records
 import { FcFile, FcFolder } from "react-icons/fc";
 import MuiAlert from '@mui/material/Alert';
 import { RecordDetailsContextSetter } from '../../../App';
+import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
+import moment from 'moment';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -80,20 +82,7 @@ const PatientDetails = () => {
     const openRecord = (e) => {
         e.preventDefault();
 
-        const recordToBeSaved = {
-            firstName: patient.firstName, 
-            lastName: patient.lastName, 
-            patientId: patient._id, 
-            email: patient.email, 
-            hospitalName: medicalPersonnel.institutionName, 
-            hospitalId: medicalPersonnel.institutionId, 
-            recordOpener: medicalPersonnel.firstName+" "+medicalPersonnel.lastName, 
-            recordCloser: "", 
-            openTime: new Date().toDateString(), 
-            closeTime: "", 
-            status: "open", 
-            insuranceName: "", 
-        };
+        const recordToBeSaved = { firstName: patient.firstName, lastName: patient.lastName, patientId: patient._id, email: patient.email, hospitalName: medicalPersonnel.institutionName, hospitalId: medicalPersonnel.institutionId, recordOpener: medicalPersonnel.firstName+" "+medicalPersonnel.lastName, recordCloser: "", openTime: new Date().toDateString(), closeTime: "", status: "open", insuranceName: "" };
 
         axios.post(`http://localhost:5050/api/mfss/record/new`, recordToBeSaved)
         .then(response => {
@@ -122,6 +111,9 @@ const PatientDetails = () => {
             recordDetails.recordCloser = medicalPersonnel.firstName+" "+medicalPersonnel.lastName; 
             recordDetails.closeTime = new Date().toDateString();
             recordDetails.status = "closed";
+
+            console.log("Record to be updated: ");
+            console.log(recordDetails);
 
             axios.put(`http://localhost:5050/api/mfss/record/update?id=${recordDetails._id}`, recordDetails)
             .then(response => {
@@ -233,8 +225,12 @@ const PatientDetails = () => {
                                     <p>Close date: <strong>{recordDetails.closeTime}</strong></p>
                                     <p>By: <strong>{recordDetails.recordCloser}</strong></p>
                                     <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>
-                                        <Button style={{ marginTop: '10px'}} variant='contained' size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}>Add New File</Button>
-                                        <Button style={{ marginTop: '10px'}} variant='contained' size='small' color='warning' onClick={closeRecord}>Close</Button>
+                                        {!recordDetails.closeTime && 
+                                            <>
+                                                <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}><AiOutlinePlus />&nbsp;Add File</Button>
+                                                <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='warning' onClick={closeRecord}><AiOutlineClose />&nbsp;Close Record</Button>
+                                            </>
+                                        }
                                     </TwoSidedParagraphContainer>
                                 </RightHalf>
                             </RecordDescriptionHeader>
@@ -243,7 +239,7 @@ const PatientDetails = () => {
                             {files.map((file, index)=> (
                                 <AFile key={index}>
                                     <FcFile />
-                                    <p>{file.creationDate}</p>
+                                    <p>{file.type}<br/>{moment(`${file.creationDate}`).format("MMM Do YYYY")}<br/>{moment(`${file.creationDate}`).format("h:mm:ss a")}</p>
                                 </AFile>
                             ))}
                             {files.length < 1 && <p>No files</p>}
