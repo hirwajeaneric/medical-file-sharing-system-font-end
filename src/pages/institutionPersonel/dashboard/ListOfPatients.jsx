@@ -20,12 +20,9 @@ const ListOfPatients = () => {
       response.data.forEach(element => {
         element.id = element._id;
       });
-      console.log(response.data);
       setPatients(response.data)
     })
-    .catch(error => {
-      console.log("Failed to fetch data ::"+error);
-    })
+    .catch(error => { console.log("Failed to fetch data ::"+error) })
   },[])
 
   return (

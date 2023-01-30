@@ -37,7 +37,6 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
     
     const handleFormInputs = ({currentTarget: input })=>{ 
         setUserInfo({...userInfo, [input.name]: input.value}) 
-        console.log(userInfo);
     };
 
     const clearInputs = () => { setUserInfo({firstName: "", lastName: "", userCode: "", email: "", password: "", phone: "", role: "", isActive: "true", joinDate: new Date().toDateString(), institutionId: localData.institutionId, institutionName: localData.institutionName, institutionCode: localData.institutionCode })}
@@ -134,6 +133,8 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
                         <option value=''>Choose role…</option>
                         <option value='doctor'>Doctor</option>
                         <option value='nurse'>Nurse</option>
+                        <option value='lab technician'>Lab Technician</option>
+                        <option value='pharmacist'>Pharmacist</option>
                     </select>
                     {userInputErrors.role && <p>{userInputErrors.role}</p>}
                 </FormInput>
