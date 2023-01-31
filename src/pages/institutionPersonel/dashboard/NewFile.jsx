@@ -97,7 +97,7 @@ const NewFile = () => {
             file.fileAttachment = attachment;
             
             // Populating file data.
-            if ( inputData.requiredTest && inputData.results ){
+            if ( inputData.requiredTest ){
                 dataRows.push(inputData);
                 setInputData({ number: dataRows.length+1, requiredTest: '', results: '' });
             }
@@ -107,8 +107,8 @@ const NewFile = () => {
                 setInputPrescriptionData({ number: prescriptionDataRows.length+1, prescriptionName: '', type:'', quantity: '' });
             }
 
-            file.exams = file.type==='laboratory tests' ? JSON.stringify(dataRows) : '';
-            file.prescriptions = file.type==='medical prescritions' ? JSON.stringify(dataRows) : ''; 
+            file.exams = file.type === 'laboratory tests' ? JSON.stringify(dataRows) : '';
+            file.prescriptions = file.type === 'medical prescritions' ? JSON.stringify(prescriptionDataRows) : ''; 
 
             // Clearing input fields
             setDataRows([]);

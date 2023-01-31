@@ -40,6 +40,7 @@ const Dashboard = () => {
           {isOpen && <Mfss>MFSS</Mfss>}
         </TitleContainer>
         {isOpen && <HospitalName>{localStorage.getItem('insttTok') && 'Hospital'}</HospitalName>}
+        {isOpen && <p style={{ fontSize: '85%', fontWeight: '700'}}>{(JSON.parse(localStorage.getItem('instPe'))).role.toUpperCase()}</p>}
         <NavigationComponents>
           <NavItemContainerHome to={''}>
             <BiHomeAlt />

@@ -12,7 +12,7 @@ const InstitutionSection = () => {
   const [institutionApplication, setInstitutionApplication] = useState({ directorId: "", institutionType: "", institutionId: "", institutionName: "", sendDate: "", status: "Pending", applicationDate: new Date().toDateString(), applicationBody: "", systemAdminId: "", location: "", numberOfPersonnel: "" });
   const [institutionApplicationError, setInstitutionApplicationError] = useState({ institutionType: "", institutionName: "", numberOfPersonnel: ""})
   
-  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date().toDateString(), institutionId: "Pending", institutionName: "Pending", });
+  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "0000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date().toDateString(), institutionId: "Pending", institutionName: "Pending" });
   const [personalInfoError, setPersonalInfoError] = useState({firstName: "", lastName: "", email: "", phone: "", password: ""});
   
   const [certificate, setCertificate] = useState('');
@@ -64,7 +64,7 @@ const InstitutionSection = () => {
     if (personalInfo.password !== input.value) {
       setConfirmPasswordError('Passwords do not match');
     } else {
-      setConfirmPasswordError('')
+      setConfirmPasswordError('');
     }
   };
 
@@ -89,11 +89,14 @@ const InstitutionSection = () => {
       return
     } else {
 
+      console.log('User data');
+      console.log(personalInfo);
+
       setPersonalInfoError({firstName: "",lastName: "",email: "",phone: ""});
       setLocationErrors({province: '',district: '',sector: '',})
       setErrorMessage('');
 
-      axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/signup`, personalInfo)
+      axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/createUser`, personalInfo)
       .then(response => {
         if (response.status === 201) {
           setSavingProgress('Saving in progress ...');
@@ -104,7 +107,7 @@ const InstitutionSection = () => {
 
             axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByEmail?email=${response.data.info.email}`)
             .then(response=>{
-              setDirector(response.data[0]._id)
+              setDirector(response.data._id)
             })
             .catch(error => setErrorMessage(error))
 

@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import styled from 'styled-components';
 
 export const NewFileForm = styled.form`
@@ -153,4 +154,47 @@ export const FileInputs = styled.input`
     @media (max-width: 480px) {
         
     }
+`;
+
+export const UpdateButton = styled.button`
+    padding: 0px; 
+    background: transparent;
+    color: white; 
+    border: none;
+
+    &:hover {
+        color: gray;
+    }
+
+`;
+
+export const FileDetailsFooter = styled.div`
+    background: black; 
+    width: 100%; 
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+export const AddResultInput = styled.input`
+    border: none;
+    padding: 3px 5px;
+    margin-left: 10px;
+    width: 100%;
+`; 
+
+export const FileDetailsButton = styled.button`
+    background: green !important;
+    padding: 5px 10px !important;
+    border: none;
+    border-radius: 3px;
+    color: white !important;
+
+    &:hover {
+        background: black !important;
+        color: white !important;
+    }
+    
 `;
