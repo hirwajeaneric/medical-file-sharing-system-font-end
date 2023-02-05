@@ -107,6 +107,10 @@ const RequestDetails = ({popupPayLoad}) => {
                                     if (response.status === 201) {
                                         setNotification({severity: 'success', message: "Request approved!"});
                                         setOpen(true);
+
+                                        setTimeout(()=>{
+                                            window.location.reload();
+                                        },3000)
                                     }
                                 })
                                 .catch(error => {

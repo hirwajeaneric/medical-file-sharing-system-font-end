@@ -24,10 +24,8 @@ import DashBoardHome from './pages/admin/dashboard/DashBoardHome';
 import Reports from './pages/admin/dashboard/Reports';
 import Patients from './pages/admin/dashboard/Patients';
 import Records from './pages/admin/dashboard/Records';
-import Doctors from './pages/admin/dashboard/Doctors';
-import Nurses from './pages/admin/dashboard/Nurses';
+import HospitalPersonnels from './pages/admin/dashboard/Personnel';
 import Hospitals from './pages/admin/dashboard/Hospitals';
-import Pharmacies from './pages/admin/dashboard/Pharmacies';
 import Requests from './pages/admin/dashboard/Requests';
 import Account from './pages/admin/dashboard/Account';
 
@@ -107,10 +105,8 @@ function App() {
                               <Route path='reports' element={<Reports />} />
                               <Route path='patients' element={<Patients />} />
                               <Route path='records' element={<Records />} />
-                              <Route path='doctors' element={<Doctors />} />
-                              <Route path='nurses' element={<Nurses />} />
+                              <Route path='personnel' element={<HospitalPersonnels />} />
                               <Route path='hospitals' element={<Hospitals />} />
-                              <Route path='pharmacies' element={<Pharmacies />} />
                               <Route path='requests' element={<Requests />} />
                               <Route path='account' element={<Account />} />
                             </Route>
@@ -128,9 +124,7 @@ function App() {
                             <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='records' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                            <Route path='doctors' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                            <Route path='nurses' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                            <Route path='pharmacies' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='personnel' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='hospitals' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='requests' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='account' exact element={<Navigate replace to='/admin/auth/signin/' />} />

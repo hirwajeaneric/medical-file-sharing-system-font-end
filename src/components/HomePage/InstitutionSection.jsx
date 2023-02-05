@@ -9,7 +9,7 @@ import { Description, FormBody, FormContainer, FormControlButtonsTwo, FormHead, 
 const InstitutionSection = () => {
   
   // States
-  const [institutionApplication, setInstitutionApplication] = useState({ directorId: "", institutionType: "", institutionId: "", institutionName: "", sendDate: "", status: "Pending", applicationDate: new Date().toDateString(), applicationBody: "", systemAdminId: "", location: "", numberOfPersonnel: "" });
+  const [institutionApplication, setInstitutionApplication] = useState({ directorId: "", institutionType: "Hospital", institutionId: "", institutionName: "", sendDate: "", status: "Pending", applicationDate: new Date().toDateString(), applicationBody: "", systemAdminId: "", location: "", numberOfPersonnel: "" });
   const [institutionApplicationError, setInstitutionApplicationError] = useState({ institutionType: "", institutionName: "", numberOfPersonnel: ""})
   
   const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "0000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date().toDateString(), institutionId: "Pending", institutionName: "Pending" });
@@ -95,7 +95,7 @@ const InstitutionSection = () => {
       setPersonalInfoError({firstName: "",lastName: "",email: "",phone: ""});
       setLocationErrors({province: '',district: '',sector: '',})
       setErrorMessage('');
-
+      
       axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/createUser`, personalInfo)
       .then(response => {
         if (response.status === 201) {
@@ -226,7 +226,7 @@ const InstitutionSection = () => {
               </FormInput>
               <FormInput>
                 <label htmlFor="phone">Phone</label>
-                <input type="text" name="phone" id="phone" value={personalInfo.phone} onChange={handlePersonalInfo} placeholder='Phone'/>
+                <input type="text" name="phone" id="phone" maxLenght={10} minLength={10} value={personalInfo.phone} onChange={handlePersonalInfo} placeholder='Phone'/>
                 {personalInfoError.phone && <p>{personalInfoError.phone}</p>}
               </FormInput>
               <FormInput>
@@ -257,7 +257,7 @@ const InstitutionSection = () => {
                 <input type="text" name="institutionName" id="institutionName" value={institutionApplication.institutionName} onChange={handleInstitutionApplicationInfo} placeholder='Institution Name'/>
                 {institutionApplicationError.institutionName && <p>{institutionApplicationError.institutionName}</p>}
               </FormInput>
-              <FormInput>
+              {/* <FormInput>
                 <label htmlFor="institutionType">Institution Type</label>
                 <select name="institutionType" id="institutionType" onChange={handleInstitutionApplicationInfo}>
                   <option value=''>Choose Institution</option>
@@ -265,7 +265,7 @@ const InstitutionSection = () => {
                   <option value='pharmacy'>Pharmacy</option>
                 </select>
                 {institutionApplicationError.institutionType && <p>{institutionApplicationError.institutionType}</p>}
-              </FormInput>
+              </FormInput> */}
               <FormInput>
                 <label htmlFor="numberOfPersonnel">Number of Personnel</label>
                 <input type="text" name="numberOfPersonnel" id="numberOfPersonnel" value={institutionApplication.numberOfPersonnel} onChange={handleInstitutionApplicationInfo} placeholder='Number of Personnel'/>

@@ -34,19 +34,19 @@ const Dashboard = () => {
 
   return (
     <DashboardContainer>
-      <SideBar >
+      <SideBar style={{background: userIdentity.institutionType === 'pharmacy' && 'green'}}>
         <TitleContainer>
           <MedicalInformationIcon />
           {isOpen && <Mfss>MFSS</Mfss>}
         </TitleContainer>
-        {isOpen && <HospitalName>{localStorage.getItem('insttTok') && 'Hospital'}</HospitalName>}
+        {isOpen && <HospitalName>{userIdentity.institutionName}</HospitalName>}
         {isOpen && <p style={{ fontSize: '85%', fontWeight: '700'}}>{(JSON.parse(localStorage.getItem('instPe'))).role.toUpperCase()}</p>}
         <NavigationComponents>
           <NavItemContainerHome to={''}>
             <BiHomeAlt />
             {isOpen && <NavItem>Dashboard</NavItem>}
           </NavItemContainerHome>
-          {userIdentity.role === 'Representative' &&
+          {(userIdentity.role === 'Representative' && userIdentity.institutionType !== 'pharmacy' ) &&
             <>
               <NavItemContainer to={'reports'}>
                 <BiPaperPlane />
@@ -54,14 +54,17 @@ const Dashboard = () => {
               </NavItemContainer>
             </>
           }
-          <NavItemContainer to={'patients'}>
-            <BiUserCircle />
-            {isOpen && <NavItem>Patients</NavItem>}
-          </NavItemContainer>
-          <NavItemContainer to={'records'}>
-            <BiFileBlank />
-            {isOpen && <NavItem>Records</NavItem>}
-          </NavItemContainer>
+          {(userIdentity.role === 'pharmacist' || userIdentity.institutionType === 'pharmacy') ? <></> : 
+          <>
+            <NavItemContainer to={'patients'}>
+              <BiUserCircle />
+              {isOpen && <NavItem>Patients</NavItem>}
+            </NavItemContainer>
+            <NavItemContainer to={'records'}>
+              <BiFileBlank />
+              {isOpen && <NavItem>Records</NavItem>}
+            </NavItemContainer>
+          </>}
           {userIdentity.role === 'Representative' && 
             <>
               <NavItemContainer to={'personnel'}>

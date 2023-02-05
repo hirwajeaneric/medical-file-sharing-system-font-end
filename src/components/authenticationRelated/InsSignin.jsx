@@ -58,9 +58,9 @@ const InsSignin = () => {
             password: ''
           })
 
-          const {token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName} = response.data;
+          const {token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType} = response.data;
           localStorage.setItem('insttTok', token);
-          localStorage.setItem('instPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName}));
+          localStorage.setItem('instPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
 
           window.location.replace(`/${params.institution}/dashboard`);
         } 

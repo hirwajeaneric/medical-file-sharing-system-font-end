@@ -56,21 +56,21 @@ const Dashboard = () => {
             <BiFileBlank />
             {isOpen && <NavItem>Records</NavItem>}
           </NavItemContainer>
-          <NavItemContainer to={'doctors'}>
+          <NavItemContainer to={'personnel'}>
             <BiUserCheck />
-            {isOpen && <NavItem>Doctors</NavItem>}
+            {isOpen && <NavItem>Personnel</NavItem>}
           </NavItemContainer>
-          <NavItemContainer to={'nurses'}>
+          {/* <NavItemContainer to={'nurses'}>
             <BiUserPlus />
             {isOpen && <NavItem>Nurses</NavItem>}
           </NavItemContainer>
+          <NavItemContainer to={'labtechnitians'}>
+            <BiBuildingHouse />
+            {isOpen && <NavItem>Lab technitians</NavItem>}
+          </NavItemContainer> */}
           <NavItemContainer to={'hospitals'}>
             <BiBuilding />
             {isOpen && <NavItem>Hospitals</NavItem>}
-          </NavItemContainer>
-          <NavItemContainer to={'pharmacies'}>
-            <BiBuildingHouse />
-            {isOpen && <NavItem>Pharmacies</NavItem>}
           </NavItemContainer>
           <NavItemContainer to={'requests'}>
             <BiFileFind/>

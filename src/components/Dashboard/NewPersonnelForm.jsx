@@ -134,7 +134,7 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
                         <option value='doctor'>Doctor</option>
                         <option value='nurse'>Nurse</option>
                         <option value='lab technician'>Lab Technician</option>
-                        <option value='pharmacist'>Pharmacist</option>
+                        {/* <option value='pharmacist'>Pharmacist</option> */}
                     </select>
                     {userInputErrors.role && <p>{userInputErrors.role}</p>}
                 </FormInput>

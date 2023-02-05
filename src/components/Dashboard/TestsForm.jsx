@@ -7,7 +7,7 @@ const TestsForm = ({dataRows, inputData, setInputData}) => {
     // Functions
     const addColumn = (e) => {
         e.preventDefault();
-        if ( inputData.requiredTest && inputData.results ){
+        if ( inputData.requiredTest ){
             dataRows.push(inputData);
             setInputData({ number: dataRows.length+1, requiredTest: '', results: '' });
         }   
