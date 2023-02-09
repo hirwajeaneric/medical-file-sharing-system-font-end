@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { Box, Button, Modal, Snackbar, Typography } from '@mui/material'
+import { Button, Modal, Snackbar } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Container, PageBody, PageHeaderContainer, PageTitle } from '../../../components/Dashboard/DashboardHome'
+import { Container, FilePopup, PageBody, PageHeaderContainer, PageTitle } from '../../../components/Dashboard/DashboardHome'
 import { AFile, ARecord, LeftHalf, ListOfFiles, RecordDescriptionHeader, RecordsContainer, RightHalf, TwoSidedParagraphContainer } from '../../../components/Dashboard/PatientDetailsComponents'
 import { FcFile, FcFolder } from "react-icons/fc";
 import MuiAlert from '@mui/material/Alert';
@@ -10,19 +10,6 @@ import { RecordDetailsContextSetter } from '../../../App';
 import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
 import moment from 'moment';
 import FileDetails from './FileDetails'
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '50vw',
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    fontFamily: ('EB Garamond', 'serif')
-    
-    // p: 4,
-};
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -247,7 +234,7 @@ const PatientDetails = () => {
                                     <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>
                                         {!recordDetails.closeTime && 
                                             <>
-                                                {medicalPersonnel.role!=='nurse' && 
+                                                {(medicalPersonnel.role!=='nurse' || !medicalPersonnel.role) && 
                                                     <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}><AiOutlinePlus />&nbsp;Add File</Button>
                                                 }
 
@@ -272,21 +259,21 @@ const PatientDetails = () => {
                     </RightHalf>
                 </RecordsContainer>
             </PageBody>
+
+            {/* Notifications snack bar */}
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity={notification.severity} sx={{ width: '100%' }}>
                     {notification.message}
                 </Alert>
             </Snackbar>
-            <Modal
-            open={openModal}
-            onClose={handleCloseModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
+            
+            {/* File details popup  */}
+            <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+                <FilePopup>
                     <FileDetails file={file}/>
-                </Box>
+                </FilePopup>
             </Modal>
+
         </Container>
   )
 }

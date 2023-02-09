@@ -118,18 +118,23 @@ const FileDetails = ({file}) => {
                     </FormTable>}
 
                 </form>
-                <p>Date: &nbsp;&nbsp;<em>{file.creationDate}</em></p>
-                {file.type === 'laboratory tests' ? 
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
-                        <p>Asking Doctor: &nbsp;&nbsp;<em>{file.doctorId && (doctor.firstName+" "+doctor.lastName)}</em></p>
-                        <p>Lab Technician: &nbsp;&nbsp;<em>{file.labTechId && (labTechnitian.firstName+" "+labTechnitian.lastName)}</em></p>
-                    </div> : 
-                    <div>
-                    
-                    </div>
-                }
+                <p>Date: &nbsp;&nbsp;<em>{file.creationDate}</em></p> 
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
+                    {file.type === 'laboratory tests' &&
+                        <>
+                            <p>Asking Doctor: &nbsp;&nbsp;<em>{file.doctorId && (doctor.firstName+" "+doctor.lastName)}</em></p>
+                            <p>Lab Technician: &nbsp;&nbsp;<em>{file.labTechId ? (labTechnitian.firstName+" "+labTechnitian.lastName) : <>&nbsp;&nbsp;&nbsp;-</>}</em></p>
+                        </>
+                    }
+                    {file.type === 'medical prescritions' && 
+                        <>
+                            <p>Doctor: &nbsp;&nbsp;<em>{file.doctorId && (doctor.firstName+" "+doctor.lastName)}</em></p>
+                            <p></p>    
+                        </>
+                    }
+                </div>  
             </div>
-            {JSON.parse(localStorage.getItem('instPe')).role === 'lab technician' && 
+            {JSON.parse(localStorage.getItem('instPe')).role !== 'doctor' && 
                 <FileDetailsFooter>
                     <UpdateButton onClick={()=> setUpdateMode(false)}>Cancel file update</UpdateButton>
                     <UpdateButton onClick={changeToUpdateMode}>Update file</UpdateButton>

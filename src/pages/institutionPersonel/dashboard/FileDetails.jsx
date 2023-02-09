@@ -1,6 +1,8 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { AddResultInput, FileDetailsButton, FileDetailsFooter, FormTable, UpdateButton } from '../../../components/Dashboard/NewFileComponents';
+import React, { useEffect, useState } from 'react';
+import { FiPrinter } from 'react-icons/fi';
+import { AddResultInput, FileDetailsButton, FileDetailsFooter, FileHeader, FormTable, UpdateButton } from '../../../components/Dashboard/NewFileComponents';
+import jspdf from 'jspdf';
 
 const FileDetails = ({file}) => {
     const [fileData, setFileData] = useState([]);
@@ -59,12 +61,23 @@ const FileDetails = ({file}) => {
 
     }
 
+    const printFile = () => {
+        var doc = new jspdf("p", "pt", "a4");
+        doc.html(document.querySelector("#file"), {
+          callback: function (pdf) {
+            pdf.save(`${new Date()}.pdf`);
+          }
+        });
+    }
+
     return (
         <>
-            <div style={{ display: 'flex', flexDirection: 'column', padding: '50px', width: '100%' }}>
+            <div id='file' style={{ display: 'flex', flexDirection: 'column', padding: '50px', width: '100%' }}>
                 <h3 style={{ textAlign: 'left' }}>{file.hospitalName}</h3>
                 <p style={{ textAlign: 'left',  }}>{file.hospitalLocation}</p>
-                <h1 style={{ textAlign: 'center', textDecoration: 'underline', fontFamily: 'roboto', margin: '30px 0 10px', textTransform: 'uppercase' }}>{file.type}</h1>
+                {file.type=== 'laboratory tests' && <FileHeader>Laboratory Tests</FileHeader>} 
+                {file.type=== 'medical prescritions' && <FileHeader>Medical Prescriptions</FileHeader>}
+                {file.type=== 'patient transfer' && <FileHeader>Patient Transfer</FileHeader>}
                 <p>Name of patient: <em>{file.patientName}</em><br/>
                     Sex:&nbsp;<em>{file.patientGender}</em>&nbsp;&nbsp;Age: <em>{file.patientAge}</em>
                 </p>
@@ -119,22 +132,34 @@ const FileDetails = ({file}) => {
 
                 </form>
                 <p>Date: &nbsp;&nbsp;<em>{file.creationDate}</em></p>
-                {file.type === 'laboratory tests' ? 
-                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
-                        <p>Asking Doctor: &nbsp;&nbsp;<em>{file.doctorId && (doctor.firstName+" "+doctor.lastName)}</em></p>
-                        <p>Lab Technician: &nbsp;&nbsp;<em>{file.labTechId && (labTechnitian.firstName+" "+labTechnitian.lastName)}</em></p>
-                    </div> : 
-                    <div>
-                    
-                    </div>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
+                    {file.type === 'laboratory tests' &&
+                        <>
+                            <p>Asking Doctor: &nbsp;&nbsp;<em>{file.doctorId && (doctor.firstName+" "+doctor.lastName)}</em></p>
+                            <p>Lab Technician: &nbsp;&nbsp;<em>{file.labTechId ? (labTechnitian.firstName+" "+labTechnitian.lastName) : <>&nbsp;&nbsp;&nbsp;-</>}</em></p>
+                        </>
+                    }
+                    {file.type === 'medical prescritions' && 
+                        <>
+                            <p>Doctor: &nbsp;&nbsp;<em>{file.doctorId && (doctor.firstName+" "+doctor.lastName)}</em></p>
+                            <p></p>    
+                        </>
+                    }
+                </div>
+            </div> 
+            <FileDetailsFooter>
+                {JSON.parse(localStorage.getItem('instPe')).role === 'lab technician'
+                    ?
+                    <>
+                        <UpdateButton onClick={()=> setUpdateMode(false)}>Cancel file update</UpdateButton>
+                        <UpdateButton onClick={changeToUpdateMode}>Update file</UpdateButton>
+                    </>
+                    :
+                    <>
+                        <UpdateButton onClick={printFile}><FiPrinter /></UpdateButton>
+                    </>
                 }
-            </div>
-            {JSON.parse(localStorage.getItem('instPe')).role === 'lab technician' && 
-                <FileDetailsFooter>
-                    <UpdateButton onClick={()=> setUpdateMode(false)}>Cancel file update</UpdateButton>
-                    <UpdateButton onClick={changeToUpdateMode}>Update file</UpdateButton>
-                </FileDetailsFooter>
-            }
+            </FileDetailsFooter>
         </>
     )
 }

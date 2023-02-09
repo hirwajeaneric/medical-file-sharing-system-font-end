@@ -1,4 +1,3 @@
-import { Button } from '@mui/material';
 import styled from 'styled-components';
 
 export const NewFileForm = styled.form`
@@ -161,9 +160,14 @@ export const UpdateButton = styled.button`
     background: transparent;
     color: white; 
     border: none;
+    cursor: pointer;
 
     &:hover {
         color: gray;
+    }
+
+    svg {
+        color: white;
     }
 
 `;
@@ -197,4 +201,11 @@ export const FileDetailsButton = styled.button`
         color: white !important;
     }
     
+`;
+
+export const FileHeader = styled.h2` 
+    text-align: center; 
+    font-family: roboto; 
+    margin: 30px 0 30px; 
+    // text-transform: uppercase;
 `;

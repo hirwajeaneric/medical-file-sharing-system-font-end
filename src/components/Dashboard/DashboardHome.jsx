@@ -139,3 +139,16 @@ export const DetailDiv = styled.div`
     width: 100%;
     margin-bottom: 10px;
 `;
+
+export const FilePopup = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    // width: 1122.520px;
+    // width: 922.520px;
+    width: 561.26px;
+    background-color: white;
+    box-shadow: 24,
+    font-family: EB Garamond, serif;
+`;
