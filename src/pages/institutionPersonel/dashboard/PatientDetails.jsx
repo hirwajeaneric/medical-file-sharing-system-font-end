@@ -74,9 +74,18 @@ const PatientDetails = () => {
 
     // Fetch Medical Personnel information 
     useEffect(()=> {
-        const personnel = JSON.parse(localStorage.getItem('instPe'));
+        let personnel = {};
+        if (params.role === 'r') {
+            personnel = JSON.parse(localStorage.getItem('instAdmPe'));
+        } else if (params.role === 'd') {
+            personnel = JSON.parse(localStorage.getItem('instDocPe'));
+        } else if (params.role === 'n') {
+            personnel = JSON.parse(localStorage.getItem('instNurPe'));
+        } else if (params.role === 'l') {
+            personnel = JSON.parse(localStorage.getItem('instLabPe'));
+        } 
         setMedicalPersonnel(personnel);
-    },[])
+    },[params.role])
 
     
     /**
@@ -147,7 +156,7 @@ const PatientDetails = () => {
         <Container>
             <PageHeaderContainer>
                 <PageTitle>Patient Info</PageTitle>
-                <Button variant='contained' color='secondary' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients`)}>Back</Button>
+                <Button variant='contained' color='secondary' size='small' onClick={()=> navigate(`/${params.institution}/${params.role}/patients`)}>Back</Button>
             </PageHeaderContainer>
             <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
             <PageBody style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', width: '100%'}}>
@@ -234,7 +243,7 @@ const PatientDetails = () => {
                                     <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>
                                         {!recordDetails.closeTime && 
                                             <>
-                                                {medicalPersonnel.role!=='nurse' && 
+                                                {(medicalPersonnel.role !=='nurse' && medicalPersonnel.role !=='Representative') && 
                                                     <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}><AiOutlinePlus />&nbsp;Add File</Button>
                                                 }
 

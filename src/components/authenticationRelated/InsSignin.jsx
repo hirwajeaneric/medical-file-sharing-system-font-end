@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ResponseMessageContext, ResponseMessageContextSetter } from '../../App';
 import { Alert, FormControl, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
@@ -21,7 +21,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 const InsSignin = () => {
   // Hooks
   const params = useParams();
-  const navigate = useNavigate();
 
   // Contexts
   const responseMessage = React.useContext(ResponseMessageContext);
@@ -53,16 +52,30 @@ const InsSignin = () => {
       axios.post('http://localhost:5050/api/mfss/institutionPersonnel/signin', formData)
       .then(response => {
         if (response.status === 200 && response.data.token) {
-          setFormData({
-            userCode: '',
-            password: ''
-          })
+          setFormData({ userCode: '', password: ''});
 
           const {token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType} = response.data;
-          localStorage.setItem('insttTok', token);
-          localStorage.setItem('instPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
+          var roleUrl = '';
 
-          window.location.replace(`/${params.institution}/dashboard`);
+          if (role === 'Representative') {
+            localStorage.setItem('insttAdmTok', token);
+            localStorage.setItem('instAdmPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
+            roleUrl = 'r';
+          } else if (role === 'doctor') {
+            localStorage.setItem('insttDocTok', token);
+            localStorage.setItem('instDocPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
+            roleUrl = 'd';
+          } else if (role === 'nurse') {
+            localStorage.setItem('insttNurTok', token);
+            localStorage.setItem('instNurPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
+            roleUrl = 'n';
+          } else if (role === 'lab technician') {
+            localStorage.setItem('insttLabTok', token);
+            localStorage.setItem('instLabPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
+            roleUrl = 'l';
+          }
+
+          window.location.replace(`/${params.institution}/${roleUrl}/`);
         } 
       })
       .catch(error => {

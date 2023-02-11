@@ -3,14 +3,33 @@ import React, { useEffect, useState } from 'react';
 import { FiPrinter } from 'react-icons/fi';
 import { AddResultInput, FileDetailsButton, FileDetailsFooter, FileHeader, FormTable, UpdateButton } from '../../../components/Dashboard/NewFileComponents';
 import jspdf from 'jspdf';
+import { useParams } from 'react-router-dom';
 
 const FileDetails = ({file}) => {
+    const params = useParams();
+
     const [fileData, setFileData] = useState([]);
     const [labTechnitian, setLabTechnitian] = useState({});
     const [doctor, setDoctor] = useState({});
     const [updateMode, setUpdateMode] = useState(false);
     const [updates, setUpdates] = useState({})
-    
+    const [medicalPersonnel, setMedicalPersonnel] = useState({});
+
+    // Fetch Medical Personnel information 
+    useEffect(()=> {
+        let personnel = {};
+        if (params.role === 'r') {
+            personnel = JSON.parse(localStorage.getItem('instAdmPe'));
+        } else if (params.role === 'd') {
+            personnel = JSON.parse(localStorage.getItem('instDocPe'));
+        } else if (params.role === 'n') {
+            personnel = JSON.parse(localStorage.getItem('instNurPe'));
+        } else if (params.role === 'l') {
+            personnel = JSON.parse(localStorage.getItem('instLabPe'));
+        } 
+        setMedicalPersonnel(personnel);
+    },[params.role])
+
     // Converting file data to redable text
     useEffect(()=>{
         if (file.prescriptions) {
@@ -148,7 +167,7 @@ const FileDetails = ({file}) => {
                 </div>
             </div> 
             <FileDetailsFooter>
-                {JSON.parse(localStorage.getItem('instPe')).role === 'lab technician'
+                {medicalPersonnel.role === 'lab technician'
                     ?
                     <>
                         <UpdateButton onClick={()=> setUpdateMode(false)}>Cancel file update</UpdateButton>

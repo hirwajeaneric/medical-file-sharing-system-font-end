@@ -24,7 +24,7 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
 
     // Fetch Local Data
     useEffect(()=>{
-        const local = JSON.parse(localStorage.getItem('instPe'));
+        const local = JSON.parse(localStorage.getItem('instAdmPe'));
         setLocalData({ institutionId: local.institutionId, institutionName: local.institutionName })
     },[]);    
 

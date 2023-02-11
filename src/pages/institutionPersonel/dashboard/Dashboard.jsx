@@ -11,8 +11,28 @@ const Dashboard = () => {
   const [userIdentity, setUserIdentity] = useState({});
 
   useEffect(()=>{
-    setUserIdentity(JSON.parse(localStorage.getItem('instPe')));
-  },[])
+    let isAdminSignedIn = localStorage.getItem('insttAdmTok');
+    let isDoctorSignedIn = localStorage.getItem('insttDocTok');
+    let isNurseSignedIn = localStorage.getItem('insttNurTok');
+    let isLabTechnicianSignedIn = localStorage.getItem('insttLabTok');
+
+    let userData = {};
+
+    if (params.role === 'r' && isAdminSignedIn !== '') {
+      userData = JSON.parse(localStorage.getItem('instAdmPe'))
+    } else if (params.role === 'd' && isDoctorSignedIn !== '') {
+      userData = JSON.parse(localStorage.getItem('instDocPe'));
+    } else if (params.role === 'n' && isNurseSignedIn !== '') {
+      userData = JSON.parse(localStorage.getItem('instNurPe'));
+    }  else if (params.role === 'l' && isLabTechnicianSignedIn !== '') {
+      userData = JSON.parse(localStorage.getItem('instLabPe'));
+    } else if (userData === null) {
+      window.location.replace(`/${params.institution}/auth/signin`)
+    }
+
+    setUserIdentity(userData);
+  },[params.institution, params.role])
+
 
   const [isOpen, setIsOpen] = useState(true);
   const [openPopup, setOpenPopup] = useState(false);
@@ -27,8 +47,20 @@ const Dashboard = () => {
 
   const logOut = () => {
     setOpenPopup(!openPopup);
-    localStorage.removeItem('insttTok');
-    localStorage.removeItem('instPe');
+    if (userIdentity.role === 'Representative') {
+      localStorage.removeItem('insttAdmTok');
+      localStorage.removeItem('instAdmPe');
+    } else if (userIdentity.role === 'doctor') {
+      localStorage.removeItem('insttDocTok');
+      localStorage.removeItem('instDocPe');
+    } else if (userIdentity.role === 'nurse') {
+      localStorage.removeItem('insttNurTok');
+      localStorage.removeItem('instNurPe');
+    } else if (userIdentity.role === 'lab technician') {
+      localStorage.removeItem('insttLabTok');
+      localStorage.removeItem('insttLabPe');
+    }
+    
     navigate(`/${params.institution}/auth/signin`)
   }  
 
@@ -40,7 +72,10 @@ const Dashboard = () => {
           {isOpen && <Mfss>MFSS</Mfss>}
         </TitleContainer>
         {isOpen && <HospitalName>{userIdentity.institutionName}</HospitalName>}
-        {isOpen && <p style={{ fontSize: '85%', fontWeight: '700'}}>{(JSON.parse(localStorage.getItem('instPe'))).role.toUpperCase()}</p>}
+        {isOpen && userIdentity.role === 'doctor' && <p style={{ fontSize: '85%', fontWeight: '700'}}>Doctor</p>}
+        {isOpen && userIdentity.role === 'Representative' && <p style={{ fontSize: '85%', fontWeight: '700'}}>Admin</p>}
+        {isOpen && userIdentity.role === 'nurse' && <p style={{ fontSize: '85%', fontWeight: '700'}}>Nurse</p>}
+        {isOpen && userIdentity.role === 'lab technician' && <p style={{ fontSize: '85%', fontWeight: '700'}}>Lab Technician</p>}
         <NavigationComponents>
           <NavItemContainerHome to={''}>
             <BiHomeAlt />

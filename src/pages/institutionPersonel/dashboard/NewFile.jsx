@@ -38,7 +38,16 @@ const NewFile = () => {
      */
     useEffect(()=>{
         // Get institution personnel information
-        var user = JSON.parse(localStorage.getItem('instPe'));
+        var user = {};
+        if (params.role === 'r') {
+            user = JSON.parse(localStorage.getItem('instAdmPe'));
+        } else if (params.role === 'd') {
+            user = JSON.parse(localStorage.getItem('instDocPe'));
+        } else if (params.role === 'n') {
+            user = JSON.parse(localStorage.getItem('instNurPe'));
+        } else if (params.role === 'l') {
+            user = JSON.parse(localStorage.getItem('instLabPe'));
+        }
         setInstitutionPersonnel(user);
 
         // Fetch institutionInfo
@@ -47,13 +56,14 @@ const NewFile = () => {
         .catch(error => { console.log('Server error: '+error) })
 
         // When you refresh you go back
-        if (!recordDetailsId) { navigate(`/${params.institution}/dashboard/patients/${params.id}`) }
+        if (!recordDetailsId) { navigate(`/${params.institution}/${params.role}/patients/${params.id}`) }
 
         // Fetch patient information
         axios.get(`http://localhost:5050/api/mfss/patient/findById?id=${params.id}`)
         .then(response => { setPatientInfo(response.data) })
         .catch(error => { console.log('Server error: '+error) });
-    },[navigate, params.id, params.institution, recordDetailsId])
+        
+    },[navigate, params.id, params.institution, params.role, recordDetailsId])
 
 
     // Fetch Patient Info
@@ -149,7 +159,7 @@ const NewFile = () => {
         <Container>
             <PageHeaderContainer>
                 <PageTitle>Add File</PageTitle>
-                <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients/${params.id}`)}>Back</Button>
+                <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/${params.role}/patients/${params.id}`)}>Back</Button>
             </PageHeaderContainer>
             <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
             <PageBody>
