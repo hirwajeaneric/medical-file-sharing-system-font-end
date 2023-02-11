@@ -1,6 +1,7 @@
 import { Button } from '@mui/material'
 import React from 'react'
 import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Container, PageBody, PageHeaderContainer, PageTitle } from '../../../components/Dashboard/DashboardHome'
 import { CustomPeriodContainer, ReportForm } from '../../../components/Dashboard/ReportsComponents'
 import { FormInput } from '../../../components/HomePage/InstitutionsComponents'
@@ -83,6 +84,10 @@ export default function Reports () {
 
   return (
     <Container>
+      <Helmet>
+        <title>Reports - Medicase</title>
+        <meta name="description" content="Medicase, generate reports related to your institution."/> 
+      </Helmet>
       <PageHeaderContainer>
           <PageTitle>Reports</PageTitle>
           {/* <Button variant='contained' color='secondary' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients`)}>Back</Button> */}

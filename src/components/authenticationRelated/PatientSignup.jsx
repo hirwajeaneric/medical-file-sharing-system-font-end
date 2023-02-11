@@ -6,6 +6,7 @@ import { SectionHeader, VerticallyFlexedContainer } from '../HomePage/Sponsors';
 import { FormBody, FormContainer, FormControlButtonsTwo, FormHead, FormInput, FormSectionTitle, MultiStepForm } from '../HomePage/InstitutionsComponents';
 import { fetchDistricts, fetchProvinces, fetchSectors } from '../../assets/locationHandler';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const PatientSignup = () => {
   //Other declarations
@@ -163,6 +164,10 @@ const PatientSignup = () => {
 
   return (
     <MainContainer style={{backgroundColor: '#006622' }}>
+      <Helmet>
+        <title>Create Account as Patient - Medicase</title>
+        <meta name="description" content="Medicase, create an account as a patient."/> 
+      </Helmet>
       <VerticallyFlexedContainer style={{backgroundColor: '#006622' }}>
         <SectionHeader style={{color: 'white' }}>CREATE AN ACCOUNT</SectionHeader>
         <MultiStepForm style={{marginTop: '0px'}}>

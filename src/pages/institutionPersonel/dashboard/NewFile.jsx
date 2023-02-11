@@ -9,6 +9,7 @@ import { RecordDetailsContext } from '../../../App';
 import { FormInput } from '../../../components/HomePage/InstitutionsComponents';
 import TestsForm from '../../../components/Dashboard/TestsForm';
 import PrescriptionForm from '../../../components/Dashboard/PrescriptionForm';
+import { Helmet } from 'react-helmet-async';
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -157,6 +158,10 @@ const NewFile = () => {
 
     return (
         <Container>
+            <Helmet>
+                <title>Add File - {params.id} - Medicase</title>
+                <meta name="description" content="Medicase, add new files."/> 
+            </Helmet>            
             <PageHeaderContainer>
                 <PageTitle>Add File</PageTitle>
                 <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/${params.role}/patients/${params.id}`)}>Back</Button>

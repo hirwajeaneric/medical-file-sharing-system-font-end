@@ -16,7 +16,7 @@ import { ResponseMessageContext, ResponseMessageContextSetter } from '../../App'
 import { Alert, FormControl, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-// import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 
 const InsSignin = () => {
   // Hooks
@@ -101,9 +101,10 @@ const InsSignin = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <Helmet>
-        <title>Medicase - Admin Sign In </title>
-      </Helmet> */}
+      <Helmet>
+        <title>Medicase - Sign In - Institution Personnel</title>
+        <meta name="description" content="Medicase, sign in page for Institution personnel."/>
+      </Helmet>
 
       <Container component="main" maxWidth="xs">
         <CssBaseline />

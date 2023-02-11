@@ -5,6 +5,7 @@ import { Container, DetailsPopup, PageBody, PageHeaderContainer, PageTitle, Popu
 import HospitalTable from '../../../components/tables/HospitalTable'
 import InstitutionDetails from './RequestDetails'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { Helmet } from 'react-helmet-async'
 
 const Hospitals = () => {
   // States
@@ -50,6 +51,10 @@ const Hospitals = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>All Hospitals - Medicase</title>
+        <meta name="description" content="Medicase, list of all hospitals."/> 
+      </Helmet>
       <PageHeaderContainer>
         <PageTitle>List of Hospitals</PageTitle>
       </PageHeaderContainer>

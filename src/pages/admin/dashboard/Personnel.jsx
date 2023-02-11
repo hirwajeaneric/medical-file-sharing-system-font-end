@@ -1,10 +1,9 @@
-import { Button } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Container, PageBody, PageHeaderContainer, PageTitle } from '../../../components/Dashboard/DashboardHome'
 import HospitalPersonnelTable from '../../../components/tables/HospitalPersonnelTable'
-import HospitalTable from '../../../components/tables/HospitalTable'
 
 const Personnel = () => {
   // Hooks
@@ -28,6 +27,10 @@ const Personnel = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>Personnel - Medicase</title>
+        <meta name="description" content="Medicase, list of all institution or hospital personnel registered and using the system."/> 
+      </Helmet>
       <PageHeaderContainer>
         <PageTitle>List of Hospital Personnel</PageTitle>
       </PageHeaderContainer>

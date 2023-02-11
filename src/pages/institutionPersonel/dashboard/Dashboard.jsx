@@ -4,6 +4,7 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { DashboardContainer, HospitalName, MainContent, MenuButton, MenuPopup, Mfss, NavigationComponents, NavItem, NavItemContainer, NavItemContainerHome, OutletSpace, SideBar, TitleContainer, TopBar, User } from '../../../components/Dashboard/DashboardComponents'
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Helmet } from 'react-helmet-async';
 
 const Dashboard = () => {
   const params = useParams();
@@ -66,6 +67,10 @@ const Dashboard = () => {
 
   return (
     <DashboardContainer>
+      <Helmet>
+        <title>Dashboard Home - Medicase</title>
+        <meta name="description" content="Medicase, this is the home page for the insitution. The dashboard."/> 
+      </Helmet>
       <SideBar style={{background: userIdentity.institutionType === 'pharmacy' && 'green'}}>
         <TitleContainer>
           <MedicalInformationIcon />

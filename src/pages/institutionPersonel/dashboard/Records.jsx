@@ -6,6 +6,7 @@ import { PopupPayLoadContext } from '../../../App';
 import RecordsTable from '../../../components/tables/RecordsTable';
 // import RequestDetails from './RequestDetails';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { Helmet } from 'react-helmet-async';
 
 const Records = () => {
   
@@ -56,6 +57,10 @@ const Records = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>Hospital Internal Records - Medicase</title>
+        <meta name="description" content="Medicase, list of all institution or hospital insternal records."/> 
+      </Helmet>
       <PageTitle>Records</PageTitle>
       <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
       <PageBody>

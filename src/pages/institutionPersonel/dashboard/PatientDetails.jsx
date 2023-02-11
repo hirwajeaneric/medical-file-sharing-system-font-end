@@ -10,6 +10,7 @@ import { RecordDetailsContextSetter } from '../../../App';
 import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
 import moment from 'moment';
 import FileDetails from './FileDetails'
+import { Helmet } from 'react-helmet-async'
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -154,6 +155,10 @@ const PatientDetails = () => {
 
     return (
         <Container>
+            <Helmet>
+                <title>Patient Info - {patient.firstName+" "+patient.lastName} - Medicase</title>
+                <meta name="description" content="Medicase, details about a patient. These include all records and files created for them."/> 
+            </Helmet>
             <PageHeaderContainer>
                 <PageTitle>Patient Info</PageTitle>
                 <Button variant='contained' color='secondary' size='small' onClick={()=> navigate(`/${params.institution}/${params.role}/patients`)}>Back</Button>
