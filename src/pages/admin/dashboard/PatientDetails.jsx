@@ -10,7 +10,6 @@ import { RecordDetailsContextSetter } from '../../../App';
 import { AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
 import moment from 'moment';
 import FileDetails from './FileDetails'
-import { Helmet } from 'react-helmet-async'
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -75,18 +74,9 @@ const PatientDetails = () => {
 
     // Fetch Medical Personnel information 
     useEffect(()=> {
-        let personnel = {};
-        if (params.role === 'r') {
-            personnel = JSON.parse(localStorage.getItem('instAdmPe'));
-        } else if (params.role === 'd') {
-            personnel = JSON.parse(localStorage.getItem('instDocPe'));
-        } else if (params.role === 'n') {
-            personnel = JSON.parse(localStorage.getItem('instNurPe'));
-        } else if (params.role === 'l') {
-            personnel = JSON.parse(localStorage.getItem('instLabPe'));
-        } 
+        const personnel = JSON.parse(localStorage.getItem('instPe'));
         setMedicalPersonnel(personnel);
-    },[params.role])
+    },[])
 
     
     /**
@@ -155,13 +145,9 @@ const PatientDetails = () => {
 
     return (
         <Container>
-            <Helmet>
-                <title>Patient Info - {patient.firstName+" "+patient.lastName} - Medicase</title>
-                <meta name="description" content="Medicase, details about a patient. These include all records and files created for them."/> 
-            </Helmet>
             <PageHeaderContainer>
                 <PageTitle>Patient Info</PageTitle>
-                <Button variant='contained' color='secondary' size='small' onClick={()=> navigate(`/${params.institution}/${params.role}/patients`)}>Back</Button>
+                <Button variant='contained' color='secondary' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients`)}>Back</Button>
             </PageHeaderContainer>
             <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
             <PageBody style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', width: '100%'}}>
@@ -248,7 +234,7 @@ const PatientDetails = () => {
                                     <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>
                                         {!recordDetails.closeTime && 
                                             <>
-                                                {(medicalPersonnel.role !=='nurse' && medicalPersonnel.role !=='Representative') && 
+                                                {(medicalPersonnel.role!=='nurse' || !medicalPersonnel.role) && 
                                                     <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}><AiOutlinePlus />&nbsp;Add File</Button>
                                                 }
 
@@ -280,13 +266,14 @@ const PatientDetails = () => {
                     {notification.message}
                 </Alert>
             </Snackbar>
-
+            
             {/* File details popup  */}
             <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                 <FilePopup>
                     <FileDetails file={file}/>
                 </FilePopup>
             </Modal>
+
         </Container>
   )
 }

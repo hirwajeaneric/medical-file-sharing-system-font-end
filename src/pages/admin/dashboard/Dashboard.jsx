@@ -4,6 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { DashboardContainer, HospitalName, MainContent, MenuButton, MenuPopup, Mfss, NavigationComponents, NavItem, NavItemContainer, NavItemContainerHome, OutletSpace, SideBar, TitleContainer, TopBar, User } from '../../../components/Dashboard/DashboardComponents'
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Helmet } from 'react-helmet-async';
 
 const Dashboard = () => {
   const navigate = useNavigate(); 
@@ -33,6 +34,10 @@ const Dashboard = () => {
 
   return (
     <DashboardContainer>
+      <Helmet>
+        <title>Admin Dashboard Home - Medicase</title>
+        <meta name="description" content="Medicase, Admin dashboard home page."/> 
+      </Helmet>
       <SideBar  style={{ background: '#003366' }}>
         <TitleContainer>
           <MedicalInformationIcon />
@@ -56,21 +61,21 @@ const Dashboard = () => {
             <BiFileBlank />
             {isOpen && <NavItem>Records</NavItem>}
           </NavItemContainer>
-          <NavItemContainer to={'doctors'}>
+          <NavItemContainer to={'personnel'}>
             <BiUserCheck />
-            {isOpen && <NavItem>Doctors</NavItem>}
+            {isOpen && <NavItem>Personnel</NavItem>}
           </NavItemContainer>
-          <NavItemContainer to={'nurses'}>
+          {/* <NavItemContainer to={'nurses'}>
             <BiUserPlus />
             {isOpen && <NavItem>Nurses</NavItem>}
           </NavItemContainer>
+          <NavItemContainer to={'labtechnitians'}>
+            <BiBuildingHouse />
+            {isOpen && <NavItem>Lab technitians</NavItem>}
+          </NavItemContainer> */}
           <NavItemContainer to={'hospitals'}>
             <BiBuilding />
             {isOpen && <NavItem>Hospitals</NavItem>}
-          </NavItemContainer>
-          <NavItemContainer to={'pharmacies'}>
-            <BiBuildingHouse />
-            {isOpen && <NavItem>Pharmacies</NavItem>}
           </NavItemContainer>
           <NavItemContainer to={'requests'}>
             <BiFileFind/>

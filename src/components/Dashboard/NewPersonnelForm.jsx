@@ -24,7 +24,7 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
 
     // Fetch Local Data
     useEffect(()=>{
-        const local = JSON.parse(localStorage.getItem('instPe'));
+        const local = JSON.parse(localStorage.getItem('instAdmPe'));
         setLocalData({ institutionId: local.institutionId, institutionName: local.institutionName })
     },[]);    
 
@@ -134,7 +134,7 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
                         <option value='doctor'>Doctor</option>
                         <option value='nurse'>Nurse</option>
                         <option value='lab technician'>Lab Technician</option>
-                        <option value='pharmacist'>Pharmacist</option>
+                        {/* <option value='pharmacist'>Pharmacist</option> */}
                     </select>
                     {userInputErrors.role && <p>{userInputErrors.role}</p>}
                 </FormInput>

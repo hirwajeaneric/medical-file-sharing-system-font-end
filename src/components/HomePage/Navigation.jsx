@@ -22,7 +22,7 @@ const Navigation = () => {
                     <Links>
                         <ALink to={'/'}>Home</ALink>
                         <ALink to={'/institutions'}>Institutions</ALink>
-                        <ALink to={'/user/account'}>Patient</ALink>
+                        {/* <ALink to={'/user/account'}>Patient</ALink> */}
                         <ALink to={'/user/signup'}>Create an account</ALink>
                     </Links>
                     <MobileMenuButton onClick={handleClick}>
@@ -34,7 +34,7 @@ const Navigation = () => {
             <ExtendedLinks>
                 <ALinkExtended to={'/'} onClick={handleClick}>Home</ALinkExtended>
                 <ALinkExtended to={'/institutions'} onClick={handleClick}>Institutions</ALinkExtended>
-                <ALinkExtended to={'/user/account'} onClick={handleClick}>Patient</ALinkExtended>
+                {/* <ALinkExtended to={'/user/account'} onClick={handleClick}>Patient</ALinkExtended> */}
                 <ALinkExtended to={'/user/signup'} onClick={handleClick}>Create an account</ALinkExtended>
             </ExtendedLinks>}
         </MainContainer>

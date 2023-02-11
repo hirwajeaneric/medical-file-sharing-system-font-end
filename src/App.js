@@ -24,10 +24,8 @@ import DashBoardHome from './pages/admin/dashboard/DashBoardHome';
 import Reports from './pages/admin/dashboard/Reports';
 import Patients from './pages/admin/dashboard/Patients';
 import Records from './pages/admin/dashboard/Records';
-import Doctors from './pages/admin/dashboard/Doctors';
-import Nurses from './pages/admin/dashboard/Nurses';
+import HospitalPersonnels from './pages/admin/dashboard/Personnel';
 import Hospitals from './pages/admin/dashboard/Hospitals';
-import Pharmacies from './pages/admin/dashboard/Pharmacies';
 import Requests from './pages/admin/dashboard/Requests';
 import Account from './pages/admin/dashboard/Account';
 
@@ -71,7 +69,10 @@ function App() {
 
   // Local data
   const adminToken = localStorage.getItem('admnTok');
-  const insttToken = localStorage.getItem('insttTok');
+  const insttAdminToken = localStorage.getItem('insttAdmTok');
+  const insttDoctorToken = localStorage.getItem('insttDocTok');
+  const insttNurseToken = localStorage.getItem('insttNurTok');
+  const insttLabTechnitianToken = localStorage.getItem('insttLabTok');
   const patToken = localStorage.getItem('patTok');
   
   // States
@@ -107,10 +108,8 @@ function App() {
                               <Route path='reports' element={<Reports />} />
                               <Route path='patients' element={<Patients />} />
                               <Route path='records' element={<Records />} />
-                              <Route path='doctors' element={<Doctors />} />
-                              <Route path='nurses' element={<Nurses />} />
+                              <Route path='personnel' element={<HospitalPersonnels />} />
                               <Route path='hospitals' element={<Hospitals />} />
-                              <Route path='pharmacies' element={<Pharmacies />} />
                               <Route path='requests' element={<Requests />} />
                               <Route path='account' element={<Account />} />
                             </Route>
@@ -128,9 +127,7 @@ function App() {
                             <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='records' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                            <Route path='doctors' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                            <Route path='nurses' exact element={<Navigate replace to='/admin/auth/signin/' />} />
-                            <Route path='pharmacies' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='personnel' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='hospitals' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='requests' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='account' exact element={<Navigate replace to='/admin/auth/signin/' />} />
@@ -138,25 +135,25 @@ function App() {
                         </Route>
 
                         {/* Institution and institution Personel routes  */}
-                        <Route path={`/:institution`} element={<InstitutionPersonnel/>}>
+                        <Route path={`/:institution/`} element={<InstitutionPersonnel/>}>
                           <Route exact path='*' element={<ErrorPage />} />
-                          <Route exact path='dashboard' element={insttToken ? <InstitutionDashboard/> : <Navigate replace to={`../auth/signin`} />}>
-                            <Route path='' element={insttToken ? <InstitutionDashBoardHome /> : <Navigate replace to={`auth/signin`} />} />
-                            <Route path='reports' element={insttToken ? <InstitutionReports /> : <Navigate replace to={`auth/signin`} />} />
-                            <Route path='patients' element={insttToken ? <ListPatients /> : <Navigate replace to={`auth/signin`} />} >
-                              <Route path='' element={insttToken ? <InstitutionPatients /> : <Navigate replace to={`auth/signin`} />} />
-                              <Route path='new' element={insttToken ? <AddPatient /> : <Navigate replace to={`auth/signin`} />} />
-                              <Route path=':id' element={insttToken ? <PatientFilesAndRecords /> : <Navigate replace to={`auth/signin`} />}>
-                                <Route path='' element={insttToken ? <PatientDetails /> : <Navigate replace to={`auth/signin`} />} />
-                                <Route path='new' element={insttToken ? <NewFile /> : <Navigate replace to={`auth/signin`} />} />
+                          <Route exact path=':role/' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionDashboard/> : <Navigate replace to={`../auth/signin`} />}>
+                            <Route path='' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionDashBoardHome /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='reports' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionReports /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='patients' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <ListPatients /> : <Navigate replace to={`auth/signin`} />} >
+                              <Route path='' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionPatients /> : <Navigate replace to={`auth/signin`} />} />
+                              <Route path='new' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <AddPatient /> : <Navigate replace to={`auth/signin`} />} />
+                              <Route path=':id' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <PatientFilesAndRecords /> : <Navigate replace to={`auth/signin`} />}>
+                                <Route path='' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <PatientDetails /> : <Navigate replace to={`auth/signin`} />} />
+                                <Route path='new' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <NewFile /> : <Navigate replace to={`auth/signin`} />} />
                               </Route>
                             </Route>
-                            <Route path='records' element={insttToken ? <InstitutionRecords /> : <Navigate replace to={`auth/signin`} />} />
-                            <Route path='personnel' element={insttToken ? <InstitutionIndividuals /> : <Navigate replace to={`auth/signin`} />}>
-                              <Route path='' element={insttToken ? <ListOfPersonnel /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='records' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionRecords /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='personnel' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionIndividuals /> : <Navigate replace to={`auth/signin`} />}>
+                              <Route path='' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <ListOfPersonnel /> : <Navigate replace to={`auth/signin`} />} />
                             </Route>
-                            <Route path='pharmacists' element={insttToken ? <InstitutionPharmacists /> : <Navigate replace to={`auth/signin`} />} />
-                            <Route path='account' element={insttToken ? <InstitutionAccount /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='pharmacists' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionPharmacists /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='account' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionAccount /> : <Navigate replace to={`auth/signin`} />} />
                           </Route>
                           <Route path='auth' element={<InstitutionAuthentication/>}>
                             <Route path='' element={<InstitutionSignin/>}/>

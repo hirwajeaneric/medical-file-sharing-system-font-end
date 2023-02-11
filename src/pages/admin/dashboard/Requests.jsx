@@ -6,6 +6,7 @@ import { PopupPayLoadContext } from '../../../App';
 import RequestsTable from '../../../components/tables/RequestsTable';
 import RequestDetails from './RequestDetails';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { Helmet } from 'react-helmet-async';
 
 const Requests = () => {
   
@@ -56,6 +57,10 @@ const Requests = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>Join request from institutions - Medicase</title>
+        <meta name="description" content="Medicase, Join request from institutions."/> 
+      </Helmet>
       <PageTitle>Requests</PageTitle>
       <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
       <PageBody>

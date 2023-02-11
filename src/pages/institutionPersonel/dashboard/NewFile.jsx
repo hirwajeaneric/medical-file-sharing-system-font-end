@@ -9,6 +9,7 @@ import { RecordDetailsContext } from '../../../App';
 import { FormInput } from '../../../components/HomePage/InstitutionsComponents';
 import TestsForm from '../../../components/Dashboard/TestsForm';
 import PrescriptionForm from '../../../components/Dashboard/PrescriptionForm';
+import { Helmet } from 'react-helmet-async';
 
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -38,7 +39,16 @@ const NewFile = () => {
      */
     useEffect(()=>{
         // Get institution personnel information
-        var user = JSON.parse(localStorage.getItem('instPe'));
+        var user = {};
+        if (params.role === 'r') {
+            user = JSON.parse(localStorage.getItem('instAdmPe'));
+        } else if (params.role === 'd') {
+            user = JSON.parse(localStorage.getItem('instDocPe'));
+        } else if (params.role === 'n') {
+            user = JSON.parse(localStorage.getItem('instNurPe'));
+        } else if (params.role === 'l') {
+            user = JSON.parse(localStorage.getItem('instLabPe'));
+        }
         setInstitutionPersonnel(user);
 
         // Fetch institutionInfo
@@ -47,13 +57,14 @@ const NewFile = () => {
         .catch(error => { console.log('Server error: '+error) })
 
         // When you refresh you go back
-        if (!recordDetailsId) { navigate(`/${params.institution}/dashboard/patients/${params.id}`) }
+        if (!recordDetailsId) { navigate(`/${params.institution}/${params.role}/patients/${params.id}`) }
 
         // Fetch patient information
         axios.get(`http://localhost:5050/api/mfss/patient/findById?id=${params.id}`)
         .then(response => { setPatientInfo(response.data) })
         .catch(error => { console.log('Server error: '+error) });
-    },[navigate, params.id, params.institution, recordDetailsId])
+        
+    },[navigate, params.id, params.institution, params.role, recordDetailsId])
 
 
     // Fetch Patient Info
@@ -97,7 +108,7 @@ const NewFile = () => {
             file.fileAttachment = attachment;
             
             // Populating file data.
-            if ( inputData.requiredTest && inputData.results ){
+            if ( inputData.requiredTest ){
                 dataRows.push(inputData);
                 setInputData({ number: dataRows.length+1, requiredTest: '', results: '' });
             }
@@ -107,8 +118,8 @@ const NewFile = () => {
                 setInputPrescriptionData({ number: prescriptionDataRows.length+1, prescriptionName: '', type:'', quantity: '' });
             }
 
-            file.exams = file.type==='laboratory tests' ? JSON.stringify(dataRows) : '';
-            file.prescriptions = file.type==='medical prescritions' ? JSON.stringify(dataRows) : ''; 
+            file.exams = file.type === 'laboratory tests' ? JSON.stringify(dataRows) : '';
+            file.prescriptions = file.type === 'medical prescritions' ? JSON.stringify(prescriptionDataRows) : ''; 
 
             // Clearing input fields
             setDataRows([]);
@@ -147,9 +158,13 @@ const NewFile = () => {
 
     return (
         <Container>
+            <Helmet>
+                <title>Add File - {params.id} - Medicase</title>
+                <meta name="description" content="Medicase, add new files."/> 
+            </Helmet>            
             <PageHeaderContainer>
                 <PageTitle>Add File</PageTitle>
-                <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients/${params.id}`)}>Back</Button>
+                <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/${params.role}/patients/${params.id}`)}>Back</Button>
             </PageHeaderContainer>
             <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
             <PageBody>
@@ -159,6 +174,7 @@ const NewFile = () => {
                             <option value="">Choose file type...</option>
                             <option value="laboratory tests">Laboratory tests</option>
                             <option value="medical prescritions">Prescription</option>
+                            <option value="patient transfer">Tranfer</option>
                         </select>
                     </FormInput>
                     {file.type ? (file.type ==='medical prescritions' ? <h2>Prescriptions</h2> : file.type === "laboratory tests" ? <h2>Laboratory Tests</h2> : "") : ""}

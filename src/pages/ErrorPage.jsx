@@ -1,7 +1,7 @@
 import React from 'react';
 import Navigation from '../components/HomePage/Navigation';
 import Footer from '../components/HomePage/Footer';
-import { Link, Outlet } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { MainContainer } from './Home';
 

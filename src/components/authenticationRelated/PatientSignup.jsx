@@ -6,6 +6,7 @@ import { SectionHeader, VerticallyFlexedContainer } from '../HomePage/Sponsors';
 import { FormBody, FormContainer, FormControlButtonsTwo, FormHead, FormInput, FormSectionTitle, MultiStepForm } from '../HomePage/InstitutionsComponents';
 import { fetchDistricts, fetchProvinces, fetchSectors } from '../../assets/locationHandler';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 const PatientSignup = () => {
   //Other declarations
@@ -16,7 +17,7 @@ const PatientSignup = () => {
   const [guardianError, setGuardianError] = useState({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
   
   const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date().toDateString()});
-  const [personalInfoError, setPersonalInfoError] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date().toDateString()});
+  const [personalInfoError, setPersonalInfoError] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date().toDateString()});
 
   
   const [errorMessage, setErrorMessage] = useState('');
@@ -78,9 +79,6 @@ const PatientSignup = () => {
       return;
     } else if (confirmPassword ===''){
       setPersonalInfoError({...confirmPasswordError, confirmPasswordError: 'Required*'})
-      return;
-    } else if (personalInfo.placeOfBirth===''){
-      setPersonalInfoError({...personalInfoError, placeOfBirth: 'Required*'})
       return;
     } else if (personalInfo.dateOfBirth===''){
       setPersonalInfoError({...personalInfoError, dateOfBirth: 'Required*'})
@@ -166,6 +164,10 @@ const PatientSignup = () => {
 
   return (
     <MainContainer style={{backgroundColor: '#006622' }}>
+      <Helmet>
+        <title>Create Account as Patient - Medicase</title>
+        <meta name="description" content="Medicase, create an account as a patient."/> 
+      </Helmet>
       <VerticallyFlexedContainer style={{backgroundColor: '#006622' }}>
         <SectionHeader style={{color: 'white' }}>CREATE AN ACCOUNT</SectionHeader>
         <MultiStepForm style={{marginTop: '0px'}}>
@@ -257,11 +259,11 @@ const PatientSignup = () => {
                 <input type="password" name="confirmPassword" id="confirmPassword" value={confirmPassword} onChange={handleConfirmPassword} placeholder='Confirm password'/>
                 {confirmPasswordError && <p>{confirmPasswordError}</p>}
               </FormInput>
-              <FormInput>
+              {/* <FormInput>
                 <label htmlFor="placeOfBirth">Place of Birth</label>
                 <input type="text" name="placeOfBirth" id="placeOfBirth" value={personalInfo.placeOfBirth} onChange={handlePersonalInfo} placeholder='Place of birth'/>
                 {personalInfoError.placeOfBirth && <p>{personalInfoError.placeOfBirth}</p>}
-              </FormInput>
+              </FormInput> */}
               <FormInput>
                 <label htmlFor="dateOfBirth">Date of Birth</label>
                 <input type="date" name="dateOfBirth" id="dateOfBirth" value={personalInfo.dateOfBirth} onChange={handlePersonalInfo} />

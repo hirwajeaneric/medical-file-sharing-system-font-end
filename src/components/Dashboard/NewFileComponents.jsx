@@ -154,3 +154,58 @@ export const FileInputs = styled.input`
         
     }
 `;
+
+export const UpdateButton = styled.button`
+    padding: 0px; 
+    background: transparent;
+    color: white; 
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        color: gray;
+    }
+
+    svg {
+        color: white;
+    }
+
+`;
+
+export const FileDetailsFooter = styled.div`
+    background: black; 
+    width: 100%; 
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+export const AddResultInput = styled.input`
+    border: none;
+    padding: 3px 5px;
+    margin-left: 10px;
+    width: 100%;
+`; 
+
+export const FileDetailsButton = styled.button`
+    background: green !important;
+    padding: 5px 10px !important;
+    border: none;
+    border-radius: 3px;
+    color: white !important;
+
+    &:hover {
+        background: black !important;
+        color: white !important;
+    }
+    
+`;
+
+export const FileHeader = styled.h2` 
+    text-align: center; 
+    font-family: roboto; 
+    margin: 30px 0 30px; 
+    // text-transform: uppercase;
+`;

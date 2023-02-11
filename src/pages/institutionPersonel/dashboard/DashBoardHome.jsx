@@ -1,11 +1,15 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { Container } from '../../../components/Dashboard/DashboardHome'
+import AdminDashboard from './AdminDashboard';
+import InstitutionPersonnelDashboard from './InstitutionPersonnelDashboard';
 
 const DashBoardHome = () => {
+  const params = useParams();
+
   return (
     <Container>
-        <h1>DashBoardHome</h1>
-        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit doloribus odit alias minus, tempora quasi modi nisi eligendi ipsum deserunt illum suscipit harum culpa? Pariatur consequatur voluptatem rerum recusandae commodi?</p>    
+        {params.role === 'r' ? <AdminDashboard/> : <InstitutionPersonnelDashboard />}    
     </Container>
   )
 }
