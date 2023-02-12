@@ -74,3 +74,45 @@ export const NewFileForm3 = styled.form`
         
     }
 `;
+
+export const FieldSet = styled.fieldset`
+    width: 100%; 
+    border: 1px solid gray;    
+    border-radius: 10px;
+    font-weight: bold;
+
+    @media (max-width: 1080px) {
+        
+    }
+
+    @media (max-width: 768px) {
+        
+    }
+
+    @media (max-width: 480px) {
+        
+    }
+`;
+
+export const FormInputTwo = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    // width: 100%;    
+    flex-wrap: wrap;
+    margin: 20px;
+    font-weight: normal;
+
+    @media (max-width: 1080px) {
+        
+    }
+
+    @media (max-width: 768px) {
+        
+    }
+
+    @media (max-width: 480px) {
+        
+    }
+`;

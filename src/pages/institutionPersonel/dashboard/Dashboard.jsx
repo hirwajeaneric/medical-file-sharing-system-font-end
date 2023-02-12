@@ -82,7 +82,7 @@ const Dashboard = () => {
         {isOpen && userIdentity.role === 'nurse' && <p style={{ fontSize: '85%', fontWeight: '700'}}>Nurse</p>}
         {isOpen && userIdentity.role === 'lab technician' && <p style={{ fontSize: '85%', fontWeight: '700'}}>Lab Technician</p>}
         <NavigationComponents>
-          <NavItemContainerHome to={''}>
+          <NavItemContainerHome to={'pa'}>
             <BiHomeAlt />
             {isOpen && <NavItem>Dashboard</NavItem>}
           </NavItemContainerHome>

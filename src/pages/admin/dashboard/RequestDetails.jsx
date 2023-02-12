@@ -47,7 +47,7 @@ const RequestDetails = ({popupPayLoad}) => {
         e.preventDefault();
     
         application.status = 'Approved';
-        application.respondDate = new Date().toDateString();
+        application.respondDate = new Date();
 
         setNotification({severity: 'info', message: "Processing ..."});
         setOpen(true);
@@ -64,7 +64,7 @@ const RequestDetails = ({popupPayLoad}) => {
                 institution.directorId =  response.data.payload.directorId
                 institution.directorName = applicant.firstName+" "+applicant.lastName
                 institution.specialization = ""
-                institution.joinDate = new Date().toDateString()
+                institution.joinDate = new Date()
                 institution.logo = ""
                 institution.isApproved = true
                 institution.certificate = response.data.payload.certificate
@@ -146,7 +146,7 @@ const RequestDetails = ({popupPayLoad}) => {
         e.preventDefault();
 
         application.status = 'Rejected';
-        application.respondDate = new Date().toDateString();
+        application.respondDate = new Date();
 
         axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         .then(response=>{

@@ -61,21 +61,23 @@ const InsSignin = () => {
             localStorage.setItem('insttAdmTok', token);
             localStorage.setItem('instAdmPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
             roleUrl = 'r';
+            window.location.replace(`/${params.institution}/${roleUrl}/pa/`);
           } else if (role === 'doctor') {
             localStorage.setItem('insttDocTok', token);
             localStorage.setItem('instDocPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
             roleUrl = 'd';
+            window.location.replace(`/${params.institution}/${roleUrl}/`);
           } else if (role === 'nurse') {
             localStorage.setItem('insttNurTok', token);
             localStorage.setItem('instNurPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
             roleUrl = 'n';
+            window.location.replace(`/${params.institution}/${roleUrl}/`);
           } else if (role === 'lab technician') {
             localStorage.setItem('insttLabTok', token);
             localStorage.setItem('instLabPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
             roleUrl = 'l';
+            window.location.replace(`/${params.institution}/${roleUrl}/`);
           }
-
-          window.location.replace(`/${params.institution}/${roleUrl}/`);
         } 
       })
       .catch(error => {

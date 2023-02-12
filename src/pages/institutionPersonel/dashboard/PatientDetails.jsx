@@ -99,7 +99,7 @@ const PatientDetails = () => {
     const openRecord = (e) => {
         e.preventDefault();
 
-        const recordToBeSaved = { firstName: patient.firstName, lastName: patient.lastName, patientId: patient._id, email: patient.email, hospitalName: medicalPersonnel.institutionName, hospitalId: medicalPersonnel.institutionId, recordOpener: medicalPersonnel.firstName+" "+medicalPersonnel.lastName, recordCloser: "", openTime: new Date().toDateString(), closeTime: "", status: "open", insuranceName: "" };
+        const recordToBeSaved = { firstName: patient.firstName, lastName: patient.lastName, patientId: patient._id, email: patient.email, hospitalName: medicalPersonnel.institutionName, hospitalId: medicalPersonnel.institutionId, recordOpener: medicalPersonnel.firstName+" "+medicalPersonnel.lastName, recordCloser: "", openTime: new Date(), closeTime: "", status: "open", insuranceName: "" };
 
         axios.post(`http://localhost:5050/api/mfss/record/new`, recordToBeSaved)
         .then(response => {
@@ -239,7 +239,7 @@ const PatientDetails = () => {
                                 <LeftHalf>
                                     <p>Open date: <strong>{recordDetails.openTime}</strong></p>
                                     <p>By: <strong>{recordDetails.recordOpener}</strong></p>
-                                    <p>Created at: <strong>King Faisal Hospital</strong></p>
+                                    <p>Created at: <strong>{recordDetails.hospitalName}</strong></p>
                                     <p>Status: <strong>open</strong></p>
                                 </LeftHalf>
                                 <RightHalf>
@@ -248,11 +248,11 @@ const PatientDetails = () => {
                                     <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>
                                         {!recordDetails.closeTime && 
                                             <>
-                                                {(medicalPersonnel.role !=='nurse' && medicalPersonnel.role !=='Representative') && 
+                                                {(medicalPersonnel.role !=='nurse' && medicalPersonnel.role !=='Representative' && medicalPersonnel.institutionName === recordDetails.hospitalName) &&  
                                                     <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}><AiOutlinePlus />&nbsp;Add File</Button>
                                                 }
 
-                                                {medicalPersonnel.role==='nurse' && 
+                                                {(medicalPersonnel.role==='nurse' && medicalPersonnel.institutionName === recordDetails.hospitalName) && 
                                                     <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='warning' onClick={closeRecord}><AiOutlineClose />&nbsp;Close Record</Button>
                                                 }
                                             </>
