@@ -27,7 +27,7 @@ const NewFile = () => {
     const [notification, setNotification] = useState({ severity: '', message: '' });
     const [open, setOpen] = useState(false);
     const [institutionInformation, setInstitutionInformation] = useState({});
-    const [file, setFile] = useState({ creationDate: new Date().toDateString(), recordId: recordDetailsId, patientId: params.id, patientName: "", patientGender: "", patientAge: "", doctorId: "", nurseId: "", labTechId: "", type: "", prescriptions: "", exams: "", hospitalName: "", hospitalId: "", hospitalLocation: "", fileAttachment: "" });
+    const [file, setFile] = useState({ creationDate: new Date(), recordId: recordDetailsId, patientId: params.id, patientName: "", patientGender: "", patientAge: "", doctorId: "", nurseId: "", labTechId: "", type: "", prescriptions: "", exams: "", hospitalName: "", hospitalId: "", hospitalLocation: "", fileAttachment: "" });
     const [dataRows, setDataRows] = useState([]);
     const [inputData, setInputData] = useState({ number: dataRows.length+1, requiredTest: '', results: '' });
     const [prescriptionDataRows, setPrescriptionDataRows] = useState([]);
@@ -94,7 +94,6 @@ const NewFile = () => {
             setOpen(true);
             return;
         } else {
-
             // Pre-populated inputs done by the system itself
             file.hospitalName = institutionPersonnel.institutionName; 
             file.hospitalId= institutionPersonnel.institutionId;

@@ -29,7 +29,7 @@ const ListOfPatients = () => {
     <Container>
       <PageHeaderContainer>
         <PageTitle>List of patients</PageTitle>
-        <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients/new`)}>Add patient</Button>
+        <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/${params.role}/patients/new`)}>Add patient</Button>
       </PageHeaderContainer>
       <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
       <PageBody style={{ marginBottom: '60px'}}>

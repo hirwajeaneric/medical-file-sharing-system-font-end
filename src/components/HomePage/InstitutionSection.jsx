@@ -9,10 +9,10 @@ import { Description, FormBody, FormContainer, FormControlButtonsTwo, FormHead, 
 const InstitutionSection = () => {
   
   // States
-  const [institutionApplication, setInstitutionApplication] = useState({ directorId: "", institutionType: "Hospital", institutionId: "", institutionName: "", sendDate: "", status: "Pending", applicationDate: new Date().toDateString(), applicationBody: "", systemAdminId: "", location: "", numberOfPersonnel: "" });
+  const [institutionApplication, setInstitutionApplication] = useState({ directorId: "", institutionType: "Hospital", institutionId: "", institutionName: "", sendDate: "", status: "Pending", applicationDate: new Date(), applicationBody: "", systemAdminId: "", location: "", numberOfPersonnel: "" });
   const [institutionApplicationError, setInstitutionApplicationError] = useState({ institutionType: "", institutionName: "", numberOfPersonnel: ""})
   
-  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "0000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date().toDateString(), institutionId: "Pending", institutionName: "Pending" });
+  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "0000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date(), institutionId: "Pending", institutionName: "Pending" });
   const [personalInfoError, setPersonalInfoError] = useState({firstName: "", lastName: "", email: "", phone: "", password: ""});
   
   const [certificate, setCertificate] = useState('');

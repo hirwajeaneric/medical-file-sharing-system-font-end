@@ -4,31 +4,35 @@ import { Container, DetailsPopup, PageBody, PageTitle, PopupBody } from '../../.
 import { ShowModalContext, ShowModalContextSetter} from '../../../App';
 import { PopupPayLoadContext } from '../../../App';
 import RecordsTable from '../../../components/tables/RecordsTable';
-// import RequestDetails from './RequestDetails';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Helmet } from 'react-helmet-async';
+import { useParams } from 'react-router-dom';
 
 const Records = () => {
-  
+  // Other Hooks
+  const params = useParams();
+
   // States 
   const showModal = useContext(ShowModalContext);
   const setShowModal = useContext(ShowModalContextSetter);
   const [requests, setRecords] = useState([]);
   const popupPayLoad = useContext(PopupPayLoadContext);
 
-  // Data fetch 
+  // Data fetch (Fetching only records from this specific hospital)
   useEffect(()=>{
-    axios.get('http://localhost:5050/api/mfss/record/list')
+    axios.get(`http://localhost:5050/api/mfss/institution/findByCode?institutionCode=${params.institution}`)
     .then(response => {
-      response.data.forEach(element => {
-        element.id = element._id;
-      });
-      setRecords(response.data)
+      axios.get(`http://localhost:5050/api/mfss/record/findByHospitalId?hospitalId=${response.data._id}`)
+      .then(response => {
+        response.data.forEach(element => {
+          element.id = element._id;
+        });
+        setRecords(response.data)
+      })
+      .catch(error => { console.log("Failed to fetch data ::"+error) })
     })
-    .catch(error => {
-      console.log("Failed to fetch data ::"+error);
-    })
-  },[])
+    .catch(error => { console.log("Failed to fetch data ::"+error) })
+  },[params.institution])
 
 
   // Popup utilities 
