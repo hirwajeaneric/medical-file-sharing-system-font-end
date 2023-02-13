@@ -18,10 +18,10 @@ const AddPatient = () => {
       </Helmet>
       <PageHeaderContainer>
         <PageTitle>Record new patient</PageTitle>
-        <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/dashboard/patients`)}>Back to list</Button>
+        <Button variant='contained' color='secondary' size='small' onClick={()=> navigate(`/${params.institution}/${[params.role]}/patients`)}>Back to list</Button>
       </PageHeaderContainer>
       <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
-      <PageBody>
+      <PageBody style={{ marginBottom: '40px', padding: '40px'}}>
         <AddPatientForm />
       </PageBody>
     </Container>
