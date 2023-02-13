@@ -21,7 +21,7 @@ const AddPatientForm = () => {
     const [guardian, setGuardian] = useState({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
     const [guardianError, setGuardianError] = useState({ patientId: "", nameOfMaleGuardian: "", locationOfMaleGuardian: "", nameOfFemaleGuardian: "", locationOfFemaleGuardian: "", phoneOfMaleGuardian: "", phoneOfFemaleGuardian: "" });
     
-    const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", placeOfBirth: "", dateOfBirth: "", maritalStatus: "", gender: "", registeredAt: medicalPersonnel.institutionName ,joinDate: new Date()});
+    const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", dateOfBirth: "", gender: "", registeredAt: medicalPersonnel.institutionName ,joinDate: new Date()});
     const [personalInfoError, setPersonalInfoError] = useState({ firstName: "", lastName: "", residence: "", email: "", password: "", phone: "", dateOfBirth: "", maritalStatus: "", gender: "", joinDate: new Date()});
     
     const [errorMessage, setErrorMessage] = useState('');
@@ -75,6 +75,7 @@ const AddPatientForm = () => {
         e.preventDefault();
 
         personalInfo.password = 'Password@123';
+        personalInfo.registeredAt = medicalPersonnel.institutionName;
 
         if (personalInfo.firstName===''){
             setPersonalInfoError({...personalInfoError, firstName: 'Required*'})
@@ -127,12 +128,6 @@ const AddPatientForm = () => {
 
             personalInfo.residence = locations.province+", "+locations.district+", "+locations.sector;
 
-            console.log('This is what we are going to save for a patient: ');
-            console.log(personalInfo);
-
-            console.log('This is what we are going to save for guardians: ');
-            console.log(guardian);
-
             axios.post(`http://localhost:5050/api/mfss/patient/signup`, personalInfo)
             .then(response => {
                 if (response.status === 201) {
@@ -143,22 +138,19 @@ const AddPatientForm = () => {
 
                     axios.post(`http://localhost:5050/api/mfss/guardian/add`, guardian)
                     .then(response=>{
-                    setSavingProgress('');
-                    if (response.status === 201){
-                        setSuccessMessage({message: "User account created!", visible: true})
-                        console.log(response.status);
-                    } else{
-                        setErrorMessage('Unable to register user!')
-                    }
-                })
+                        setSavingProgress('');
+                        window.location.replace(`/${params.institution}/${[params.role]}/patients`);
+                        if (response.status === 201){
+                            setNotification({message: "User account created!", severity: 'success'})
+                        } else{
+                            setNotification({message: 'Failed to save!', severity: 'error'})
+                        }
+                    })
                     .catch(error => setErrorMessage(error))
                 }, 5000);
                 }
             })
-            .catch(error => {
-                if (error.response && error.response.status >= 400 && error.response.status <= 500){
-                setErrorMessage(error.response.data.message);
-                }
+            .catch(error => { if (error.response && error.response.status >= 400 && error.response.status <= 500){ setErrorMessage(error.response.data.message) }
             })
         } 
     }
@@ -313,7 +305,7 @@ const AddPatientForm = () => {
                     </FormInputTwo>
                 </RightSide>
             </FieldSet>
-            <Button type='submit' variant='contained' size='small'>Submit</Button>
+            <Button type='submit' variant='contained' size='small'>{savingProgress !== '' ? savingProgress : "Submit"}</Button>
 
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity={notification.severity} sx={{ width: '100%' }}>
