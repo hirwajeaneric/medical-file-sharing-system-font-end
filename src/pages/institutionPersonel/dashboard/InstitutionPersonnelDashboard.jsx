@@ -156,7 +156,7 @@ const InstitutionPersonnelDashboard = () => {
       <PageBody style={{ marginBottom: '40px' }}>
         <PageHeaderContainer style={{ marginBottom: '20px'}}>
             <PageTitle>Records and Files</PageTitle>
-            <Button variant='contained' size='small' onClick={openRecord}>Add record</Button>
+            {medicalPersonnel.role !== 'nurse' ? <></> :<Button variant='contained' size='small' onClick={openRecord}>Add record</Button>}
         </PageHeaderContainer>
         <RecordsContainer>
             <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap', width: '51%' }}>

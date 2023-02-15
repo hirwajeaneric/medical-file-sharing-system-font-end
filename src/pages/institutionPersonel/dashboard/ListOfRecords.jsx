@@ -152,7 +152,7 @@ const ListOfRecords = () => {
               <input type="date" name="from" id="from" />
             </DateRangePicker>
           </Durations>
-            <Button variant='contained' size='small' onClick={openRecord}>Add record</Button>
+          {medicalPersonnel.role !== 'nurse' ? <></> :<Button variant='contained' size='small' onClick={openRecord}>Add record</Button>}
         </PageHeaderContainer>
         <RecordsContainer>
             <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap', width: '51%' }}>

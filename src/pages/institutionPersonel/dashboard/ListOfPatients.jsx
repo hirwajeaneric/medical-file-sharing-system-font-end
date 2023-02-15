@@ -12,6 +12,21 @@ const ListOfPatients = () => {
 
   // States
   const [patients, setPatients] = useState([]);
+  const [medicalPersonnel, setMedicalPersonnel] = useState({});
+    
+  useEffect(() => {
+    let personnel = {};
+    if (params.role === 'r') {
+        personnel = JSON.parse(localStorage.getItem('instAdmPe'));
+    } else if (params.role === 'd') {
+        personnel = JSON.parse(localStorage.getItem('instDocPe'));
+    } else if (params.role === 'n') {
+        personnel = JSON.parse(localStorage.getItem('instNurPe'));
+    } else if (params.role === 'l') {
+        personnel = JSON.parse(localStorage.getItem('instLabPe'));
+    } 
+    setMedicalPersonnel(personnel);
+  },[params.role]);
 
   // Data fetch
   useEffect(()=>{
@@ -29,7 +44,7 @@ const ListOfPatients = () => {
     <Container>
       <PageHeaderContainer>
         <PageTitle>List of patients</PageTitle>
-        <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/${params.role}/patients/new`)}>Add patient</Button>
+        {medicalPersonnel.role === 'doctor' ? <></> : <Button variant='contained' size='small' onClick={()=> navigate(`/${params.institution}/${params.role}/patients/new`)}>Add patient</Button>}
       </PageHeaderContainer>
       <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
       <PageBody style={{ marginBottom: '60px'}}>

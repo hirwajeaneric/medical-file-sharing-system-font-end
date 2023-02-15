@@ -54,6 +54,7 @@ import PatientsStats from './pages/institutionPersonel/dashboard/PatientsStats';
 import RecordAndFilesStats from './pages/institutionPersonel/dashboard/RecordAndFilesStats';
 import PersonnelStats from './pages/institutionPersonel/dashboard/PersonnelStats';
 import InsResetPassword from './components/authenticationRelated/InsResetPassword';
+import Institution from './pages/institutionPersonel/dashboard/Institution';
 
 // Contexts declaration 
 export var ResponseMessageContext = createContext();
@@ -164,6 +165,7 @@ function App() {
                             </Route>
                             <Route path='pharmacists' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionPharmacists /> : <Navigate replace to={`auth/signin`} />} />
                             <Route path='account' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionAccount /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='institution' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <Institution /> : <Navigate replace to={`auth/signin`} />} />
                           </Route>
                           <Route path='auth' element={<InstitutionAuthentication/>}>
                             <Route path='' element={<InstitutionSignin/>}/>
