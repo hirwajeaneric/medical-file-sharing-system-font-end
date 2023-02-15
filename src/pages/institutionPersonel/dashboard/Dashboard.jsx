@@ -94,17 +94,16 @@ const Dashboard = () => {
               </NavItemContainer>
             </>
           }
-          {(userIdentity.role === 'pharmacist' || userIdentity.institutionType === 'pharmacy') ? <></> : 
-          <>
-            <NavItemContainer to={'patients'}>
-              <BiUserCircle />
-              {isOpen && <NavItem>Patients</NavItem>}
-            </NavItemContainer>
+          <NavItemContainer to={'patients'}>
+            <BiUserCircle />
+            {isOpen && <NavItem>Patients</NavItem>}
+          </NavItemContainer>
+          {(userIdentity.role === 'nurse' || userIdentity.role === 'doctor' || userIdentity.role === 'lab technician') ? <></> : 
             <NavItemContainer to={'records'}>
               <BiFileBlank />
               {isOpen && <NavItem>Records</NavItem>}
             </NavItemContainer>
-          </>}
+          }
           {userIdentity.role === 'Representative' && 
             <>
               <NavItemContainer to={'personnel'}>
