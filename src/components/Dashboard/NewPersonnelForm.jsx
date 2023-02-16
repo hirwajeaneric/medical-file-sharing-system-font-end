@@ -29,7 +29,7 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
         setLocalData({ institutionId: local.institutionId, institutionName: local.institutionName })
 
         // Get all institution data
-        axios.get(`http://localhost:5050/api/mfss/institution/findById=${local.institutionId}`)
+        axios.get(`http://localhost:5050/api/mfss/institution/findById?id=${local.institutionId}`)
         .then(response => { setInstitution(response.data) })
         .catch(error => console.log(error));
     },[]);    
@@ -99,19 +99,16 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
                     let numberOfPersonnel = 0;
 
                     // Get full list of personnel
-                    console.log('Institution ID: '+localData.institutionId);
-
                     axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByInstitutionId?institutionId=${localData.institutionId}`)
                     .then(response => { 
                         numberOfPersonnel = response.data.length 
-                        console.log('The number of personnel recorded in the database is: '+response.data.length);
                     })
                     .catch(error => console.log(error));
 
                     setTimeout(() => {
                         // Update the number of personnel
                         institution.numberOfPersonnel = numberOfPersonnel;
-                        axios.put(`http://localhost:5050/api/mfss/institution/updateOne?id=${localData.institutionId}`,)
+                        axios.put(`http://localhost:5050/api/mfss/institution/updateOne?id=${localData.institutionId}`,institution)
                         .then(response => {
                             if (response.status === 201) {
                                 setProgress('');

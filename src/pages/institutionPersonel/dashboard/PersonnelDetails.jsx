@@ -77,12 +77,12 @@ const PersonnelDetails = ({popupPayLoad}) => {
     const deleteAccount = (e) => {
         e.preventDefault();
         
-        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/delete?id=${popupPayLoad.id}`)
+        axios.delete(`http://localhost:5050/api/mfss/institutionPersonnel/delete?id=${popupPayLoad.id}`)
         .then(response => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account deleted!"});
                 setOpen(true);
-                setTimeout(()=>{ window.location.reload(); },5000)
+                setTimeout(()=>{ window.location.reload(); },3000)
             }
         })
         .catch(error => {
