@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BiFileBlank, BiHomeAlt, BiMenuAltLeft, BiPaperPlane, BiUserCheck, BiUserCircle, BiUserX } from 'react-icons/bi'
+import { BiBuilding, BiFileBlank, BiHomeAlt, BiHotel, BiMenuAltLeft, BiPaperPlane, BiUserCheck, BiUserCircle, BiUserX } from 'react-icons/bi'
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { DashboardContainer, HospitalName, MainContent, MenuButton, MenuPopup, Mfss, NavigationComponents, NavItem, NavItemContainer, NavItemContainerHome, OutletSpace, SideBar, TitleContainer, TopBar, User } from '../../../components/Dashboard/DashboardComponents'
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
@@ -94,22 +94,25 @@ const Dashboard = () => {
               </NavItemContainer>
             </>
           }
-          {(userIdentity.role === 'pharmacist' || userIdentity.institutionType === 'pharmacy') ? <></> : 
-          <>
-            <NavItemContainer to={'patients'}>
-              <BiUserCircle />
-              {isOpen && <NavItem>Patients</NavItem>}
-            </NavItemContainer>
+          <NavItemContainer to={'patients'}>
+            <BiUserCircle />
+            {isOpen && <NavItem>Patients</NavItem>}
+          </NavItemContainer>
+          {(userIdentity.role === 'nurse' || userIdentity.role === 'doctor' || userIdentity.role === 'lab technician') ? <></> : 
             <NavItemContainer to={'records'}>
               <BiFileBlank />
               {isOpen && <NavItem>Records</NavItem>}
             </NavItemContainer>
-          </>}
+          }
           {userIdentity.role === 'Representative' && 
             <>
               <NavItemContainer to={'personnel'}>
                 <BiUserCheck />
                 {isOpen && <NavItem>Personnel</NavItem>}
+              </NavItemContainer>
+              <NavItemContainer to={'institution'}>
+                <BiBuilding />
+                {isOpen && <NavItem>My hospital</NavItem>}
               </NavItemContainer>
             </>
           }

@@ -17,6 +17,7 @@
     "froala-editor": "^4.0.17",
     "jspdf": "^2.5.1",
     "moment": "^2.29.4",
+    "nodemailer": "^6.9.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",

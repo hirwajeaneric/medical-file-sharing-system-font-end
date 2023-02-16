@@ -179,3 +179,31 @@ export const FormSectionTitle = styled.div`
 
     }
 `;
+
+export const UpdateInputs = styled.input`
+    padding: 5px;
+    border: 1px solid #94b8b8;
+    border-radius: 4px;
+    width: 200px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+
+    @media (max-width: 480px) {
+
+    }
+`;
+
+export const ResetPasswordButton = styled.button`
+    color: blue;
+    font-size: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+`;
+
+export const ResetPasswordText = styled.p`
+    margin-top: 40px;
+`;

@@ -53,6 +53,8 @@ import NewFile from './pages/institutionPersonel/dashboard/NewFile';
 import PatientsStats from './pages/institutionPersonel/dashboard/PatientsStats';
 import RecordAndFilesStats from './pages/institutionPersonel/dashboard/RecordAndFilesStats';
 import PersonnelStats from './pages/institutionPersonel/dashboard/PersonnelStats';
+import InsResetPassword from './components/authenticationRelated/InsResetPassword';
+import Institution from './pages/institutionPersonel/dashboard/Institution';
 
 // Contexts declaration 
 export var ResponseMessageContext = createContext();
@@ -123,6 +125,7 @@ function App() {
                             <Route path='signin' element={<AdminSignin/>}/>
                             <Route path='signup' element={<AdminSignup/>}/>
                             <Route path='forgotPassword' element={<AdminForgotPassword/>}/>
+                            {/* <Route path='resetPassword' element={<AdminForgotPassword/>}/> */}
                           </Route>
 
                           <Route path='dashboard' exact element={<Navigate replace to='/admin/auth/signin/' />} >
@@ -162,12 +165,14 @@ function App() {
                             </Route>
                             <Route path='pharmacists' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionPharmacists /> : <Navigate replace to={`auth/signin`} />} />
                             <Route path='account' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionAccount /> : <Navigate replace to={`auth/signin`} />} />
+                            <Route path='institution' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <Institution /> : <Navigate replace to={`auth/signin`} />} />
                           </Route>
                           <Route path='auth' element={<InstitutionAuthentication/>}>
                             <Route path='' element={<InstitutionSignin/>}/>
                             <Route path='signin' element={<InstitutionSignin/>}/>
                             <Route path='signup' element={<InstitutionSignup/>}/>
                             <Route path='forgotPassword' element={<InstitutionForgotPassword/>}/>
+                            <Route path='resetPassword/:token/:id' element={<InsResetPassword/>}/>
                           </Route>
                         </Route>
 

@@ -3,6 +3,9 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { DashboardWrapper, DateRangePicker, Durations, HeadSection, RangePeriods, StatsCategories } from '../../../components/Dashboard/AdminDashboards'
 
 const AdminDashboard = () => {
+
+  
+
   return (
     <DashboardWrapper>
       <HeadSection>

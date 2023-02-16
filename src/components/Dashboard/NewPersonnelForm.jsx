@@ -20,12 +20,18 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
     const [userInputErrors, setUserInputErrors] = useState({ firstName: "", lastName: "", email: "", phone: "", role: "" });
     const [notification, setNotification] = useState({ severity: '', message: '' });
     const [open, setOpen] = useState(false);
-
+    const [institution, setInstitution] = useState({});
+    const [progress, setProgress]= useState('');
 
     // Fetch Local Data
     useEffect(()=>{
         const local = JSON.parse(localStorage.getItem('instAdmPe'));
         setLocalData({ institutionId: local.institutionId, institutionName: local.institutionName })
+
+        // Get all institution data
+        axios.get(`http://localhost:5050/api/mfss/institution/findById=${local.institutionId}`)
+        .then(response => { setInstitution(response.data) })
+        .catch(error => console.log(error));
     },[]);    
 
     
@@ -84,15 +90,46 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
         } else {
             clearInputErrors();
 
+            setProgress('Recording user info ...')
+
             axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/addUser`, userInfo)
             .then(response=> {
                 if (response.status === 201) {
-                    setNotification({severity: 'success', message: "User information recorded!"});
-                    setOpen(true);
-                    clearInputs();
-                    setTimeout(()=>{
-                        window.location.reload();
-                    },5000)
+                    
+                    let numberOfPersonnel = 0;
+
+                    // Get full list of personnel
+                    console.log('Institution ID: '+localData.institutionId);
+
+                    axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByInstitutionId?institutionId=${localData.institutionId}`)
+                    .then(response => { 
+                        numberOfPersonnel = response.data.length 
+                        console.log('The number of personnel recorded in the database is: '+response.data.length);
+                    })
+                    .catch(error => console.log(error));
+
+                    setTimeout(() => {
+                        // Update the number of personnel
+                        institution.numberOfPersonnel = numberOfPersonnel;
+                        axios.put(`http://localhost:5050/api/mfss/institution/updateOne?id=${localData.institutionId}`,)
+                        .then(response => {
+                            if (response.status === 201) {
+                                setProgress('');
+                                setNotification({severity: 'success', message: "User information recorded!"});
+                                setOpen(true);
+                                clearInputs();
+                                setTimeout(()=>{
+                                    window.location.reload();
+                                },3000)
+                            }
+                        })
+                        .catch(error => {
+                            if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                                setNotification({ severity: 'error', message: error.response.data.message});
+                                setOpen(true);
+                            }
+                        })
+                    }, 3000);        
                 }
             })
             .catch(error => {
@@ -138,7 +175,7 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
                     </select>
                     {userInputErrors.role && <p>{userInputErrors.role}</p>}
                 </FormInput>
-                <Button variant='contained' size='small' color='success' onClick={handleSubmit}>Add</Button>
+                <Button variant='contained' size='small' color='success' onClick={handleSubmit}>{progress ? progress : 'Add'}</Button>
             </FormTwo>
             
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

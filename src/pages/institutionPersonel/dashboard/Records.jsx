@@ -7,6 +7,7 @@ import RecordsTable from '../../../components/tables/RecordsTable';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import ListOfRecords from './ListOfRecords';
 
 const Records = () => {
   // Other Hooks
@@ -67,9 +68,7 @@ const Records = () => {
       </Helmet>
       <PageTitle>Records</PageTitle>
       <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
-      <PageBody>
-        <RecordsTable data={requests}/>
-      </PageBody>
+      <ListOfRecords />
 
       {/* Popup */}
       {showModal ? 

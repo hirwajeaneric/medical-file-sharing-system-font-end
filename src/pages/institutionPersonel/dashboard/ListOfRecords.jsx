@@ -16,7 +16,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const InstitutionPersonnelDashboard = () => {
+const ListOfRecords = () => {
     // Hooks
     const navigate = useNavigate();
     const params = useParams();
@@ -134,29 +134,25 @@ const InstitutionPersonnelDashboard = () => {
 
   return (
     <DashboardWrapper>
-      <HeadSection>
-        <h2>Home</h2>
-        <Durations>
-          <div>
-            <button>All day</button>
-          </div>
-          <RangePeriods>
-            <button style={{ borderRight: '1px solid gray'}}>7 Days</button>
-            <button style={{ borderRight: '1px solid gray'}}>1 Month</button>
-            <button>1 Year</button>
-          </RangePeriods>
-          <DateRangePicker>
-            <input type="date" name="from" id="from" />
-            &nbsp;&nbsp;-&nbsp;&nbsp;
-            <input type="date" name="from" id="from" />
-          </DateRangePicker>
-        </Durations>
-      </HeadSection>
       {/* <Outlet /> */}
       <PageBody style={{ marginBottom: '40px' }}>
         <PageHeaderContainer style={{ marginBottom: '20px'}}>
-            <PageTitle>Records and Files</PageTitle>
-            {medicalPersonnel.role !== 'nurse' ? <></> :<Button variant='contained' size='small' onClick={openRecord}>Add record</Button>}
+            <Durations style={{ background: '#d1e0e0', padding: '5px', borderRadius: '4px'}}>
+            <div>
+              <button>All day</button>
+            </div>
+            <RangePeriods>
+              <button style={{ borderRight: '1px solid gray'}}>7 Days</button>
+              <button style={{ borderRight: '1px solid gray'}}>1 Month</button>
+              <button>1 Year</button>
+            </RangePeriods>
+            <DateRangePicker>
+              <input type="date" name="from" id="from" />
+              &nbsp;&nbsp;-&nbsp;&nbsp;
+              <input type="date" name="from" id="from" />
+            </DateRangePicker>
+          </Durations>
+          {medicalPersonnel.role !== 'nurse' ? <></> :<Button variant='contained' size='small' onClick={openRecord}>Add record</Button>}
         </PageHeaderContainer>
         <RecordsContainer>
             <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap', width: '51%' }}>
@@ -225,4 +221,4 @@ const InstitutionPersonnelDashboard = () => {
   )
 }
 
-export default InstitutionPersonnelDashboard
+export default ListOfRecords
