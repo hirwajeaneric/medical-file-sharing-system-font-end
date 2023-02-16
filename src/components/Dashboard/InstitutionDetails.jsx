@@ -64,13 +64,67 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
     const uploadOrUpdateLogo = (e) => {
         e.preventDefault();
 
+        const config = { headers: { "Content-Type":"multipart/form-data" } }
 
+        if (logo === '') {
+            setNotification({ severity: 'error', message: "No file uploaded"});
+            setOpen(true);
+            return;
+        } else {
+            institution.logo = logo;
+
+            axios.put(`http://localhost:5050/api/mfss/institution/updateLogo?id=${institution._id}`, institution, config)
+            .then(response => {
+                if (response.status === 201) {
+                    setUpdateInProgress({...updateInProgress, two: 'Updating...'});
+                    setTimeout(()=>{
+                        setNotification({severity: 'success', message: "Logo uploaded!"});
+                        setOpen(true);
+                        setUpdateInProgress({...updateInProgress, two: ''});
+                        window.location.reload();
+                    },3000)
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                    setNotification({ severity: 'error', message: error.response.data.message});
+                    setOpen(true);
+                }
+            })
+        }
     }
 
     const uploadOrUpdateCertificate = (e) => {
         e.preventDefault();
 
+        const config = { headers: { "Content-Type":"multipart/form-data" } }
         
+        if (certificate === '') {
+            setNotification({ severity: 'error', message: "No file uploaded"});
+            setOpen(true);
+            return;
+        } else {
+            institution.certificate = certificate;
+
+            axios.put(`http://localhost:5050/api/mfss/institution/updateCertificate?id=${institution._id}`, institution, config)
+            .then(response => {
+                if (response.status === 201) {
+                    setUpdateInProgress({...updateInProgress, three: 'Updating...'});
+                    setTimeout(()=>{
+                        setNotification({severity: 'success', message: "Certificate uploaded!"});
+                        setOpen(true);
+                        setUpdateInProgress({...updateInProgress, three: ''});
+                        window.location.reload();
+                    },3000)
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                    setNotification({ severity: 'error', message: error.response.data.message});
+                    setOpen(true);
+                }
+            })
+        }
     }
 
     return (
@@ -104,14 +158,6 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
                     </TwoSidedParagraphContainer>
                     <TwoSidedParagraphContainer style={{fontSize: '100%', marginBottom: '15px'}}>
                         <LeftHalf>
-                            <p>Work certificate:</p>
-                        </LeftHalf>
-                        <RightHalf>
-                            <a href={`http://localhost:5050/api/mfss/uploads/${institution.certificate}`} target='_blank' rel="noreferrer" style={{ fontSize: '200%', color: 'tomato'}} ><BsFileEarmarkPdf/></a>
-                        </RightHalf>
-                    </TwoSidedParagraphContainer>
-                    <TwoSidedParagraphContainer style={{fontSize: '100%', marginBottom: '15px'}}>
-                        <LeftHalf>
                             <p>Admin:</p>
                         </LeftHalf>
                         <RightHalf>
@@ -140,14 +186,24 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
                     <Button variant='contained' style={{marginTop: '20px'}} color="secondary" size='small' onClick={updateData}>{updateInProgress.one !== '' ? updateInProgress.one : 'Update'}</Button>
                 </RightHalf>
             </TwoSidedParagraphContainer>
-            <hr style={{ margin: '40px 0px 20px'}}/>
+            <hr style={{ margin: '20px 0px 20px'}}/>
             <TwoSidedParagraphContainer style={{ width: '100%'}}>
                 <LeftHalf >
-                    <h3>Upload logo</h3>
+                    <div 
+                        style={{ 
+                            backgroundImage: "url('http://localhost:5050/api/mfss/uploads/"+institution.logo+"')",  
+                            height: '150px',
+                            width: '150px',
+                            backgroundSize: 'cover',
+                            border: '1px solid gray',
+                            marginBottom: '20px',
+                        }}>
+                    </div>
                 </LeftHalf>
                 <RightHalf>
+                    <h3 style={{ marginBottom: '20px' }}>Upload/Update logo</h3>
                     <FormInput style={{ margin: '0px'}}>
-                        <input type="file" name='logo' onChange={handleLogo}/>
+                        <input type="file" accept="image/x-png,image/gif,image/jpeg" name='logo' onChange={handleLogo}/>
                     </FormInput>
                     <Button variant='contained' style={{marginTop: '20px'}} color="secondary" size='small' onClick={uploadOrUpdateLogo}>{updateInProgress.two !== '' ? updateInProgress.two : 'Update'}</Button>
                 </RightHalf>
@@ -155,11 +211,12 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
             <hr style={{ margin: '20px 0px'}}/>
             <TwoSidedParagraphContainer style={{ width: '100%'}}>
                 <LeftHalf>
-                    <h3>Upload certificate</h3>
+                    <a href={`http://localhost:5050/api/mfss/uploads/${institution.certificate}`} target='_blank' rel="noreferrer" style={{ fontSize: '500%', color: 'tomato'}} ><BsFileEarmarkPdf/></a>
                 </LeftHalf>
                 <RightHalf>
+                    <h3 style={{ marginBottom: '20px' }}>Upload/Update Certificate</h3>
                     <FormInput style={{ margin: '0px'}}>
-                        <input type="file" name='logo' onChange={handleCertificate}/>
+                        <input type="file" name='logo' accept=".pdf" onChange={handleCertificate}/>
                     </FormInput>
                     <Button variant='contained' style={{marginTop: '20px'}} color="secondary" size='small' onClick={uploadOrUpdateCertificate}>{updateInProgress.three !== '' ? updateInProgress.three : 'Update'}</Button>
                 </RightHalf>

@@ -92,8 +92,14 @@ const FileDetails = ({file}) => {
     return (
         <>
             <div id='file' style={{ display: 'flex', flexDirection: 'column', padding: '50px', width: '100%' }}>
-                <h3 style={{ textAlign: 'left' }}>{file.hospitalName}</h3>
-                <p style={{ textAlign: 'left',  }}>{file.hospitalLocation}</p>
+                <div style={{display: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+                    <div>
+                        <h3 style={{ textAlign: 'left' }}>{file.hospitalName}</h3>
+                        <p style={{ textAlign: 'left',  }}>{file.hospitalLocation}</p>
+                    </div>
+                    <img src={`http://localhost:5050/api/mfss/uploads/${file.hospitalLogo}`} alt='' style={{ height: '100px', width: '100px', backgroundSize: 'cover' }} />
+                </div>
+
                 {file.type=== 'laboratory tests' && <FileHeader>Laboratory Tests</FileHeader>} 
                 {file.type=== 'medical prescritions' && <FileHeader>Medical Prescriptions</FileHeader>}
                 {file.type=== 'patient transfer' && <FileHeader>Patient Transfer</FileHeader>}

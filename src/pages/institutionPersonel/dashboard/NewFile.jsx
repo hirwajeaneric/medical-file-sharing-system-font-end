@@ -105,6 +105,7 @@ const NewFile = () => {
             file.patientAge = (new Date().getFullYear() - new Date(patientInfo.dateOfBirth).getFullYear()).toString();
             file.hospitalLocation = institutionInformation.location;
             file.fileAttachment = attachment;
+            file.hospitalLogo = institutionInformation.logo;
             
             // Populating file data.
             if ( inputData.requiredTest ){
