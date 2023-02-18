@@ -80,6 +80,8 @@ const InstitutionPersonnelDashboard = () => {
 
       const recordToBeSaved = { firstName: patient.firstName, lastName: patient.lastName, patientId: patient._id, email: patient.email, hospitalName: medicalPersonnel.institutionName, hospitalId: medicalPersonnel.institutionId, recordOpener: medicalPersonnel.firstName+" "+medicalPersonnel.lastName, recordCloser: "", openTime: new Date(), closeTime: "", status: "open", insuranceName: "" };
 
+      console.log(recordToBeSaved);
+
       axios.post(`http://localhost:5050/api/mfss/record/new`, recordToBeSaved)
       .then(response => {
           if (response.status === 201) {
@@ -156,7 +158,7 @@ const InstitutionPersonnelDashboard = () => {
       <PageBody style={{ marginBottom: '40px' }}>
         <PageHeaderContainer style={{ marginBottom: '20px'}}>
             <PageTitle>Records and Files</PageTitle>
-            {medicalPersonnel.role !== 'nurse' ? <></> :<Button variant='contained' size='small' onClick={openRecord}>Add record</Button>}
+            {/* {medicalPersonnel.role !== 'nurse' ? <></> :<Button variant='contained' size='small' onClick={openRecord}>Add record</Button>} */}
         </PageHeaderContainer>
         <RecordsContainer>
             <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap', width: '51%' }}>
@@ -172,12 +174,13 @@ const InstitutionPersonnelDashboard = () => {
                 {recordDetails.openTime && 
                     <RecordDescriptionHeader>
                         <LeftHalf>
+                            <p>Patient: <strong>{recordDetails.firstName+" "+recordDetails.lastName}</strong></p>
                             <p>Open date: <strong>{recordDetails.openTime}</strong></p>
                             <p>By: <strong>{recordDetails.recordOpener}</strong></p>
                             <p>Created at: <strong>{recordDetails.hospitalName}</strong></p>
-                            <p>Status: <strong>open</strong></p>
                         </LeftHalf>
                         <RightHalf>
+                            <p>Status: <strong>open</strong></p>
                             <p>Close date: <strong>{recordDetails.closeTime}</strong></p>
                             <p>By: <strong>{recordDetails.recordCloser}</strong></p>
                             <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>

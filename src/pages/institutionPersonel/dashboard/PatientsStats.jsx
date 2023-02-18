@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 const PatientsStats = () => {    
     const params = useParams();
     
-    const [topStats, setTopStats] = useState({ servedPatients: 0, registeredPatients: 0, transferedPatients: 0, complainingPatients: 0 });
+    const [topStats, setTopStats] = useState({ servedPatients: 0, registeredPatients: 0, transferedPatients: 0 });
     const [data, setData] = useState({});
     const [medicalPersonnel, setMedicalPersonnel] = useState({});
     
@@ -24,34 +24,46 @@ const PatientsStats = () => {
         } 
         setMedicalPersonnel(personnel);
 
+        var registeredPatients = [];
+        var served = [];
+        var transfered = [];
+
         // Fetch patients
         axios.get(`http://localhost:5050/api/mfss/patient/list`)
         .then(response => {
-            let registeredPatients = [];
             response.data.forEach(element => {
                 if (element.registeredAt === personnel.institutionName) {
                     registeredPatients.push(element);
                 }
-            });
-
-            setTopStats({...topStats, registeredPatients: registeredPatients.length});
+            })
         })
         .catch(error => console.log(error));
 
         // Fetch records
         axios.get(`http://localhost:5050/api/mfss/record/list`)
         .then(response => {
-            let served = [];
             response.data.forEach(element => {
                 if (element.hospitalName === personnel.institutionName) {
                     served.push(element);
                 }
-            });
-
-            setTopStats({...topStats, servedPatients: served.length});
+            })
         })
         .catch(error => console.log(error));
-    },[params.role, topStats])
+
+        // Fetch files
+        axios.get(`http://localhost:5050/api/mfss/file/list`)
+        .then(response => {
+            response.data.forEach(element => {
+                if (element.hospitalName === personnel.institutionName && element.type === 'patient transfer') {
+                    transfered.push(element);
+                }
+            })
+        })
+        .catch(error => console.log(error));
+
+        // Populate all stats
+        setTopStats({ registeredPatients: registeredPatients.length, servedPatients: served.length, transferedPatients: transfered.length});
+    },[params.role])
 
     return (
         <>

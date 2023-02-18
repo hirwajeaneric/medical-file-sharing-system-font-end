@@ -50,11 +50,12 @@ import ErrorPage from './pages/ErrorPage';
 import PatientDetails from './pages/institutionPersonel/dashboard/PatientDetails';
 import PatientFilesAndRecords from './pages/institutionPersonel/dashboard/PatientFilesAndRecords';
 import NewFile from './pages/institutionPersonel/dashboard/NewFile';
-import PatientsStats from './pages/institutionPersonel/dashboard/PatientsStats';
+// import PatientsStats from './pages/institutionPersonel/dashboard/PatientsStats';
 import RecordAndFilesStats from './pages/institutionPersonel/dashboard/RecordAndFilesStats';
 import PersonnelStats from './pages/institutionPersonel/dashboard/PersonnelStats';
 import InsResetPassword from './components/authenticationRelated/InsResetPassword';
 import Institution from './pages/institutionPersonel/dashboard/Institution';
+import SearchResults from './pages/institutionPersonel/dashboard/SearchResults';
 
 // Contexts declaration 
 export var ResponseMessageContext = createContext();
@@ -144,9 +145,10 @@ function App() {
                         <Route path={`/:institution/`} element={<InstitutionPersonnel/>}>
                           <Route exact path='*' element={<ErrorPage />} />
                           <Route exact path=':role/' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionDashboard/> : <Navigate replace to={`../auth/signin`} />}>
+                            <Route path='results' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <SearchResults /> : <Navigate replace to={`auth/signin`} />} />
                             <Route path='' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionDashBoardHome /> : <Navigate replace to={`auth/signin`} />} >
-                              <Route path='' element={<PatientsStats/>}/>
-                              <Route path='pa' element={<PatientsStats/>}/>
+                              <Route path='' element={<RecordAndFilesStats/>}/>
+                              {/* <Route path='pa' element={<PatientsStats/>}/> */}
                               <Route path='per' element={<PersonnelStats/>}/>
                               <Route path='rec' element={<RecordAndFilesStats/>}/>
                             </Route>

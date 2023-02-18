@@ -126,7 +126,7 @@ export const RecordDescriptionHeader = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     font-size: 85%;
     width: 98%;

@@ -148,7 +148,6 @@ const NewFile = () => {
 
     const handleFormInput = ({currentTarget: input}) => {
         setFile({...file, [input.name]: input.value})
-        console.log(file);
     }
 
     const handleClose = (event, reason) => {

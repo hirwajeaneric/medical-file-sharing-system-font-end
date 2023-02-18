@@ -1,17 +1,64 @@
-import React, { useState } from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
 import PatientChart from '../../../components/Charts/PatientChart'
 import { AStatistic, ChartOne, ChartSection, SideChart, Stats } from '../../../components/Dashboard/AdminDashboards'
 
 const RecordAndFilesStats = () => {
-    
-    const [topStats, setTopStats] = useState({
-        total: 100,
-        open: 40,
-        closed: 60,
-        empty: 45
-    })
+    const params = useParams();
+
+    const [topStats, setTopStats] = useState({ total: 0, open: 0, closed: 0, hospitalized: 0 })
     const [data, setData] = useState({});
+    const [medicalPersonnel, setMedicalPersonnel] = useState({});
     
+    useEffect(() => {
+        let personnel = {};
+        if (params.role === 'r') {
+            personnel = JSON.parse(localStorage.getItem('instAdmPe'));
+        } else if (params.role === 'd') {
+            personnel = JSON.parse(localStorage.getItem('instDocPe'));
+        } else if (params.role === 'n') {
+            personnel = JSON.parse(localStorage.getItem('instNurPe'));
+        } else if (params.role === 'l') {
+            personnel = JSON.parse(localStorage.getItem('instLabPe'));
+        } 
+        setMedicalPersonnel(personnel);
+
+        // Bring filter information
+        var filter = JSON.parse(localStorage.getItem('filter'));
+
+        // Fetch patients
+        axios.get(`http://localhost:5050/api/mfss/record/list`)
+        .then(response => {
+            let total = [];
+            let open = [];
+            let closed = []; 
+            let hospitalized = [];          
+            let today = new Date().getTime();
+
+            response.data.forEach(element => {
+                if (element.hospitalName === personnel.institutionName && Date.parse(element.openTime) >= Date.parse(new Date(filter.from)) && Date.parse(element.openTime) <= Date.parse(new Date(filter.to))) {
+                    total.push(element);
+                    let openDate = new Date(element.openTime).getTime();
+                    
+                    if (!element.closeTime && !element.recordCloser) {
+                        open.push(element);
+                    }
+                    if (element.closeTime && element.recordCloser) {
+                        closed.push(element);
+                    }
+
+                    if (((today - openDate) / (1000 * 3600 * 24)) > 4 && !element.closeTime && !element.recordCloser) {
+                        hospitalized.push(element);
+                    }
+                } 
+            });
+
+            setTopStats({ total: total.length, open: open.length, closed: closed.length, hospitalized: hospitalized.length });
+        })
+        .catch(error => console.log(error));
+    },[params.role])
+
     return (
         <>
             <Stats>
@@ -38,8 +85,8 @@ const RecordAndFilesStats = () => {
                 </AStatistic>
                 <AStatistic>
                     <div>
-                        <h1>{topStats.empty}</h1>
-                        <p>Empty</p>
+                        <h1>{topStats.hospitalized}</h1>
+                        <p>Hospitalized</p>
                     </div>
                     <img src="/img/4.png" alt="" />
                 </AStatistic>
