@@ -5,6 +5,7 @@ import { DashboardContainer, HospitalName, MainContent, MenuButton, MenuPopup, M
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Helmet } from 'react-helmet-async';
+import SearchBoxForPatients from '../../../components/Dashboard/SearchBoxForPatients';
 
 const Dashboard = () => {
   const params = useParams();
@@ -82,7 +83,7 @@ const Dashboard = () => {
         {isOpen && userIdentity.role === 'nurse' && <p style={{ fontSize: '85%', fontWeight: '700'}}>Nurse</p>}
         {isOpen && userIdentity.role === 'lab technician' && <p style={{ fontSize: '85%', fontWeight: '700'}}>Lab Technician</p>}
         <NavigationComponents>
-          <NavItemContainerHome to={'pa'}>
+          <NavItemContainerHome to={'rec'}>
             <BiHomeAlt />
             {isOpen && <NavItem>Dashboard</NavItem>}
           </NavItemContainerHome>
@@ -124,9 +125,12 @@ const Dashboard = () => {
       </SideBar>
       <MainContent>
         <TopBar>
-          <MenuButton onClick={minimizeView}>
-            <BiMenuAltLeft />
-          </MenuButton>
+          <div style={{ display: 'flex', flexWrap: 'nowrap', alignItems:'center', justifyContent: 'flex-start', gap: '40px' }}>
+            <MenuButton onClick={minimizeView}>
+              <BiMenuAltLeft />
+            </MenuButton>
+            <SearchBoxForPatients />
+          </div>
           <User>
             <BiUserCircle/>
             <p>{userIdentity.firstName+" "+userIdentity.lastName}</p>

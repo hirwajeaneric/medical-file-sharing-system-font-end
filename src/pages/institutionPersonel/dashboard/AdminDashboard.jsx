@@ -27,9 +27,8 @@ const AdminDashboard = () => {
         </Durations>
       </HeadSection>
       <StatsCategories>
-        <NavLink to={'pa'}>Patients</NavLink>
+        <NavLink to={'rec'}>Patient records</NavLink>
         <NavLink to={'per'}>Personnel</NavLink>
-        <NavLink to={'rec'}>Records & Files</NavLink>
       </StatsCategories>
       <Outlet />
     </DashboardWrapper>

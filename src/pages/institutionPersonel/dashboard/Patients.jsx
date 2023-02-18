@@ -9,7 +9,7 @@ const Patients = () => {
         <title>List of Patients - Medicase</title>
         <meta name="description" content="Medicase, list of all institution or hospital personnel registered and using the system."/> 
       </Helmet>      
-        <Outlet />
+      <Outlet />
     </>
   )
 }

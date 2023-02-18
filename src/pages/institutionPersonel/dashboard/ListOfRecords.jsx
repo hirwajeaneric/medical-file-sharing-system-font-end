@@ -168,12 +168,13 @@ const ListOfRecords = () => {
                 {recordDetails.openTime && 
                     <RecordDescriptionHeader>
                         <LeftHalf>
+                            <p>Patient: <strong>{recordDetails.firstName+" "+recordDetails.lastName}</strong></p>
                             <p>Open date: <strong>{recordDetails.openTime}</strong></p>
                             <p>By: <strong>{recordDetails.recordOpener}</strong></p>
                             <p>Created at: <strong>{recordDetails.hospitalName}</strong></p>
-                            <p>Status: <strong>open</strong></p>
                         </LeftHalf>
                         <RightHalf>
+                            <p>Status: <strong>open</strong></p>
                             <p>Close date: <strong>{recordDetails.closeTime}</strong></p>
                             <p>By: <strong>{recordDetails.recordCloser}</strong></p>
                             <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>
