@@ -24,21 +24,23 @@ const RecordAndFilesStats = () => {
         } 
         setMedicalPersonnel(personnel);
 
+        // Bring filter information
+        var filter = JSON.parse(localStorage.getItem('filter'));
+
         // Fetch patients
         axios.get(`http://localhost:5050/api/mfss/record/list`)
         .then(response => {
             let total = [];
             let open = [];
             let closed = []; 
-            let hospitalized = [];
+            let hospitalized = [];          
             let today = new Date().getTime();
 
             response.data.forEach(element => {
-                if (element.hospitalName === personnel.institutionName) {
+                if (element.hospitalName === personnel.institutionName && Date.parse(element.openTime) >= Date.parse(new Date(filter.from)) && Date.parse(element.openTime) <= Date.parse(new Date(filter.to))) {
                     total.push(element);
                     let openDate = new Date(element.openTime).getTime();
-                    console.log("Difference: "+((today - openDate) / (1000 * 3600 * 24)))
-
+                    
                     if (!element.closeTime && !element.recordCloser) {
                         open.push(element);
                     }

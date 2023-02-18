@@ -31,8 +31,12 @@ const PersonnelStats = () => {
             let doctors = [];
             let nurses = []; 
             let labtechnicians = [];
+
+            // Bring filter information
+            var filter = JSON.parse(localStorage.getItem('filter'));
+
             response.data.forEach(element => {
-                if (element.institutionName === personnel.institutionName) {
+                if (element.institutionName === personnel.institutionName && Date.parse(element.joinDate) >= Date.parse(new Date(filter.from)) && Date.parse(element.joinDate) <= Date.parse(new Date(filter.to))) {
                     total.push(element);
                     
                     if (element.role === 'nurse') {

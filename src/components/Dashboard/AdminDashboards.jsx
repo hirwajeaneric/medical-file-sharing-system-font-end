@@ -89,6 +89,18 @@ export const DateRangePicker = styled.div`
         border: none;
         color: gray;
     }
+    button {
+        padding: 0 10px !important;
+        margin: 0 0 0 10px; 
+        border-left: 1px solid gray !important;
+        cursor: pointer;
+
+        svg {
+            font-size: 100%;
+            margin: 0px 0 0 0;
+            padding: 0;
+        }
+    }
 `;
 
 export const StatsCategories = styled.div`
