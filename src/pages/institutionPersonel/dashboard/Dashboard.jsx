@@ -35,6 +35,20 @@ const Dashboard = () => {
     setUserIdentity(userData);
   },[params.institution, params.role])
 
+  useEffect(()=>{
+    // Setting up the filters:
+    if (!localStorage.getItem('filter')) {
+      let currentTime = new Date().getTime();
+      let midNight = new Date(currentTime + (1 * 24 * 60 * 60 * 1000))
+      let updatedTime = new Date(currentTime - (1 * 24 * 60 * 60 * 1000));
+      let filter = { 
+        from: updatedTime.toLocaleDateString(), 
+        to: midNight.toLocaleDateString(), 
+      }
+      localStorage.setItem('filter', JSON.stringify(filter));
+    }
+  },[])
+
 
   const [isOpen, setIsOpen] = useState(true);
   const [openPopup, setOpenPopup] = useState(false);
@@ -63,6 +77,8 @@ const Dashboard = () => {
       localStorage.removeItem('insttLabPe');
     }
     
+    localStorage.removeItem('filter');
+
     navigate(`/${params.institution}/auth/signin`)
   }  
 

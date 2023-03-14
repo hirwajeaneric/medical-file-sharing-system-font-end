@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { ResetPasswordButton, ResetPasswordText, UpdateInputs } from '../HomePage/InstitutionsComponents';
 import MuiAlert from '@mui/material/Alert';
+import moment from 'moment';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -122,7 +123,7 @@ const UserAccountData = () => {
                             <p>Join Date:</p>
                         </LeftHalf>
                         <RightHalf>
-                            <strong>{userInformation.joinDate}</strong>
+                            <strong>{moment(`${userInformation.joinDate}`).format("MMM Do YYYY")}</strong>
                         </RightHalf>
                     </TwoSidedParagraphContainer>
                     <TwoSidedParagraphContainer style={{fontSize: '100%', marginBottom: '15px'}}>

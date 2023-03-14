@@ -2,13 +2,14 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import PatientChart from '../../../components/Charts/PatientChart'
+import PersonnelChart from '../../../components/Charts/PersonnelChart';
 import { AStatistic, ChartOne, ChartSection, SideChart, Stats } from '../../../components/Dashboard/AdminDashboards'
 
 const PersonnelStats = () => {
     const params = useParams();
     
     const [topStats, setTopStats] = useState({ total: 0, doctors: 0, nurses: 0, labtechnicians: 0 })
-    const [data, setData] = useState({});
+    const [data, setData] = useState({active: 0, inactive: 0});
     const [medicalPersonnel, setMedicalPersonnel] = useState({});
     
     useEffect(() => {
@@ -49,6 +50,12 @@ const PersonnelStats = () => {
                         labtechnicians.push(element);
                     }
                 } 
+
+                if (element.institutionName === personnel.institutionName) {
+                    
+                } 
+
+
             });
 
             setTopStats({ total: total.length, doctors: doctors.length, nurses: nurses.length, labtechnicians: labtechnicians.length });
@@ -89,12 +96,12 @@ const PersonnelStats = () => {
                 </AStatistic>
             </Stats>
             <ChartSection>
-                <ChartOne>
-                    <PatientChart data={data} />
+                <ChartOne style={{ width: '100%'}}>
+                    {/* <PersonnelChart data={data} /> */}
                 </ChartOne>
-                <SideChart>
-                    <h3>Side bar</h3>
-                </SideChart>
+                {/* <SideChart>
+                    <h4>Recent Activities</h4>
+                </SideChart> */}
             </ChartSection>
         </>
     )

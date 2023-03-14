@@ -99,7 +99,7 @@ const PatientsStats = () => {
             </Stats>
             <ChartSection>
                 <ChartOne>
-                    <PatientChart data={data} />
+                    {/* <PatientChart data={data} /> */}
                 </ChartOne>
                 <SideChart>
                     <h3>Side bar</h3>

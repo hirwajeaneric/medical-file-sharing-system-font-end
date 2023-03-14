@@ -64,19 +64,19 @@ const AdminDashboard = () => {
       <HeadSection>
         <h2>Overview dashbaord</h2>
         <Durations>
-          <div>
-            <button onClick={()=> {changeFilter(1)}}>All day</button>
-          </div>
-          <RangePeriods>
-            <button onClick={()=> {changeFilter(7)}} style={{ borderRight: '1px solid gray'}}>7 Days</button>
-            <button onClick={()=> {changeFilter(30)}} style={{ borderRight: '1px solid gray'}}>1 Month</button>
-            <button onClick={()=> {changeFilter(365)}} >1 Year</button>
-          </RangePeriods>
-          <DateRangePicker>
+            <div>
+            <button onClick={()=> {changeFilter(1)}} style={{ cursor: 'pointer' }}>All day</button>
+            </div>
+            <RangePeriods>
+              <button onClick={()=> {changeFilter(7)}} style={{ borderRight: '1px solid gray', cursor: 'pointer' }}>7 Days</button>
+              <button onClick={()=> {changeFilter(30)}} style={{ borderRight: '1px solid gray', cursor: 'pointer'}}>1 Month</button>
+              <button onClick={()=> {changeFilter(365)}} style={{ cursor: 'pointer' }}>1 Year</button>
+            </RangePeriods>
+            <DateRangePicker>
             <input type="date" name="from" id="from" value={filterValue.from} onChange={handleDateChoice}/>
             &nbsp;&nbsp;-&nbsp;&nbsp;
             <input type="date" name="to" id="to" value={filterValue.to} onChange={handleDateChoice}/>
-            <button onClick={filter}><BiSearchAlt /></button>
+            <button onClick={filter} style={{ cursor: 'pointer' }}><BiSearchAlt /></button>
           </DateRangePicker>
         </Durations>
       </HeadSection>
