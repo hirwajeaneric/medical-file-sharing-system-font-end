@@ -96,6 +96,10 @@ export const User = styled.div`
     align-items: center;
     position: relative;
 
+    p {
+        font-size: 1em;
+    }
+
     button {
         background: none;
         border: none;
@@ -103,7 +107,7 @@ export const User = styled.div`
     }
 
     svg {
-        font-size: 150%;
+        font-size: 1.5rem;
     }
 
     @media (max-width: 1080px) {
@@ -111,7 +115,9 @@ export const User = styled.div`
     }
 
     @media (max-width: 768px) {
-
+        p {
+            font-size: .6 rem;
+        }
     }
 
     @media (max-width: 480px) {

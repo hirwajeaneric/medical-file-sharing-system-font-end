@@ -6,7 +6,7 @@ const PatientChart = ({data}) => {
   return (
     <div>
       <ChartHeader>Graph of Patients and Opened Records</ChartHeader>
-      <BarChart />
+      <BarChart dataset={data} />
     </div>
   )
 }

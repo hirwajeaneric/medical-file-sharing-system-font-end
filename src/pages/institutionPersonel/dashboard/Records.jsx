@@ -74,7 +74,6 @@ const Records = () => {
         <DetailsPopup onClick={closeModal} ref={modalRef}>
           <PopupBody showModal={showModal}>
             <CloseRoundedIcon aria-label='Close modal' onClick={()=> setShowModal(prev => !prev)} style={{ cursor: 'pointer'}} />
-            {/* <RequestDetails popupPayLoad={popupPayLoad} /> */}
           </PopupBody>
         </DetailsPopup>
       :

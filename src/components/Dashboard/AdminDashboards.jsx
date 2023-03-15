@@ -227,6 +227,10 @@ export const ChartOne = styled.div`
     padding: 20px;
     border-radius: 5px;
 
+    h4 {
+        margin-bottom: 10px;
+    }
+
     @media (max-width: 1080px) {
         
     }

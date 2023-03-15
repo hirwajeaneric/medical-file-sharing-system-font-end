@@ -34,9 +34,6 @@ const ListOfRecords = () => {
     const [open, setOpen] = useState(false);
     const [file, setFile] = useState({creationDate: "", recordId: "", patientId: "", patientName: "", patientGender: "", patientAge: "", doctorId: "", nurseId: "", labTechId: "", type: "", prescriptions: "", exams: "", hospitalName: "", hospitalId: "", hospitalLocation: "", fileAttachment: "" })
 
-    // Bring filter information
-    var filterData = JSON.parse(localStorage.getItem('filter'));
-
     // Popup states
     const [openModal, setOpenModal] = useState(false);
     const handleOpenModal = () => setOpenModal(true);
@@ -44,33 +41,10 @@ const ListOfRecords = () => {
 
     // Fetch Records
     useEffect(()=>{
-      axios.get(`http://localhost:5050/api/mfss/record/list`)
-      .then(response => { 
-        let records = [];
-        response.data.forEach((element)=>{
-          if (element.hospitalId === medicalPersonnel.institutionId
-            && Date.parse(element.openTime) >= Date.parse(new Date(filterData.from)) 
-            && Date.parse(element.openTime) <= Date.parse(new Date(filterData.to))) 
-          {
-            records.push(element);
-          }
-        })
-        setRecords(records); 
-        console.log('Records');
-        console.log(records);
-      })
-      .catch(error => { console.log(error) })
-    },[filterData.from, filterData.to, medicalPersonnel.institutionId])
+      // Bring filter information
+      var filterData = JSON.parse(localStorage.getItem('filter'));
 
-    // Fetch files for this patients record
-    useEffect(()=>{
-      axios.get(`http://localhost:5050/api/mfss/file/findByRecordId?recordId=${recordDetails._id}`)
-      .then(response => { setFiles(response.data); })
-      .catch(error => { console.log(error) })
-    },[recordDetails._id])
-
-    // Fetch Medical Personnel information 
-    useEffect(()=> {
+      // Fetch personnel information
       let personnel = {};
       if (params.role === 'r') {
           personnel = JSON.parse(localStorage.getItem('instAdmPe'));
@@ -82,7 +56,44 @@ const ListOfRecords = () => {
           personnel = JSON.parse(localStorage.getItem('instLabPe'));
       } 
       setMedicalPersonnel(personnel);
+
+      axios.get(`http://localhost:5050/api/mfss/record/list`)
+      .then(response => { 
+        let records = [];
+        response.data.forEach((element)=>{
+          if (element.hospitalId === personnel.institutionId
+            && Date.parse(element.openTime) >= Date.parse(new Date(filterData.from)) 
+            && Date.parse(element.openTime) <= Date.parse(new Date(filterData.to))) 
+          {
+            records.push(element);
+          }
+        })
+        setRecords(records); 
+      })
+      .catch(error => { console.log(error) })
     },[params.role])
+
+    // Fetch files for this patients record
+    useEffect(()=>{
+      axios.get(`http://localhost:5050/api/mfss/file/findByRecordId?recordId=${recordDetails._id}`)
+      .then(response => { setFiles(response.data); })
+      .catch(error => { console.log(error) })
+    },[recordDetails._id])
+
+    // Fetch Medical Personnel information 
+    // useEffect(()=> {
+    //   let personnel = {};
+    //   if (params.role === 'r') {
+    //       personnel = JSON.parse(localStorage.getItem('instAdmPe'));
+    //   } else if (params.role === 'd') {
+    //       personnel = JSON.parse(localStorage.getItem('instDocPe'));
+    //   } else if (params.role === 'n') {
+    //       personnel = JSON.parse(localStorage.getItem('instNurPe'));
+    //   } else if (params.role === 'l') {
+    //       personnel = JSON.parse(localStorage.getItem('instLabPe'));
+    //   } 
+    //   setMedicalPersonnel(personnel);
+    // },[params.role])
 
   // Open record
   const openRecord = (e) => {
