@@ -1,13 +1,28 @@
 import React, { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { DashboardWrapper, DateRangePicker, Durations, HeadSection, RangePeriods, StatsCategories } from '../../../components/Dashboard/AdminDashboards'
 import { FcSearch } from 'react-icons/fc';
 import { BiSearchAlt } from 'react-icons/bi';
+import { Button, Menu, MenuItem } from '@mui/material';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const params = useParams();
 
   const [filterValue, setFilterValue] = useState({ from: '', to:'' });
   
+  // Report generation menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    navigate(`/${params.institution}/${params.role}/reports/`);
+    localStorage.setItem('report', )
+  };
+
   // Changing the filter according to what is choosen.
   const changeFilter = (duration) => {
     let filter = {}
@@ -81,8 +96,24 @@ const AdminDashboard = () => {
         </Durations>
       </HeadSection>
       <StatsCategories>
-        <NavLink to={'rec'}>Patient records</NavLink>
-        <NavLink to={'per'}>Personnel</NavLink>
+        <div>
+          <NavLink to={'rec'}>Patient records</NavLink>
+          <NavLink to={'per'}>Personnel</NavLink>
+        </div>
+        <Button variant='text' size='small' color='primary' onClick={handleClick} >Print reports</Button>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+        >
+          <MenuItem onClick={handleClose}>General hospital report</MenuItem>
+          <MenuItem onClick={handleClose}>Patients report</MenuItem>
+          <MenuItem onClick={handleClose}>Hospital personnel report</MenuItem>
+        </Menu>
       </StatsCategories>
       <Outlet />
     </DashboardWrapper>
