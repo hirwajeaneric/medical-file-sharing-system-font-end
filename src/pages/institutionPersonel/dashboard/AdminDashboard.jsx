@@ -109,9 +109,9 @@ const AdminDashboard = () => {
             'aria-labelledby': 'basic-button',
           }}
         >
-          <MenuItem onClick={() => { handleClose(); goToReportPage('General hospital report'); }}>General hospital report</MenuItem>
-          <MenuItem onClick={() => { handleClose(); goToReportPage('Patient report'); }}>Patients report</MenuItem>
-          <MenuItem onClick={() => { handleClose(); goToReportPage('Hospital personnel report'); }}>Hospital personnel report</MenuItem>
+          <MenuItem onClick={() => { handleClose(); goToReportPage('General Hospital Report'); }}>General hospital report</MenuItem>
+          <MenuItem onClick={() => { handleClose(); goToReportPage('Patient Report'); }}>Patients report</MenuItem>
+          <MenuItem onClick={() => { handleClose(); goToReportPage('Hospital Personnel Report'); }}>Hospital personnel report</MenuItem>
         </Menu>
       </StatsCategories>
       <Outlet />

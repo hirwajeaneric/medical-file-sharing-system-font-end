@@ -66,6 +66,12 @@ const Dashboard = () => {
     if (userIdentity.role === 'Representative') {
       localStorage.removeItem('insttAdmTok');
       localStorage.removeItem('instAdmPe');
+      localStorage.removeItem('stats-patients');
+      localStorage.removeItem('payload-patients');
+      localStorage.removeItem('stats-personnel');
+      localStorage.removeItem('payload-personnel');
+      localStorage.removeItem('report');
+      localStorage.removeItem('filter');
     } else if (userIdentity.role === 'doctor') {
       localStorage.removeItem('insttDocTok');
       localStorage.removeItem('instDocPe');

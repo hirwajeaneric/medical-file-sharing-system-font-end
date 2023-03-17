@@ -61,6 +61,13 @@ const RecordAndFilesStats = () => {
             setData(total);
             setTopStats({ total: total.length, open: open.length, closed: closed.length, hospitalized: hospitalized.length });
         
+            // Stringifying and sending filtered data to the localstorage for other pages to use it.
+            const localPatients = JSON.stringify(total);
+            const localStats = JSON.stringify({ total: total.length, open: open.length, closed: closed.length, hospitalized: hospitalized.length })
+
+            localStorage.setItem('payload-patients', localPatients);
+            localStorage.setItem('stats-patients',localStats);
+
         })
         .catch(error => console.log(error));
     },[params.role])
