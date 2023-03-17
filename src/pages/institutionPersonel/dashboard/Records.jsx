@@ -1,9 +1,8 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios';
-import { Container, DetailsPopup, PageBody, PageTitle, PopupBody } from '../../../components/Dashboard/DashboardHome'
+import { Container, DetailsPopup, PageTitle, PopupBody } from '../../../components/Dashboard/DashboardHome'
 import { ShowModalContext, ShowModalContextSetter} from '../../../App';
 import { PopupPayLoadContext } from '../../../App';
-import RecordsTable from '../../../components/tables/RecordsTable';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
@@ -75,7 +74,6 @@ const Records = () => {
         <DetailsPopup onClick={closeModal} ref={modalRef}>
           <PopupBody showModal={showModal}>
             <CloseRoundedIcon aria-label='Close modal' onClick={()=> setShowModal(prev => !prev)} style={{ cursor: 'pointer'}} />
-            {/* <RequestDetails popupPayLoad={popupPayLoad} /> */}
           </PopupBody>
         </DetailsPopup>
       :

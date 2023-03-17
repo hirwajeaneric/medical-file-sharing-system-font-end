@@ -2,13 +2,15 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import PatientChart from '../../../components/Charts/PatientChart'
+import PersonnelChart from '../../../components/Charts/PersonnelChart';
 import { AStatistic, ChartOne, ChartSection, SideChart, Stats } from '../../../components/Dashboard/AdminDashboards'
+import PersonnelTable from '../../../components/tables/PersonnelTable';
 
 const PersonnelStats = () => {
     const params = useParams();
     
     const [topStats, setTopStats] = useState({ total: 0, doctors: 0, nurses: 0, labtechnicians: 0 })
-    const [data, setData] = useState({});
+    const [data, setData] = useState([]);
     const [medicalPersonnel, setMedicalPersonnel] = useState({});
     
     useEffect(() => {
@@ -39,6 +41,8 @@ const PersonnelStats = () => {
                 if (element.institutionName === personnel.institutionName && Date.parse(element.joinDate) >= Date.parse(new Date(filter.from)) && Date.parse(element.joinDate) <= Date.parse(new Date(filter.to))) {
                     total.push(element);
                     
+                    element.id = element._id
+                    
                     if (element.role === 'nurse') {
                         nurses.push(element);
                     }
@@ -50,7 +54,7 @@ const PersonnelStats = () => {
                     }
                 } 
             });
-
+            setData(total);
             setTopStats({ total: total.length, doctors: doctors.length, nurses: nurses.length, labtechnicians: labtechnicians.length });
         })
         .catch(error => console.log(error));
@@ -89,12 +93,9 @@ const PersonnelStats = () => {
                 </AStatistic>
             </Stats>
             <ChartSection>
-                <ChartOne>
-                    <PatientChart data={data} />
+                <ChartOne style={{ width: '100%'}}>
+                    <PersonnelTable data={data} />
                 </ChartOne>
-                <SideChart>
-                    <h3>Side bar</h3>
-                </SideChart>
             </ChartSection>
         </>
     )

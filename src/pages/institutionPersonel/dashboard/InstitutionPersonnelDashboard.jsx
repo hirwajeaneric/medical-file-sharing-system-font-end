@@ -107,7 +107,7 @@ const InstitutionPersonnelDashboard = () => {
           setOpen(true);
       } else {
           recordDetails.recordCloser = medicalPersonnel.firstName+" "+medicalPersonnel.lastName; 
-          recordDetails.closeTime = new Date().toDateString();
+          recordDetails.closeTime = new Date();
           recordDetails.status = "closed";
 
           console.log("Record to be updated: ");
@@ -165,7 +165,7 @@ const InstitutionPersonnelDashboard = () => {
                 {records && records.map((record, index)=>(
                     <ARecord key={index} onClick={() => setRecordDetails(record)}>
                         <FcFolder/>
-                        <p>{record.openTime}</p>
+                        <p>{moment(`${record.openTime}`).format("MMM Do YYYY")}<br/>{moment(`${record.openTime}`).format("h:mm:ss a")}</p>
                     </ARecord>
                 ))}
                 {records.length < 1 && <p>No records available</p>} 
@@ -175,13 +175,13 @@ const InstitutionPersonnelDashboard = () => {
                     <RecordDescriptionHeader>
                         <LeftHalf>
                             <p>Patient: <strong>{recordDetails.firstName+" "+recordDetails.lastName}</strong></p>
-                            <p>Open date: <strong>{recordDetails.openTime}</strong></p>
+                            <p>Open date: <strong>{moment(recordDetails.openTime).format("MMM Do YYYY")+" - "+moment(recordDetails.openTime).format("h:mm:ss a") }</strong></p>
                             <p>By: <strong>{recordDetails.recordOpener}</strong></p>
                             <p>Created at: <strong>{recordDetails.hospitalName}</strong></p>
                         </LeftHalf>
                         <RightHalf>
                             <p>Status: <strong>open</strong></p>
-                            <p>Close date: <strong>{recordDetails.closeTime}</strong></p>
+                            {recordDetails.closeTime && <p>Close date: <strong>{moment(recordDetails.closeTime).format("MMM Do YYYY")+" - "+moment(recordDetails.closeTime).format("h:mm:ss a") }</strong></p>}
                             <p>By: <strong>{recordDetails.recordCloser}</strong></p>
                             <TwoSidedParagraphContainer style={{ marginBottom: '0px', width: '100%'}}>
                                 {!recordDetails.closeTime && 

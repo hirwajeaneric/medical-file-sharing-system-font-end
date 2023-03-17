@@ -4,6 +4,7 @@ import { FiPrinter } from 'react-icons/fi';
 import { AddResultInput, FileDetailsButton, FileDetailsFooter, FileHeader, FormTable, UpdateButton } from '../../../components/Dashboard/NewFileComponents';
 import jspdf from 'jspdf';
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
 
 const FileDetails = ({file}) => {
     const params = useParams();
@@ -156,7 +157,7 @@ const FileDetails = ({file}) => {
                     </FormTable>}
 
                 </form>
-                <p>Date: &nbsp;&nbsp;<em>{file.creationDate}</em></p>
+                <p>Date: &nbsp;&nbsp;<em>{moment(file.creationDate).format("MMM Do YYYY")}</em></p>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
                     {file.type === 'laboratory tests' &&
                         <>

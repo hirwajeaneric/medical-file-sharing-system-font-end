@@ -1,14 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import PatientChart from '../../../components/Charts/PatientChart'
+import PieChart from '../../../components/Charts/PieChart';
 import { AStatistic, ChartOne, ChartSection, SideChart, Stats } from '../../../components/Dashboard/AdminDashboards'
+import RecordsTable from '../../../components/tables/RecordsTable';
 
 const RecordAndFilesStats = () => {
     const params = useParams();
 
     const [topStats, setTopStats] = useState({ total: 0, open: 0, closed: 0, hospitalized: 0 })
-    const [data, setData] = useState({});
+    const [data, setData] = useState([]);
     const [medicalPersonnel, setMedicalPersonnel] = useState({});
     
     useEffect(() => {
@@ -27,7 +28,7 @@ const RecordAndFilesStats = () => {
         // Bring filter information
         var filter = JSON.parse(localStorage.getItem('filter'));
 
-        // Fetch patients
+        // Fetch records
         axios.get(`http://localhost:5050/api/mfss/record/list`)
         .then(response => {
             let total = [];
@@ -35,26 +36,38 @@ const RecordAndFilesStats = () => {
             let closed = []; 
             let hospitalized = [];          
             let today = new Date().getTime();
+            
+            console.log(filter);
 
             response.data.forEach(element => {
+
+                // The conditions bellow generates besic numbers about records (Total, open, closed, hospitalized patients)
                 if (element.hospitalName === personnel.institutionName && Date.parse(element.openTime) >= Date.parse(new Date(filter.from)) && Date.parse(element.openTime) <= Date.parse(new Date(filter.to))) {
-                    total.push(element);
                     let openDate = new Date(element.openTime).getTime();
                     
-                    if (!element.closeTime && !element.recordCloser) {
-                        open.push(element);
-                    }
-                    if (element.closeTime && element.recordCloser) {
-                        closed.push(element);
-                    }
+                    element.id = element._id;
 
-                    if (((today - openDate) / (1000 * 3600 * 24)) > 4 && !element.closeTime && !element.recordCloser) {
-                        hospitalized.push(element);
-                    }
+                    //Total records
+                    total.push(element);
+                    // Open
+                    if (!element.closeTime && !element.recordCloser) { open.push(element) }
+                    // Closed 
+                    if (element.closeTime && element.recordCloser) { closed.push(element) }
+                    // Hospitalized
+                    if (((today - openDate) / (1000 * 3600 * 24)) >= 2 && !element.closeTime && !element.recordCloser) { hospitalized.push(element) }
                 } 
             });
 
+            setData(total);
             setTopStats({ total: total.length, open: open.length, closed: closed.length, hospitalized: hospitalized.length });
+        
+            // Stringifying and sending filtered data to the localstorage for other pages to use it.
+            const localPatients = JSON.stringify(total);
+            const localStats = JSON.stringify({ total: total.length, open: open.length, closed: closed.length, hospitalized: hospitalized.length })
+
+            localStorage.setItem('payload-patients', localPatients);
+            localStorage.setItem('stats-patients',localStats);
+
         })
         .catch(error => console.log(error));
     },[params.role])
@@ -93,10 +106,12 @@ const RecordAndFilesStats = () => {
             </Stats>
             <ChartSection>
                 <ChartOne>
-                    <PatientChart data={data} />
+                    <h4>Our Records</h4>
+                    <RecordsTable data={data} />
                 </ChartOne>
                 <SideChart>
-                    <h3>Side bar</h3>
+                    <h4>Overview</h4>
+                    <PieChart chartData={[ topStats.open, topStats.closed, topStats.hospitalized ]}/>
                 </SideChart>
             </ChartSection>
         </>
@@ -104,3 +119,4 @@ const RecordAndFilesStats = () => {
 }
 
 export default RecordAndFilesStats
+

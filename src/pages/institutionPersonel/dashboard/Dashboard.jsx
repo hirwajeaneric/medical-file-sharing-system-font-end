@@ -35,6 +35,20 @@ const Dashboard = () => {
     setUserIdentity(userData);
   },[params.institution, params.role])
 
+  useEffect(()=>{
+    // Setting up the filters:
+    if (!localStorage.getItem('filter')) {
+      let currentTime = new Date().getTime();
+      let midNight = new Date(currentTime + (1 * 24 * 60 * 60 * 1000))
+      let updatedTime = new Date(currentTime - (1 * 24 * 60 * 60 * 1000));
+      let filter = { 
+        from: updatedTime.toLocaleDateString(), 
+        to: midNight.toLocaleDateString(), 
+      }
+      localStorage.setItem('filter', JSON.stringify(filter));
+    }
+  },[])
+
 
   const [isOpen, setIsOpen] = useState(true);
   const [openPopup, setOpenPopup] = useState(false);
@@ -52,6 +66,12 @@ const Dashboard = () => {
     if (userIdentity.role === 'Representative') {
       localStorage.removeItem('insttAdmTok');
       localStorage.removeItem('instAdmPe');
+      localStorage.removeItem('stats-patients');
+      localStorage.removeItem('payload-patients');
+      localStorage.removeItem('stats-personnel');
+      localStorage.removeItem('payload-personnel');
+      localStorage.removeItem('report');
+      localStorage.removeItem('filter');
     } else if (userIdentity.role === 'doctor') {
       localStorage.removeItem('insttDocTok');
       localStorage.removeItem('instDocPe');
@@ -63,6 +83,8 @@ const Dashboard = () => {
       localStorage.removeItem('insttLabPe');
     }
     
+    localStorage.removeItem('filter');
+
     navigate(`/${params.institution}/auth/signin`)
   }  
 
@@ -72,6 +94,8 @@ const Dashboard = () => {
         <title>Dashboard Home - Medicase</title>
         <meta name="description" content="Medicase, this is the home page for the insitution. The dashboard."/> 
       </Helmet>
+
+      {/* Side bar  */}
       <SideBar style={{background: userIdentity.institutionType === 'pharmacy' && 'green'}}>
         <TitleContainer>
           <MedicalInformationIcon />
@@ -87,14 +111,14 @@ const Dashboard = () => {
             <BiHomeAlt />
             {isOpen && <NavItem>Dashboard</NavItem>}
           </NavItemContainerHome>
-          {(userIdentity.role === 'Representative' && userIdentity.institutionType !== 'pharmacy' ) &&
+          {/* {(userIdentity.role === 'Representative' && userIdentity.institutionType !== 'pharmacy' ) &&
             <>
               <NavItemContainer to={'reports'}>
                 <BiPaperPlane />
                 {isOpen && <NavItem>Reports</NavItem>}
               </NavItemContainer>
             </>
-          }
+          } */}
           <NavItemContainer to={'patients'}>
             <BiUserCircle />
             {isOpen && <NavItem>Patients</NavItem>}
@@ -123,13 +147,14 @@ const Dashboard = () => {
           </NavItemContainer>
         </NavigationComponents>
       </SideBar>
+
       <MainContent>
         <TopBar>
           <div style={{ display: 'flex', flexWrap: 'nowrap', alignItems:'center', justifyContent: 'flex-start', gap: '40px' }}>
             <MenuButton onClick={minimizeView}>
               <BiMenuAltLeft />
             </MenuButton>
-            <SearchBoxForPatients />
+            {/* <SearchBoxForPatients /> */}
           </div>
           <User>
             <BiUserCircle/>

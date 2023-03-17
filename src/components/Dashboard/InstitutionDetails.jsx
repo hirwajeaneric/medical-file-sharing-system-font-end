@@ -12,9 +12,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 
 const InstitutionDetails = ({ institution, setInstitution }) => {
-    const [updateInProgress, setUpdateInProgress] = useState({
-        one: '', two: '', three: ''
-    });
+    const [updateInProgress, setUpdateInProgress] = useState({ one: '', two: '', three: ''});
     const [open, setOpen] = useState(false);
     const [notification, setNotification] = useState({ severity: '', message: '' });
     const [logo, setLogo] = useState('');
@@ -164,9 +162,6 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
                             <strong>{institution.directorName}</strong>
                         </RightHalf>
                     </TwoSidedParagraphContainer>
-                </LeftHalf>
-                <RightHalf>
-                    {/* <h3 style={headerTwoStyles}>Edit</h3> */}
                     <TwoSidedParagraphContainer style={{fontSize: '100%'}}>
                         <LeftHalf>
                             <label htmlFor="name">Name:</label>
@@ -175,12 +170,38 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
                             <UpdateInputs type='text' name='name' value={institution.name || ''} onChange={handleFormUpdate}/>
                         </RightHalf>
                     </TwoSidedParagraphContainer>
+                </LeftHalf>
+                <RightHalf>
                     <TwoSidedParagraphContainer style={{fontSize: '100%'}}>
                         <LeftHalf>
                             <label htmlFor="location">Location:</label>
                         </LeftHalf>
                         <RightHalf>
                             <UpdateInputs type='text' name='location' value={institution.location || ''} onChange={handleFormUpdate}/>
+                        </RightHalf>
+                    </TwoSidedParagraphContainer>
+                    <TwoSidedParagraphContainer style={{fontSize: '100%'}}>
+                        <LeftHalf>
+                            <label htmlFor="name">Postal Box:</label>
+                        </LeftHalf>
+                        <RightHalf>
+                            <UpdateInputs type='text' name='postalBox' value={institution.postalBox || ''} onChange={handleFormUpdate}/>
+                        </RightHalf>
+                    </TwoSidedParagraphContainer>
+                    <TwoSidedParagraphContainer style={{fontSize: '100%'}}>
+                        <LeftHalf>
+                            <label htmlFor="name">Contact Email:</label>
+                        </LeftHalf>
+                        <RightHalf>
+                            <UpdateInputs type='text' name='contactEmail' value={institution.contactEmail || ''} onChange={handleFormUpdate}/>
+                        </RightHalf>
+                    </TwoSidedParagraphContainer>
+                    <TwoSidedParagraphContainer style={{fontSize: '100%'}}>
+                        <LeftHalf>
+                            <label htmlFor="name">Contact Phone:</label>
+                        </LeftHalf>
+                        <RightHalf>
+                            <UpdateInputs type='text' name='contactPhone' value={institution.contactPhone || ''} onChange={handleFormUpdate}/>
                         </RightHalf>
                     </TwoSidedParagraphContainer>
                     <Button variant='contained' style={{marginTop: '20px'}} color="secondary" size='small' onClick={updateData}>{updateInProgress.one !== '' ? updateInProgress.one : 'Update'}</Button>

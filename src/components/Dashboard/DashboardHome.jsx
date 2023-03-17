@@ -152,3 +152,7 @@ export const FilePopup = styled.div`
     box-shadow: 24,
     font-family: EB Garamond, serif;
 `;
+
+export const ChartHeader = styled.h4`
+    margin-bottom: 20px;
+`;

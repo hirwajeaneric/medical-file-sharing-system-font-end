@@ -61,7 +61,7 @@ const InsSignin = () => {
             localStorage.setItem('insttAdmTok', token);
             localStorage.setItem('instAdmPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));
             roleUrl = 'r';
-            window.location.replace(`/${params.institution}/${roleUrl}/pa/`);
+            window.location.replace(`/${params.institution}/${roleUrl}/`);
           } else if (role === 'doctor') {
             localStorage.setItem('insttDocTok', token);
             localStorage.setItem('instDocPe', JSON.stringify({token, id, firstName, lastName, email, role, userCode, isActive, institutionId, institutionName, institutionType}));

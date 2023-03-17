@@ -1,13 +1,29 @@
 import React, { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { DashboardWrapper, DateRangePicker, Durations, HeadSection, RangePeriods, StatsCategories } from '../../../components/Dashboard/AdminDashboards'
 import { FcSearch } from 'react-icons/fc';
 import { BiSearchAlt } from 'react-icons/bi';
+import { Button, Menu, MenuItem } from '@mui/material';
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const params = useParams();
 
   const [filterValue, setFilterValue] = useState({ from: '', to:'' });
   
+  // Report generation menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => { setAnchorEl(event.currentTarget) };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const goToReportPage = (reportType) => {
+    navigate(`/${params.institution}/${params.role}/reports/`);
+    localStorage.setItem('report', reportType);
+  }
+
   // Changing the filter according to what is choosen.
   const changeFilter = (duration) => {
     let filter = {}
@@ -46,9 +62,7 @@ const AdminDashboard = () => {
     window.location.reload();
   }
 
-  const handleDateChoice = ({currentTarget: input}) => {
-    setFilterValue({...filterValue, [input.name]: input.value})
-  }
+  const handleDateChoice = ({currentTarget: input}) => { setFilterValue({...filterValue, [input.name]: input.value})}
 
   const filter = () => {
     if (filterValue.from && filterValue.to) {
@@ -64,25 +78,41 @@ const AdminDashboard = () => {
       <HeadSection>
         <h2>Overview dashbaord</h2>
         <Durations>
-          <div>
-            <button onClick={()=> {changeFilter(1)}}>All day</button>
-          </div>
-          <RangePeriods>
-            <button onClick={()=> {changeFilter(7)}} style={{ borderRight: '1px solid gray'}}>7 Days</button>
-            <button onClick={()=> {changeFilter(30)}} style={{ borderRight: '1px solid gray'}}>1 Month</button>
-            <button onClick={()=> {changeFilter(365)}} >1 Year</button>
-          </RangePeriods>
-          <DateRangePicker>
+            <div>
+            <button onClick={()=> {changeFilter(1)}} style={{ cursor: 'pointer' }}>All day</button>
+            </div>
+            <RangePeriods>
+              <button onClick={()=> {changeFilter(7)}} style={{ borderRight: '1px solid gray', cursor: 'pointer' }}>7 Days</button>
+              <button onClick={()=> {changeFilter(30)}} style={{ borderRight: '1px solid gray', cursor: 'pointer'}}>1 Month</button>
+              <button onClick={()=> {changeFilter(365)}} style={{ cursor: 'pointer' }}>1 Year</button>
+            </RangePeriods>
+            <DateRangePicker>
             <input type="date" name="from" id="from" value={filterValue.from} onChange={handleDateChoice}/>
             &nbsp;&nbsp;-&nbsp;&nbsp;
             <input type="date" name="to" id="to" value={filterValue.to} onChange={handleDateChoice}/>
-            <button onClick={filter}><BiSearchAlt /></button>
+            <button onClick={filter} style={{ cursor: 'pointer' }}><BiSearchAlt /></button>
           </DateRangePicker>
         </Durations>
       </HeadSection>
       <StatsCategories>
-        <NavLink to={'rec'}>Patient records</NavLink>
-        <NavLink to={'per'}>Personnel</NavLink>
+        <div>
+          <NavLink to={'rec'}>Patient records</NavLink>
+          <NavLink to={'per'}>Personnel</NavLink>
+        </div>
+        <Button variant='text' size='small' color='primary' onClick={handleClick} >Print reports</Button>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button',
+          }}
+        >
+          <MenuItem onClick={() => { handleClose(); goToReportPage('General Hospital Report'); }}>General hospital report</MenuItem>
+          <MenuItem onClick={() => { handleClose(); goToReportPage('Patient Report'); }}>Patients report</MenuItem>
+          <MenuItem onClick={() => { handleClose(); goToReportPage('Hospital Personnel Report'); }}>Hospital personnel report</MenuItem>
+        </Menu>
       </StatsCategories>
       <Outlet />
     </DashboardWrapper>

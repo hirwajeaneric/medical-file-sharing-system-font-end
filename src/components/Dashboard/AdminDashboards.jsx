@@ -107,26 +107,24 @@ export const StatsCategories = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     margin-top: 15px;
     border-bottom: 2px solid #ccccb3;
     
-    a {
-        padding: 10px;
-        text-decoration: none;
-        color: gray;
-        font-size: 90%;
-        margin-bottom: -2px;
+    div { 
+        a {
+            padding: 6px 10px;
+            text-decoration: none;
+            color: gray;
+            font-size: 90%;
+            margin-bottom: 0px;
 
-        &:hover {
-
-        }
-
-        &.active{
-            color: #006699;
-            font-weight: 700;
-            border-bottom: 2px solid #00cc44;
-        }
+            &.active{
+                color: #006699;
+                font-weight: 700;
+                border-bottom: 2px solid #00cc44;
+            }
+        }   
     }
 
     @media (max-width: 1080px) {
@@ -226,6 +224,10 @@ export const ChartOne = styled.div`
     background: white;
     padding: 20px;
     border-radius: 5px;
+
+    h4 {
+        margin-bottom: 10px;
+    }
 
     @media (max-width: 1080px) {
         
