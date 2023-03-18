@@ -62,7 +62,10 @@ const PatientDetails = () => {
     // Fetch Records for this patient
     useEffect(()=>{
         axios.get(`http://localhost:5050/api/mfss/record/findByPatientId?patientId=${params.id}`)
-        .then(response => { setRecords(response.data); })
+        .then(response => { 
+            response.data.sort((a, b) => new Date(b.openTime) - new Date(a.openTime))
+            setRecords(response.data) 
+        })
         .catch(error => { console.log(error) })
     },[params.id])
 

@@ -11,20 +11,17 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { ResponseMessageContext, ResponseMessageContextSetter } from '../../App';
 import { Alert, FormControl, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Helmet } from 'react-helmet-async';
-// import { Helmet } from 'react-helmet-async';
 
 const AdminSignin = () => {
   const responseMessage = React.useContext(ResponseMessageContext);
   const setResponseMessage = React.useContext(ResponseMessageContextSetter);
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = React.useState('');
   const [formData, setFormData] = React.useState({
     email: '',
@@ -69,7 +66,7 @@ const AdminSignin = () => {
           localStorage.setItem('admnTok', token);
           localStorage.setItem('usr', JSON.stringify({id, firstName, lastName, email, phone}));
 
-          window.location.replace('/admin/dashboard');
+          window.location.replace('/admin/dashboard/rec');
         } 
       })
       .catch(error => {

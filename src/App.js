@@ -48,11 +48,13 @@ import InstitutionPharmacists from './pages/institutionPersonel/dashboard/Pharma
 import InstitutionAccount from './pages/institutionPersonel/dashboard/Account';
 import ErrorPage from './pages/ErrorPage';
 import PatientDetails from './pages/institutionPersonel/dashboard/PatientDetails';
-import PatientFilesAndRecords from './pages/institutionPersonel/dashboard/PatientFilesAndRecords';
 import NewFile from './pages/institutionPersonel/dashboard/NewFile';
-// import PatientsStats from './pages/institutionPersonel/dashboard/PatientsStats';
+import PatientFilesAndRecords from './pages/institutionPersonel/dashboard/PatientFilesAndRecords';
 import RecordAndFilesStats from './pages/institutionPersonel/dashboard/RecordAndFilesStats';
 import PersonnelStats from './pages/institutionPersonel/dashboard/PersonnelStats';
+import PatientFilesAndRecordsA from './pages/admin/dashboard/PatientFilesAndRecords';
+import RecordAndFilesStatsA from './pages/institutionPersonel/dashboard/RecordAndFilesStats';
+import PersonnelStatsA from './pages/institutionPersonel/dashboard/PersonnelStats';
 import InsResetPassword from './components/authenticationRelated/InsResetPassword';
 import Institution from './pages/institutionPersonel/dashboard/Institution';
 import SearchResults from './pages/institutionPersonel/dashboard/SearchResults';
@@ -110,7 +112,11 @@ function App() {
                         <Route path='/admin/' element={<Admin/>}>
                           {adminToken &&
                             <Route path='dashboard' element={<Dashboard/> } errorElement={<ErrorPage />}>
-                              <Route path='' element={<DashBoardHome />} />
+                              <Route path='' element={<DashBoardHome />}>
+                                <Route path='' element={<RecordAndFilesStatsA/>}/>
+                                <Route path='per' element={<PersonnelStatsA/>}/>
+                                <Route path='rec' element={<RecordAndFilesStatsA/>}/>
+                              </Route>
                               <Route path='reports' element={<Reports />} />
                               <Route path='patients' element={<Patients />} />
                               <Route path='records' element={<Records />} />
@@ -130,7 +136,11 @@ function App() {
                           </Route>
 
                           <Route path='dashboard' exact element={<Navigate replace to='/admin/auth/signin/' />} >
-                            <Route path='' exact element={<Navigate replace to='/admin/auth/signin/' />} />
+                            <Route path='' exact element={<Navigate replace to='/admin/auth/signin/' />}>
+                              <Route path='' element={<RecordAndFilesStats/>}/>
+                              <Route path='per' element={<PersonnelStats/>}/>
+                              <Route path='rec' element={<RecordAndFilesStats/>}/>
+                            </Route>
                             <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='records' exact element={<Navigate replace to='/admin/auth/signin/' />} />
@@ -148,7 +158,6 @@ function App() {
                             <Route path='results' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <SearchResults /> : <Navigate replace to={`auth/signin`} />} />
                             <Route path='' element={(insttAdminToken || insttDoctorToken || insttLabTechnitianToken || insttNurseToken) ? <InstitutionDashBoardHome /> : <Navigate replace to={`auth/signin`} />} >
                               <Route path='' element={<RecordAndFilesStats/>}/>
-                              {/* <Route path='pa' element={<PatientsStats/>}/> */}
                               <Route path='per' element={<PersonnelStats/>}/>
                               <Route path='rec' element={<RecordAndFilesStats/>}/>
                             </Route>

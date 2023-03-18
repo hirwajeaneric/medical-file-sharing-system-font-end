@@ -47,6 +47,7 @@ const InstitutionPersonnelDashboard = () => {
             records.push(element);
           }
         })
+        records.sort((a, b) => new Date(b.openTime) - new Date(a.openTime))
         setRecords(records); 
       })
       .catch(error => { console.log(error) })
@@ -138,7 +139,7 @@ const InstitutionPersonnelDashboard = () => {
     <DashboardWrapper>
       <HeadSection>
         <h2>Home</h2>
-        <Durations>
+        {/* <Durations>
           <div>
             <button>All day</button>
           </div>
@@ -152,20 +153,19 @@ const InstitutionPersonnelDashboard = () => {
             &nbsp;&nbsp;-&nbsp;&nbsp;
             <input type="date" name="from" id="from" />
           </DateRangePicker>
-        </Durations>
+        </Durations> */}
       </HeadSection>
       {/* <Outlet /> */}
       <PageBody style={{ marginBottom: '40px' }}>
         <PageHeaderContainer style={{ marginBottom: '20px'}}>
             <PageTitle>Records and Files</PageTitle>
-            {/* {medicalPersonnel.role !== 'nurse' ? <></> :<Button variant='contained' size='small' onClick={openRecord}>Add record</Button>} */}
         </PageHeaderContainer>
         <RecordsContainer>
             <LeftHalf style={{ flexDirection: 'row' , gap: '10px', flexWrap: 'wrap', width: '51%' }}>
                 {records && records.map((record, index)=>(
                     <ARecord key={index} onClick={() => setRecordDetails(record)}>
                         <FcFolder/>
-                        <p>{moment(`${record.openTime}`).format("MMM Do YYYY")}<br/>{moment(`${record.openTime}`).format("h:mm:ss a")}</p>
+                        <p>{record.firstName}<br/>{record.lastName}<br/>{moment(`${record.openTime}`).format("MMM Do YYYY")}<br/>{moment(`${record.openTime}`).format("h:mm:ss a")}</p>
                     </ARecord>
                 ))}
                 {records.length < 1 && <p>No records available</p>} 

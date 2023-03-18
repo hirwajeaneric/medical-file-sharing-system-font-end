@@ -1,9 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import PatientChart from '../../../components/Charts/PatientChart'
-import PersonnelChart from '../../../components/Charts/PersonnelChart';
-import { AStatistic, ChartOne, ChartSection, SideChart, Stats } from '../../../components/Dashboard/AdminDashboards'
+import { AStatistic, ChartOne, ChartSection, Stats } from '../../../components/Dashboard/AdminDashboards'
 import PersonnelTable from '../../../components/tables/PersonnelTable';
 
 const PersonnelStats = () => {
@@ -11,21 +9,8 @@ const PersonnelStats = () => {
     
     const [topStats, setTopStats] = useState({ total: 0, doctors: 0, nurses: 0, labtechnicians: 0 })
     const [data, setData] = useState([]);
-    const [medicalPersonnel, setMedicalPersonnel] = useState({});
     
     useEffect(() => {
-        let personnel = {};
-        if (params.role === 'r') {
-            personnel = JSON.parse(localStorage.getItem('instAdmPe'));
-        } else if (params.role === 'd') {
-            personnel = JSON.parse(localStorage.getItem('instDocPe'));
-        } else if (params.role === 'n') {
-            personnel = JSON.parse(localStorage.getItem('instNurPe'));
-        } else if (params.role === 'l') {
-            personnel = JSON.parse(localStorage.getItem('instLabPe'));
-        } 
-        setMedicalPersonnel(personnel);
-
         // Fetch patients
         axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/list`)
         .then(response => {
@@ -35,10 +20,10 @@ const PersonnelStats = () => {
             let labtechnicians = [];
 
             // Bring filter information
-            var filter = JSON.parse(localStorage.getItem('filter'));
+            var filter = JSON.parse(localStorage.getItem('filter-A'));
 
             response.data.forEach(element => {
-                if (element.institutionName === personnel.institutionName && Date.parse(element.joinDate) >= Date.parse(new Date(filter.from)) && Date.parse(element.joinDate) <= Date.parse(new Date(filter.to))) {
+                if (Date.parse(element.joinDate) >= Date.parse(new Date(filter.from)) && Date.parse(element.joinDate) <= Date.parse(new Date(filter.to))) {
                     total.push(element);
                     
                     element.id = element._id
@@ -61,8 +46,8 @@ const PersonnelStats = () => {
             const localPersonnel = JSON.stringify(total);
             const localStats = JSON.stringify({ total: total.length, doctors: doctors.length, nurses: nurses.length, labtechnicians: labtechnicians.length })
 
-            localStorage.setItem('payload-personnel', localPersonnel);
-            localStorage.setItem('stats-personnel',localStats);
+            localStorage.setItem('payload-personnel-A', localPersonnel);
+            localStorage.setItem('stats-personnel-A',localStats);
 
         })
         .catch(error => console.log(error));

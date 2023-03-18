@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { DashboardWrapper, DateRangePicker, Durations, HeadSection, RangePeriods, StatsCategories } from '../../../components/Dashboard/AdminDashboards'
-import { FcSearch } from 'react-icons/fc';
 import { BiSearchAlt } from 'react-icons/bi';
 import { Button, Menu, MenuItem } from '@mui/material';
 
@@ -109,7 +108,7 @@ const AdminDashboard = () => {
             'aria-labelledby': 'basic-button',
           }}
         >
-          <MenuItem onClick={() => { handleClose(); goToReportPage('General Hospital Report'); }}>General hospital report</MenuItem>
+          {/* <MenuItem onClick={() => { handleClose(); goToReportPage('General Hospital Report'); }}>General hospital report</MenuItem> */}
           <MenuItem onClick={() => { handleClose(); goToReportPage('Patient Report'); }}>Patients report</MenuItem>
           <MenuItem onClick={() => { handleClose(); goToReportPage('Hospital Personnel Report'); }}>Hospital personnel report</MenuItem>
         </Menu>

@@ -2,7 +2,7 @@ import axios from 'axios'
 import React , { useEffect } from 'react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ReportBody, ReportFooter, ReportHeader, ReportPaperContainer, InstitutionDetails, ReportDateAndGenerator, ReportContent, Table } from '../../../components/Dashboard/ReportStyledComponents'
+import { ReportBody, ReportFooter, ReportHeader, ReportPaperContainer, InstitutionDetails, ReportDateAndGenerator, ReportContent, Table, TableList } from '../../../components/Dashboard/ReportStyledComponents'
 
 export const ComponentToPrint = React.forwardRef((props, ref) => {
     const params = useParams();
@@ -76,7 +76,7 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
                 {reportType==="Patient Report" && 
                     <ReportContent>
                         <p>This report contains information about patients who visited our hospital in the period between {filter.from} and {filter.to}.
-                            It provides the total number of those patients, and a list that contain the most important information for every patient.
+                            It provides the total number of those patients, and a list that contains patients that visited the hospital, when they came in and when they exited or closed services with the hospital.
                         </p>
                         <h4>General Statistics</h4>
                         <Table>
@@ -102,14 +102,82 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
                             </tbody>
                         </Table>
                         <h4>List of patients</h4>
-
+                        <TableList>
+                            <thead>
+                                <tr>
+                                    <th>First name</th>
+                                    <th>Last name</th>
+                                    <th>Date of entry</th>
+                                    <th>Date of exit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {patients.length !== 0 && 
+                                    patients.map((patient, index) => 
+                                    <tr key={index}>
+                                        <td>{patient.firstName}</td>
+                                        <td>{patient.lastName}</td>
+                                        <td>{new Date(patient.openTime).toLocaleDateString()}</td>
+                                        <td>{patient.closeTime && new Date(patient.closeTime).toLocaleDateString()}</td>
+                                    </tr>
+                                    )
+                                }
+                            </tbody>
+                        </TableList>
                     </ReportContent>
                 }
                 
                 {/* Hospital personnel report  */}
                 {reportType==="Hospital Personnel Report" && 
                     <ReportContent>
-
+                        <p>This report contains as summarized overview of hospital personnel that we employ and who use the system.
+                            These personnel include: <strong>Doctors, Lab technicians, and nurses.</strong> 
+                            Every user of the system has limited access to the system hence performing activities related to their given role.
+                        </p>
+                        <h4>General Statistics</h4>
+                        <Table>
+                            <thead>
+                                <tr>
+                                    <th>Total</th>
+                                    <th>Doctors</th>
+                                    <th>Nurses</th>
+                                    <th>Lab technicians</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{personnelStats.total}</td>
+                                    <td>{personnelStats.doctors}</td>
+                                    <td>{personnelStats.nurses}</td>
+                                    <td>{personnelStats.labtechnicians}</td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                        <h4>List of patients</h4>
+                        <TableList>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>User Code</th>
+                                    <th>Role</th>
+                                    <th>Account status</th>
+                                    <th>Join date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {personnel.length !== 0 && 
+                                    personnel.map((aPersonnel, index) => 
+                                    <tr key={index}>
+                                        <td>{aPersonnel.firstName+" "+aPersonnel.lastName}</td>
+                                        <td>{aPersonnel.userCode}</td>
+                                        <td>{aPersonnel.role}</td>
+                                        <td>{aPersonnel.isActive}</td>
+                                        <td>{new Date(aPersonnel.joinDate).toLocaleDateString()}</td>
+                                    </tr>
+                                    )
+                                }
+                            </tbody>
+                        </TableList>
                     </ReportContent>
                 }
             </ReportBody>

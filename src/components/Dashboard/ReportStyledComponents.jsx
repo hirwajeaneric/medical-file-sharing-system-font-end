@@ -56,7 +56,7 @@ export const InstitutionDetails = styled.div`
     align-items: flex-end;
 
     p {
-        font-size: 90%;
+        font-size: 85%;
     }
 
 `;
@@ -91,4 +91,31 @@ export const Table = styled.table`
             }
         }
     }
+`;
+
+export const TableList = styled.table`
+    border-collapse: collapse;
+    width: 100%;
+
+    thead {
+        tr {
+            th {
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid gray;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            td {
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid gray;
+            }
+        }
+    }
+
+
 `;
