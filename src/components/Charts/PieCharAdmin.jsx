@@ -1,9 +1,9 @@
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 
-const labels = ["Open", "Closed", "Hospitalized"];
+const labels = ["North", "South", "East", "West", "Kigali City"];
 
-const PieChart = ({ chartData }) => {
+const PieChartAdmin = ({ chartData }) => {
 
   const data = {
     labels: labels,
@@ -15,12 +15,16 @@ const PieChart = ({ chartData }) => {
         backgroundColor: [
           'rgba(255, 99, 132, 0.5)',
           'rgba(75, 192, 192, 0.5)',
-          'rgba(153, 102, 255, 0.5)',
+          'rgba(255, 202, 255, 0.5)',
+          'rgba(100, 200, 100, 0.5)',
+          'rgba(100, 100, 200, 0.5)',
         ],
         borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(75, 192, 192, 0.5)',
+          'rgba(255, 202, 255, 0.5)',
+          'rgba(100, 200, 100, 0.5)',
+          'rgba(100, 100, 200, 0.5)',
         ],
         borderWidth: 1,
       }
@@ -35,4 +39,4 @@ const PieChart = ({ chartData }) => {
     )
 }
 
-export default PieChart
+export default PieChartAdmin

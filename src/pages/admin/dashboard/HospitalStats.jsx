@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import PieChart from '../../../components/Charts/PieChart';
 import { AStatistic, ChartOne, ChartSection, SideChart, Stats } from '../../../components/Dashboard/AdminDashboards'
 import HospitalTable from '../../../components/tables/HospitalTable';
+import PieChartAdmin from '../../../components/Charts/PieCharAdmin';
 
 const HospitalStats = () => {
     const params = useParams();
@@ -89,7 +89,7 @@ const HospitalStats = () => {
                 </ChartOne>
                 <SideChart>
                     <h4>Overview</h4>
-                    <PieChart chartData={[ topStats.north, topStats.south, topStats.east, topStats.west, topStats.kigaliCity ]}/>
+                    <PieChartAdmin chartData={[ topStats.north, topStats.south, topStats.east, topStats.west, topStats.kigaliCity ]}/>
                 </SideChart>
             </ChartSection>
         </>
