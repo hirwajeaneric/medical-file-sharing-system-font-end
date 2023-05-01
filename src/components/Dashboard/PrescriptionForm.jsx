@@ -36,7 +36,7 @@ const PrescriptionForm = ({prescriptionDataRows, inputPrescriptionData, setInput
             <FormTable>
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Px</th>
                         <th>Prescription</th>
                         <th>Type</th>
                         <th>Quantity</th>

@@ -19,7 +19,8 @@ const Banner = () => {
           <h2>The most effiscient and effective Medical File Sharing System.</h2>
         </LeftSide>
         <RightSide>
-          <SigninForm 
+          <img src='/img/medicase-2.png' alt='' />
+          {/* <SigninForm 
             formData={formData} 
             setFormData={setFormData}  
             tokenName="usTokn" 
@@ -29,7 +30,7 @@ const Banner = () => {
             forgotPasswordLocation="/user/forgotPassword"
             backendLink="patient/signin"
             formTitle="User" 
-          />
+          /> */}
         </RightSide>
       </SectionContainer>
     </MainContainer>
@@ -110,22 +111,6 @@ export const LeftSide = styled.div`
       font-size: 1.2rem;
     }
   }
-`;
-
-export const FormOne = styled.form`
-
-`;
-
-export const FormInput = styled.div`
-
-`;
-
-export const FormOneButtonGroup = styled.div`
-
-`;
-
-export const FormOneButtonSuccess = styled.button`
-
 `;
 
 export const RightSide = styled.div`

@@ -23,7 +23,7 @@ const Navigation = () => {
                         <ALink to={'/'}>Home</ALink>
                         <ALink to={'/institutions'}>Institutions</ALink>
                         {/* <ALink to={'/user/account'}>Patient</ALink> */}
-                        <ALink to={'/user/signup'}>Join as Patient</ALink>
+                        <ALink to={'/user/signup'}>Patient registration</ALink>
                     </Links>
                     <MobileMenuButton onClick={handleClick}>
                         <MenuIcon/>
@@ -35,7 +35,7 @@ const Navigation = () => {
                 <ALinkExtended to={'/'} onClick={handleClick}>Home</ALinkExtended>
                 <ALinkExtended to={'/institutions'} onClick={handleClick}>Institutions</ALinkExtended>
                 {/* <ALinkExtended to={'/user/account'} onClick={handleClick}>Patient</ALinkExtended> */}
-                <ALinkExtended to={'/user/signup'} onClick={handleClick}>Create an account</ALinkExtended>
+                <ALinkExtended to={'/user/signup'} onClick={handleClick}>Patient registration</ALinkExtended>
             </ExtendedLinks>}
         </MainContainer>
     )
@@ -75,7 +75,7 @@ const NavigationContainer = styled.div`
     align-items: center;
     margin: 0 auto;
     position: relative;
-    padding: 5px 90px;
+    padding: 20px 90px;
 
     @media (max-width: 1920px) {
         
@@ -183,7 +183,7 @@ const ALinkExtended = styled(Link)`
 const ALink = styled(NavLink)`
     text-decoration: none;
     color: black;
-    padding: 8px 12px;
+    padding: 0px 30px 0px 0px;
     margin: 0 10px;
 
     &:hover {
@@ -191,15 +191,16 @@ const ALink = styled(NavLink)`
     }
 
     &.active {
-        padding-bottom: -0.2rem;
-        border-bottom: 0.2rem solid blue;
+        padding-bottom: 0rem;
+        color: green;
+        border-bottom: 0.2rem solid green;
     }
 `;
 
 
 export const Logo = styled(Link)`
     text-decoration: none;
-    color: blue;
+    color: black;
     font-size: 2rem;
     font-weight: 700;
     @media (max-width: 1920px) {

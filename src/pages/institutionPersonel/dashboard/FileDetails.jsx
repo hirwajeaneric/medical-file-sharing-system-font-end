@@ -77,7 +77,8 @@ const FileDetails = ({file}) => {
     const handleUpdate = (e) => {
         e.preventDefault();
 
-        
+        console.log("File information: ");
+        console.log(fileData);
 
     }
 
@@ -174,7 +175,10 @@ const FileDetails = ({file}) => {
                 </div>
             </div> 
             <FileDetailsFooter>
-                {medicalPersonnel.role === 'lab technician'
+                <>
+                    <UpdateButton onClick={printFile}><FiPrinter /> Print</UpdateButton>
+                </>
+                {/* {medicalPersonnel.role === 'lab technician'
                     ?
                     <>
                         <UpdateButton onClick={()=> setUpdateMode(false)}>Cancel file update</UpdateButton>
@@ -184,7 +188,7 @@ const FileDetails = ({file}) => {
                     <>
                         <UpdateButton onClick={printFile}><FiPrinter /></UpdateButton>
                     </>
-                }
+                } */}
             </FileDetailsFooter>
         </>
     )
