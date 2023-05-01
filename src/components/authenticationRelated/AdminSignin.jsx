@@ -66,7 +66,7 @@ const AdminSignin = () => {
           localStorage.setItem('admnTok', token);
           localStorage.setItem('usr', JSON.stringify({id, firstName, lastName, email, phone}));
 
-          window.location.replace('/admin/dashboard/rec');
+          window.location.replace('/admin/dashboard/hsp');
         } 
       })
       .catch(error => {

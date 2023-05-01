@@ -1,16 +1,35 @@
-import React from 'react'
-import { Helmet } from 'react-helmet-async'
 
-const Reports = () => {
+import { Button } from '@mui/material'
+import React, { useRef } from 'react'
+import { Helmet } from 'react-helmet-async';
+import { useReactToPrint } from 'react-to-print';
+import { Container, PageBody, PageHeaderContainer, PageTitle } from '../../../components/Dashboard/DashboardHome'
+import { ComponentToPrint } from './ComponentToPrint';
+
+export default function Reports () {
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+      content: () => componentRef.current
+  });
+
   return (
-    <div>
+    <Container>
       <Helmet>
-        <title>Reports - Medicase</title>
-        <meta name="description" content="Medicase, reports."/> 
-      </Helmet>      
-      Reports
-    </div>
+        <title>Reports - Admin reports</title>
+        <meta name="description" content="Medicase, admin reports."/> 
+      </Helmet>
+      <PageHeaderContainer>
+          <PageTitle>Report : </PageTitle>
+          <Button variant='contained' color='primary' size='small' onClick={handlePrint}>Print</Button>
+      </PageHeaderContainer>
+      
+      <hr style={{height: '1px', background: '#b3b3cc', border: 'none'}}/>
+      
+      {/* Report preview  */}
+      <PageBody style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', width: '100%', background: '#c2d6d6' }}>
+        <ComponentToPrint ref={componentRef} />
+      </PageBody>
+    </Container>
   )
 }
 
-export default Reports

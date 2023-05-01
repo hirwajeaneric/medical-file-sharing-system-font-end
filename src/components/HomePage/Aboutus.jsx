@@ -24,7 +24,7 @@ const Aboutus = () => {
 }
 
 const Description = styled.p`
-
+  line-height: 1.7rem;
 `;
 
 const Imag = styled.img`

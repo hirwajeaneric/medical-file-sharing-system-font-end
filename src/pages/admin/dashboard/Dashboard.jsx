@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BiBuilding, BiFileBlank, BiFileFind,   BiHomeAlt, BiMenuAltLeft, BiPaperPlane, BiUserCheck, BiUserCircle, BiUserPlus, BiUserX } from 'react-icons/bi'
+import { BiBuilding, BiFileBlank, BiFileFind,   BiHomeAlt, BiMenuAltLeft, BiUserCheck, BiUserCircle, BiUserX } from 'react-icons/bi'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { DashboardContainer, HospitalName, MainContent, MenuButton, MenuPopup, Mfss, NavigationComponents, NavItem, NavItemContainer, NavItemContainerHome, OutletSpace, SideBar, TitleContainer, TopBar, User } from '../../../components/Dashboard/DashboardComponents'
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
@@ -45,14 +45,10 @@ const Dashboard = () => {
         </TitleContainer>
         {isOpen && <HospitalName>{localStorage.getItem('admnTok') && 'Admin'}</HospitalName>}
         <NavigationComponents>
-          <NavItemContainerHome to={'rec'}>
+          <NavItemContainerHome to={'hsp'}>
             <BiHomeAlt />
             {isOpen && <NavItem>Dashboard</NavItem>}
           </NavItemContainerHome>
-          <NavItemContainer to={'reports'}>
-            <BiPaperPlane />
-            {isOpen && <NavItem>Reports</NavItem>}
-          </NavItemContainer>
           <NavItemContainer to={'patients'}>
             <BiUserCircle />
             {isOpen && <NavItem>Patients</NavItem>}

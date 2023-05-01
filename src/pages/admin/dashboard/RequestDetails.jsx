@@ -16,8 +16,6 @@ const RequestDetails = ({popupPayLoad}) => {
     const [institution, setInstitution] = useState({ name: "", type: "", location: "", directorId: "", directorName: "", specialization: "", joinDate: "", logo: "", isApproved: "", certificate: "", numberOfPersonnel: "", institutionCode: ""});
     const [notification, setNotification] = useState({ severity: '', message: '' });
 
-    const handleClick = () => setOpen(true);
-
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') { return; }
         setOpen(false);
@@ -55,83 +53,75 @@ const RequestDetails = ({popupPayLoad}) => {
 
         await axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         .then(response=>{
+            /** Create new hospital. */
+            institution.name = response.data.payload.institutionName
+            institution.type = response.data.payload.institutionType 
+            institution.location = response.data.payload.location
+            institution.directorId = response.data.payload.directorId
+            institution.directorName = applicant.firstName+" "+applicant.lastName
+            institution.specialization = ""
+            institution.joinDate = new Date()
+            institution.logo = ""
+            institution.isApproved = true
+            institution.certificate = response.data.payload.certificate
+            institution.numberOfPersonnel = response.data.payload.numberOfPersonnel
+            institution.institutionCode = response.data.payload.institutionName.replace(/\s/g, '').toLowerCase() ;
 
-            setTimeout(()=>{
-                /** Create new hospital. */
-                institution.name = response.data.payload.institutionName
-                institution.type =  response.data.payload.institutionType 
-                institution.location = response.data.payload.location
-                institution.directorId =  response.data.payload.directorId
-                institution.directorName = applicant.firstName+" "+applicant.lastName
-                institution.specialization = ""
-                institution.joinDate = new Date()
-                institution.logo = ""
-                institution.isApproved = true
-                institution.certificate = response.data.payload.certificate
-                institution.numberOfPersonnel = response.data.payload.numberOfPersonnel
-                institution.institutionCode = response.data.payload.institutionName.replace(/\s/g, '').toLowerCase() ;
+            // Record new institution
+            axios.post(`http://localhost:5050/api/mfss/institution/approve`, institution)
+            .then(response => {
+                if (response.status === 201) {
+                    // Fetch the recorded institution using the certificate provided.
+                    axios.get(`http://localhost:5050/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
+                    .then(response => {
 
-                // Record new institution
-                axios.post(`http://localhost:5050/api/mfss/institution/approve`, institution)
-                .then(response => {
-                    setTimeout(()=>{
-                        if (response.status === 201) {
-                            // Fetch the recorded institution using the certificate provided.
-                            axios.get(`http://localhost:5050/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
-                            .then(response => {
+                        /** Update Applicant information. */
+                        const institutionFirstThreeLetters = [];
+                        for (var prop in institution.name) {
+                            if (prop < 4) 
+                                institutionFirstThreeLetters.push(institution.name[prop]);
+                        };
 
-                                /** Update Applicant information. */
-                                const institutionFirstThreeLetters = [];
-                                for (var prop in institution.name) {
-                                    if (prop < 4) 
-                                        institutionFirstThreeLetters.push(institution.name[prop]);
-                                };
+                        const institutionIdLastThreeLetters = [];
+                        for (var i in institution._id) {
+                            if (i === institution.length-3) 
+                            institutionIdLastThreeLetters.push(institution.name[i]);
+                        };
 
-                                const institutionIdLastThreeLetters = [];
-                                for (var i in institution._id) {
-                                    if (i === institution.length-3) 
-                                    institutionIdLastThreeLetters.push(institution.name[i]);
-                                };
+                        let employeeNumber = 1;
+                        var userCode = institutionFirstThreeLetters.join("").toUpperCase()+""+employeeNumber.toString().padStart(3, '0');
 
-                                let employeeNumber = 1;
-                                var userCode = institutionFirstThreeLetters.join("").toUpperCase()+""+employeeNumber.toString().padStart(3, '0');
-    
-                                applicant.userCode = userCode
-                                applicant.institutionId = response.data[0]._id
-                                applicant.institutionCode = institution.institutionCode
-                                applicant.institutionName = response.data[0].name
-                                applicant.isActive = true
-    
-                                axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/updateInstitution?id=${applicant._id}`, applicant)
-                                .then(response => {
-                                    if (response.status === 201) {
-                                        setNotification({severity: 'success', message: "Request approved!"});
-                                        setOpen(true);
+                        applicant.userCode = userCode
+                        applicant.institutionId = response.data[0]._id
+                        applicant.institutionCode = institution.institutionCode
+                        applicant.institutionName = response.data[0].name
+                        applicant.isActive = true
 
-                                        setTimeout(()=>{
-                                            window.location.reload();
-                                        },3000)
-                                    }
-                                })
-                                .catch(error => {
-                                    if (error.response && error.response.status >= 400 && error.response.status <= 500){
-                                        setNotification({ severity: 'error', message: error.response.data.message});
-                                        setOpen(true);
-                                    }
-                                })
-                            })
-                            .catch(error => {
-                                console.log("Server error :: "+error);
-                            })
-                        }
-                    },3000)  
-                })
-                .catch(error => {
-                    if (error.response && error.response.status >= 400 && error.response.status <= 500){
-                        setNotification({ severity: 'error', message: error.response.data.message});
-                    }
-                })
-            },5000)
+                        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/update?id=${applicant._id}`, applicant)
+                        .then(response => {
+                            if (response.status === 201) {
+                                setNotification({severity: 'success', message: "Request approved!"});
+                                setOpen(true);
+                                window.location.reload();
+                            }
+                        })
+                        .catch(error => {
+                            if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                                setNotification({ severity: 'error', message: error.response.data.message});
+                                setOpen(true);
+                            }
+                        })
+                    })
+                    .catch(error => {
+                        console.log("Server error :: "+error);
+                    })
+                }
+            })
+            .catch(error => {
+                if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                    setNotification({ severity: 'error', message: error.response.data.message});
+                }
+            })
         })
         .catch(error => {
             if (error.response && error.response.status >= 400 && error.response.status <= 500){

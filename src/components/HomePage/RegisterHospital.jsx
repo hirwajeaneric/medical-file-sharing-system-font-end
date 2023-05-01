@@ -22,7 +22,8 @@ const RegisterHospital = () => {
 }
 
 const Description = styled.p`
-
+  line-height: 1.7rem;
+  text-align: center;
 `;
 
 const CallToActionButton = styled(Link)`
@@ -30,7 +31,7 @@ const CallToActionButton = styled(Link)`
   margin: 50px 0 50px;
   padding: 8px 20px;
   color: white;
-  background: #0066ff;
+  background: green;
   font-weight: 600;
   font-size: 110%;
   border: none;
