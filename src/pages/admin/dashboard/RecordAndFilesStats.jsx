@@ -10,21 +10,10 @@ const RecordAndFilesStats = () => {
 
     const [topStats, setTopStats] = useState({ total: 0, open: 0, closed: 0, hospitalized: 0 })
     const [data, setData] = useState([]);
-    
+ 
     useEffect(() => {
-        let personnel = {};
-        if (params.role === 'r') {
-            personnel = JSON.parse(localStorage.getItem('instAdmPe'));
-        } else if (params.role === 'd') {
-            personnel = JSON.parse(localStorage.getItem('instDocPe'));
-        } else if (params.role === 'n') {
-            personnel = JSON.parse(localStorage.getItem('instNurPe'));
-        } else if (params.role === 'l') {
-            personnel = JSON.parse(localStorage.getItem('instLabPe'));
-        } 
-
         // Bring filter information
-        var filter = JSON.parse(localStorage.getItem('filter'));
+        var filter = JSON.parse(localStorage.getItem('filter-A'));
 
         // Fetch records
         axios.get(`http://localhost:5050/api/mfss/record/list`)
@@ -35,10 +24,11 @@ const RecordAndFilesStats = () => {
             let hospitalized = [];          
             let today = new Date().getTime();
             
-            response.data.forEach(element => {
+            console.log(response.data);
 
-                // The conditions bellow generates besic numbers about records (Total, open, closed, hospitalized patients)
-                if (element.hospitalName === personnel.institutionName && Date.parse(element.openTime) >= Date.parse(new Date(filter.from)) && Date.parse(element.openTime) <= Date.parse(new Date(filter.to))) {
+            response.data.forEach(element => {
+                // The conditions bellow generates basic numbers about records (Total, open, closed, hospitalized patients)
+                if (Date.parse(element.openTime) >= Date.parse(new Date(filter.from)) && Date.parse(element.openTime) <= Date.parse(new Date(filter.to))) {
                     let openDate = new Date(element.openTime).getTime();
                     
                     element.id = element._id;
@@ -53,7 +43,8 @@ const RecordAndFilesStats = () => {
                     if (((today - openDate) / (1000 * 3600 * 24)) >= 2 && !element.closeTime && !element.recordCloser) { hospitalized.push(element) }
                 } 
             });
-
+            console.log("All records");
+            console.log(total);
             setData(total);
             setTopStats({ total: total.length, open: open.length, closed: closed.length, hospitalized: hospitalized.length });
         
@@ -61,8 +52,8 @@ const RecordAndFilesStats = () => {
             const localPatients = JSON.stringify(total);
             const localStats = JSON.stringify({ total: total.length, open: open.length, closed: closed.length, hospitalized: hospitalized.length })
 
-            localStorage.setItem('payload-patients', localPatients);
-            localStorage.setItem('stats-patients',localStats);
+            localStorage.setItem('payload-patients-A', localPatients);
+            localStorage.setItem('stats-patients-A',localStats);
 
         })
         .catch(error => console.log(error));

@@ -68,6 +68,7 @@ const ListOfRecords = () => {
             records.push(element);
           }
         })
+        records.sort((a, b) => new Date(b.openTime) - new Date(a.openTime))
         setRecords(records); 
       })
       .catch(error => { console.log(error) })

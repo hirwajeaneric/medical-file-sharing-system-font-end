@@ -173,7 +173,7 @@ const NewFile = () => {
                             <option value="">Choose file type...</option>
                             <option value="laboratory tests">Laboratory tests</option>
                             <option value="medical prescritions">Prescription</option>
-                            <option value="patient transfer">Tranfer</option>
+                            {/* <option value="patient transfer">Tranfer</option> */}
                         </select>
                     </FormInput>
                     {file.type ? (file.type ==='medical prescritions' ? <h2>Prescriptions</h2> : file.type === "laboratory tests" ? <h2>Laboratory Tests</h2> : "") : ""}
