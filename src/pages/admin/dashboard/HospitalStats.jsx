@@ -48,7 +48,7 @@ const HospitalStats = () => {
         
             // Stringifying and sending filtered data to the localstorage for other pages to use it.
             const localPatients = JSON.stringify(total);
-            const localStats = JSON.stringify({ total: total.length, active: active.length, inactive: inactive.length, north: north.length, south: south.length, east: east.length, west: west.length })
+            const localStats = JSON.stringify({ total: total.length, active: active.length, inactive: inactive.length, north: north.length, south: south.length, east: east.length, west: west.length, kigaliCity: kigaliCity.length })
 
             localStorage.setItem('payload-hospitals-A', localPatients);
             localStorage.setItem('stats-hospitals-A',localStats);
