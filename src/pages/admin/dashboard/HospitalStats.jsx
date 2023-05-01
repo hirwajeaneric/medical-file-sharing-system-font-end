@@ -50,8 +50,8 @@ const HospitalStats = () => {
             const localPatients = JSON.stringify(total);
             const localStats = JSON.stringify({ total: total.length, active: active.length, inactive: inactive.length, north: north.length, south: south.length, east: east.length, west: west.length })
 
-            localStorage.setItem('payload-patients-A', localPatients);
-            localStorage.setItem('stats-patients-A',localStats);
+            localStorage.setItem('payload-hospitals-A', localPatients);
+            localStorage.setItem('stats-hospitals-A',localStats);
 
         })
         .catch(error => console.log(error));

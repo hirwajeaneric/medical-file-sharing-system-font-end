@@ -19,25 +19,18 @@ const PersonnelStats = () => {
             let nurses = []; 
             let labtechnicians = [];
 
-            // Bring filter information
-            var filter = JSON.parse(localStorage.getItem('filter-A'));
-
             response.data.forEach(element => {
-                if (Date.parse(element.joinDate) >= Date.parse(new Date(filter.from)) && Date.parse(element.joinDate) <= Date.parse(new Date(filter.to))) {
-                    total.push(element);
+                total.push(element);
                     
-                    element.id = element._id
-                    
-                    if (element.role === 'nurse') {
-                        nurses.push(element);
-                    }
-                    if (element.role === 'doctor') {
-                        doctors.push(element);
-                    }
-                    if (element.role === 'lab technician') {
-                        labtechnicians.push(element);
-                    }
-                } 
+                element.id = element._id
+                
+                if (element.role === 'nurse') {
+                    nurses.push(element);
+                } else if (element.role === 'doctor') {
+                    doctors.push(element);
+                } else if (element.role === 'lab technician') {
+                    labtechnicians.push(element);
+                }
             });
             setData(total);
             setTopStats({ total: total.length, doctors: doctors.length, nurses: nurses.length, labtechnicians: labtechnicians.length });
