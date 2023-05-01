@@ -59,7 +59,7 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
                 {/* Patient report  */}
                 {reportType==="Hospitals Report" && 
                     <ReportContent>
-                        <p>This report contains as summarized overview of all hospitals which have the permission to use the medical file sharing system (Medicase).
+                        <p>This report contains as summarized overview and list of all hospitals which have the permission to use the medical file sharing system (Medicase).
                             Hospitals that have the permission to use this system are hospitals which submitted their application or request to use it. 
                             Their requests are revised and assessed by authorities from the ministry of health before being granted access to the system.
                             <br/><br/>
@@ -124,8 +124,12 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
                 {/* Hospital personnel report  */}
                 {reportType==="Hospital Personnel Report" && 
                     <ReportContent>
-                        <p>This report contains as summarized overview of hospital personnel that we employ and who use the system.
-                            These personnel include: <strong>Doctors, Lab technicians, and nurses.</strong> 
+                        <p>This report contains as summarized overview and list of hospital personnel who have access to this medical file sharing system.
+                            <br/><br/>
+                            The following personnel gained access to the system through their respective hospitals of service.
+                            The hospital admin is responsible for adding new personnel, activating, desactivating or suspending personnel accounts to ensure a secure use of patient information.
+                            <br/><br/>
+                            These personnel include: <strong>Doctors, Lab technicians, nurses, and hospital admins.</strong> 
                             Every user of the system has limited access to the system hence performing activities related to their given role.
                         </p>
                         <h4>General Statistics</h4>
@@ -136,6 +140,7 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
                                     <th>Doctors</th>
                                     <th>Nurses</th>
                                     <th>Lab technicians</th>
+                                    <th>Hospital admins</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -144,9 +149,14 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
                                     <td>{personnelStats.doctors}</td>
                                     <td>{personnelStats.nurses}</td>
                                     <td>{personnelStats.labtechnicians}</td>
+                                    <td>{personnelStats.total - (personnelStats.doctors + personnelStats.nurses + personnelStats.labtechnicians)}</td>
                                 </tr>
                             </tbody>
                         </Table>
+                        <br/>
+                        <p>
+                            The table bellow shows a list of all personnel. It also shows their roles, their user codes, and the status of their codes, and the time at which they joined the system.
+                        </p>
                         <h4>List of hospitals</h4>
                         <TableList>
                             <thead>
