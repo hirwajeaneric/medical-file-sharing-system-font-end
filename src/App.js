@@ -52,9 +52,8 @@ import NewFile from './pages/institutionPersonel/dashboard/NewFile';
 import PatientFilesAndRecords from './pages/institutionPersonel/dashboard/PatientFilesAndRecords';
 import RecordAndFilesStats from './pages/institutionPersonel/dashboard/RecordAndFilesStats';
 import PersonnelStats from './pages/institutionPersonel/dashboard/PersonnelStats';
-import PatientFilesAndRecordsA from './pages/admin/dashboard/PatientFilesAndRecords';
-import RecordAndFilesStatsA from './pages/institutionPersonel/dashboard/RecordAndFilesStats';
-import PersonnelStatsA from './pages/institutionPersonel/dashboard/PersonnelStats';
+import HospitalStatsA from './pages/admin/dashboard/HospitalStats';
+import PersonnelStatsA from './pages/admin/dashboard/PersonnelStats';
 import InsResetPassword from './components/authenticationRelated/InsResetPassword';
 import Institution from './pages/institutionPersonel/dashboard/Institution';
 import SearchResults from './pages/institutionPersonel/dashboard/SearchResults';
@@ -113,9 +112,9 @@ function App() {
                           {adminToken &&
                             <Route path='dashboard' element={<Dashboard/> } errorElement={<ErrorPage />}>
                               <Route path='' element={<DashBoardHome />}>
-                                <Route path='' element={<RecordAndFilesStatsA/>}/>
+                                <Route path='' element={<HospitalStatsA/>}/>
                                 <Route path='per' element={<PersonnelStatsA/>}/>
-                                <Route path='rec' element={<RecordAndFilesStatsA/>}/>
+                                <Route path='hsp' element={<HospitalStatsA/>}/>
                               </Route>
                               <Route path='reports' element={<Reports />} />
                               <Route path='patients' element={<Patients />} />

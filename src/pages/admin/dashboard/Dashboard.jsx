@@ -49,10 +49,10 @@ const Dashboard = () => {
             <BiHomeAlt />
             {isOpen && <NavItem>Dashboard</NavItem>}
           </NavItemContainerHome>
-          <NavItemContainer to={'reports'}>
+          {/* <NavItemContainer to={'reports'}>
             <BiPaperPlane />
             {isOpen && <NavItem>Reports</NavItem>}
-          </NavItemContainer>
+          </NavItemContainer> */}
           <NavItemContainer to={'patients'}>
             <BiUserCircle />
             {isOpen && <NavItem>Patients</NavItem>}
