@@ -23,6 +23,7 @@ const Requests = () => {
       response.data.forEach(element => {
         element.id = element._id;
       });
+      response.data.sort((a, b) => new Date(b.sendDate) - new Date(a.sendDate))
       setRequests(response.data)
     })
     .catch(error => {
