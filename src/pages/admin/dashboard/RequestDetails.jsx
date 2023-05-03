@@ -45,7 +45,7 @@ const RequestDetails = ({popupPayLoad}) => {
         e.preventDefault();
     
         application.status = 'Approved';
-        application.respondDate = new Date();
+        application.respondDate = Date.now();
 
         setNotification({severity: 'info', message: "Processing ..."});
         setOpen(true);
@@ -60,7 +60,7 @@ const RequestDetails = ({popupPayLoad}) => {
             institution.directorId = response.data.payload.directorId
             institution.directorName = applicant.firstName+" "+applicant.lastName
             institution.specialization = ""
-            institution.joinDate = new Date()
+            institution.joinDate = Date.now()
             institution.logo = ""
             institution.isApproved = true
             institution.certificate = response.data.payload.certificate
@@ -100,9 +100,25 @@ const RequestDetails = ({popupPayLoad}) => {
                         axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/update?id=${applicant._id}`, applicant)
                         .then(response => {
                             if (response.status === 201) {
+                                // Sending an email
+                                const email = {
+                                    email: applicant.email,
+                                    subject: `Institution Credentials`,
+                                    text: `Dear ${applicant.lastName}, \n\nThis email containss sensitive and important information related to the access of ${applicant.institutionName} to the MEDICASE.\n\nAccess URL: http://localhost:3030/${applicant.institutionCode}/auth/signin\n\nLogin credentials:\nUsercode: ${applicant.userCode}\nPassword: The password you used to register the institution. \n\nPlease note that for the sake of data security of this application and for the security of patients data, you are prohibited to share above credentials to any other person out of this institution. Any sign or tentative of bleach, missuse, or compromise that will come from ${applicant.institutionName} may result to getting the hospital banned from accessing the system in addition to other measures that can include law enforcement. \n\nThis therefore gives you ${applicant.firstName+" "+applicant.lastName} full responsibility of how the hospital you have applied for uses the system. \n\nMore details will be found in your dashboard. \n\n\nBest Regards,`
+                                };
+                                
+                                axios.post(`http://localhost:5050/api/mfss/email/`, email)
+                                .then(response => {
+                                    console.log(response.data);
+                                })
+                                .catch(error => console.log(error))
+
+                                // Displaying success message
                                 setNotification({severity: 'success', message: "Request approved!"});
                                 setOpen(true);
-                                window.location.reload();
+                                setTimeout(()=>{
+                                    window.location.reload();
+                                }, 3000)
                             }
                         })
                         .catch(error => {
@@ -136,13 +152,16 @@ const RequestDetails = ({popupPayLoad}) => {
         e.preventDefault();
 
         application.status = 'Rejected';
-        application.respondDate = new Date();
+        application.respondDate = Date.now();
 
         axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         .then(response=>{
             if (response.status === 201) {
                 setNotification({severity: 'success', message: response.data.message});
                 setOpen(true);
+                setTimeout(()=>{
+                    window.location.reload();
+                }, 2000)
             }
         })
         .catch(error => {
@@ -201,7 +220,7 @@ const RequestDetails = ({popupPayLoad}) => {
                 </DetailDiv>
                 <DetailDiv>
                     <p><strong>Respond Date: </strong></p>
-                    <p>{application.respondDate}</p>
+                    <p>{ isNaN(parseInt(application.respondDate)) ? application.respondDate : new Date(parseInt(application.respondDate)).toDateString()}</p>
                 </DetailDiv>
                 <DetailDiv>
                     <p><strong>Certificate: </strong></p>
