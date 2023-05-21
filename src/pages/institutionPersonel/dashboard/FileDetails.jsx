@@ -99,7 +99,7 @@ const FileDetails = ({file}) => {
                         <h3 style={{ textAlign: 'left' }}>{file.hospitalName}</h3>
                         <p style={{ textAlign: 'left',  }}>{file.hospitalLocation}</p>
                     </div>
-                    <img src={`http://localhost:5050/api/mfss/uploads/${file.hospitalLogo}`} alt='' style={{ height: '100px', width: '100px', backgroundSize: 'cover' }} />
+                    <img src={`http://localhost:5050/api/mfss/uploads/${file.hospitalLogo}`} alt='' style={{ height: '100px', width: 'auto', minWidth: '100px', backgroundSize: 'cover' }} />
                 </div>
 
                 {file.type=== 'laboratory tests' && <FileHeader>Laboratory Tests</FileHeader>} 

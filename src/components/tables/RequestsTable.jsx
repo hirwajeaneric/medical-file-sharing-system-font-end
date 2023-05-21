@@ -68,6 +68,10 @@ function CustomToolbar() {
 var rows = [];
 
 const RequestsTable = ({data}) => {
+    data.forEach(element => {
+        element.sendDate = new Date(element.sendDate).toDateString();
+        if (element.respondDate) { element.respondDate = new Date(element.respondDate).toDateString(); }
+    });
     rows = data;
     return (
         <Box sx={{height: 350, width:'100%'}}>

@@ -5,11 +5,11 @@ import { useParams } from 'react-router-dom'
 import { ReportBody, ReportFooter, ReportHeader, ReportPaperContainer, InstitutionDetails, ReportDateAndGenerator, ReportContent, Table, TableList } from '../../../components/Dashboard/ReportStyledComponents'
 
 export const ComponentToPrint = React.forwardRef((props, ref) => {
-    const params = useParams();
     const [institution, setInstitution] = useState({});
     const [representative, setRepresentative] = useState({});
     const [reportType, setReportType] = useState('');
     const [filter, setFilter] = useState({});
+    const [diseasesStats, setDiseasesStats] = useState({ total: 0, positive: 0, rare: 0, extreme: 0, testedDiseases: [], rareCases: [], extremeCases: [] });
     const [personnelStats, setPersonnelStats] = useState({});
     const [patientStats, setPatientStats] = useState({});
     const [patients, setPatients] = useState([]);
@@ -29,11 +29,13 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
         const localPatientStats = localStorage.getItem('stats-patients');
         const localPayloadPatients = localStorage.getItem('payload-patients');
         const localPersonnelStats = localStorage.getItem('stats-personnel');
+        const localDiseasesStats = localStorage.getItem('stats-diseases');
         const localPayloadPersonnel = localStorage.getItem('payload-personnel');
         setPatients(JSON.parse(localPayloadPatients));
         setPatientStats(JSON.parse(localPatientStats));
         setPersonnel(JSON.parse(localPayloadPersonnel));
         setPersonnelStats(JSON.parse(localPersonnelStats));
+        setDiseasesStats(JSON.parse(localDiseasesStats));
 
         // Filtering Male, Female and Underaged
         const listOfPatients = JSON.parse(localPayloadPatients);
@@ -65,11 +67,67 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
                     <p>Generated on: {new Date().toLocaleDateString()}</p>
                     <p>By: {representative.firstName+" "+representative.lastName}</p>
                 </ReportDateAndGenerator>
-                {/* General Hospital Report  */}
-                {reportType==="General Hospital Report" && 
+                
+                {/* Diseases tests Report  */}
+                {reportType==="Recorded Diseases Numbers" && 
                     <ReportContent>
+                    <p>This report contains statistical information about medical tests done for various diseases on patients who visited our hospital in the period between {filter.from} and {filter.to}.
+                        It provides numbers for the over all number of diseases that were tested from our hospital, positve cases, rare cases, extreme cases, and list of tested diseases with their frequencies.
+                    </p>
+                    <h4>General Statistics</h4>
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>Total</th>
+                                <th>Positive</th>
+                                <th>Rare</th>
+                                <th>Extreme</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{diseasesStats.total}</td>
+                                <td>{diseasesStats.positive}</td>
+                                <td>{diseasesStats.rare}</td>
+                                <td>{diseasesStats.extreme}</td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                    <h4>Tested Cases and Frequency of Occurances.</h4>
+                    <TableList>
+                        <thead>
+                            <tr>
+                                <th>Test</th>
+                                <th>Frequency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {diseasesStats.testedDiseases.length !== 0 && 
+                                diseasesStats.testedDiseases.map((disease, index) => 
+                                <tr key={index}>
+                                    <td>{disease.test}</td>
+                                    <td>{disease.frequency}</td>
+                                </tr>
+                                )
+                            }
+                        </tbody>
+                    </TableList>
+                    {diseasesStats.extremeCases.length !== 0 && <>
+                            <h4>Extreme cases: </h4>
+                            <p>
+                                {diseasesStats.extremeCases.map((element,index) => <span key={index}>{element} ,</span>)}
+                            </p>
+                        </>
+                    }
+                    {diseasesStats.rareCases.length !== 0 && <>
+                            <h4>Rare cases: </h4>
+                            <p>
+                                {diseasesStats.rareCases.map((element,index) => <span key={index}>{element} ,</span>)}
+                            </p>
+                        </>
+                    }
 
-                    </ReportContent>
+                </ReportContent>
                 }
 
                 {/* Patient report  */}

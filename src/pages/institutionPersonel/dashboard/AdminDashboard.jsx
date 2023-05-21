@@ -97,20 +97,13 @@ const AdminDashboard = () => {
         <div>
           <NavLink to={'rec'}>Patient records</NavLink>
           <NavLink to={'per'}>Personnel</NavLink>
+          <NavLink to={'dis'}>Recorded diseases</NavLink>
         </div>
         <Button variant='text' size='small' color='primary' onClick={handleClick} >Print reports</Button>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
-        >
-          {/* <MenuItem onClick={() => { handleClose(); goToReportPage('General Hospital Report'); }}>General hospital report</MenuItem> */}
+        <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{ 'aria-labelledby': 'basic-button' }}>
           <MenuItem onClick={() => { handleClose(); goToReportPage('Patient Report'); }}>Patients report</MenuItem>
           <MenuItem onClick={() => { handleClose(); goToReportPage('Hospital Personnel Report'); }}>Hospital personnel report</MenuItem>
+          <MenuItem onClick={() => { handleClose(); goToReportPage('Recorded Diseases Numbers'); }}>Recorded disease numbers</MenuItem>
         </Menu>
       </StatsCategories>
       <Outlet />

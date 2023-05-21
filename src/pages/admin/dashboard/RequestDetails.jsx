@@ -194,7 +194,7 @@ const RequestDetails = ({popupPayLoad}) => {
                 </DetailDiv>
                 <DetailDiv>
                     <p><strong>Application Date: </strong></p>
-                    <p>{application.sendDate}</p>
+                    <p>{new Date(application.sendDate).toDateString()}</p>
                 </DetailDiv>
                 <hr style={{height: '1px', background: '#b3b3cc', border: 'none', marginBottom: '20px'}}/>
                 <DetailDiv>
@@ -220,7 +220,7 @@ const RequestDetails = ({popupPayLoad}) => {
                 </DetailDiv>
                 <DetailDiv>
                     <p><strong>Respond Date: </strong></p>
-                    <p>{ isNaN(parseInt(application.respondDate)) ? application.respondDate : new Date(parseInt(application.respondDate)).toDateString()}</p>
+                    {application.respondDate && <p>{new Date(application.respondDate).toDateString()}</p>}
                 </DetailDiv>
                 <DetailDiv>
                     <p><strong>Certificate: </strong></p>

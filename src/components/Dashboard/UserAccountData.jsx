@@ -118,14 +118,14 @@ const UserAccountData = () => {
                             <strong>{userInformation.isActive}</strong>
                         </RightHalf>
                     </TwoSidedParagraphContainer>
-                    <TwoSidedParagraphContainer style={{fontSize: '100%', marginBottom: '15px'}}>
+                    {userInformation.joinDate && <TwoSidedParagraphContainer style={{fontSize: '100%', marginBottom: '15px'}}>
                         <LeftHalf>
                             <p>Join Date:</p>
                         </LeftHalf>
                         <RightHalf>
                             <strong>{moment(`${userInformation.joinDate}`).format("MMM Do YYYY")}</strong>
                         </RightHalf>
-                    </TwoSidedParagraphContainer>
+                    </TwoSidedParagraphContainer>}
                     <TwoSidedParagraphContainer style={{fontSize: '100%', marginBottom: '15px'}}>
                         <LeftHalf>
                             <p>Hospital name:</p>
