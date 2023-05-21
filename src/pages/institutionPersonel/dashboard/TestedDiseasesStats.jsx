@@ -127,10 +127,7 @@ export default function TestedDiseasesStats() {
             console.log(testStatistics);
         
             // Stringifying and sending filtered data to the localstorage for other pages to use it.
-            const localTestData = JSON.stringify(mergedTestData);
             const localTestStats = JSON.stringify(testStatistics)
-
-            localStorage.setItem('payload-diseases', localTestData);
             localStorage.setItem('stats-diseases',localTestStats);
         })
         .catch(error => console.log(error));

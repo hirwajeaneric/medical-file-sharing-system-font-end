@@ -103,7 +103,7 @@ const AdminDashboard = () => {
         <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{ 'aria-labelledby': 'basic-button' }}>
           <MenuItem onClick={() => { handleClose(); goToReportPage('Patient Report'); }}>Patients report</MenuItem>
           <MenuItem onClick={() => { handleClose(); goToReportPage('Hospital Personnel Report'); }}>Hospital personnel report</MenuItem>
-          <MenuItem onClick={() => { handleClose(); goToReportPage('Recorded disease numbers'); }}>Recorded disease numbers</MenuItem>
+          <MenuItem onClick={() => { handleClose(); goToReportPage('Recorded Diseases Numbers'); }}>Recorded disease numbers</MenuItem>
         </Menu>
       </StatsCategories>
       <Outlet />
