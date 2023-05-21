@@ -9,10 +9,10 @@ import { Description, FormBody, FormContainer, FormControlButtonsTwo, FormHead, 
 const InstitutionSection = () => {
   
   // States
-  const [institutionApplication, setInstitutionApplication] = useState({ directorId: "", institutionType: "Hospital", institutionId: "", institutionName: "", sendDate: "", status: "Pending", applicationDate: new Date(), applicationBody: "", systemAdminId: "", location: "", numberOfPersonnel: "" });
+  const [institutionApplication, setInstitutionApplication] = useState({ directorId: "", institutionType: "Hospital", institutionId: "", institutionName: "", sendDate: "", status: "Pending", applicationDate: Date.now(), applicationBody: "", systemAdminId: "", location: "", numberOfPersonnel: "" });
   const [institutionApplicationError, setInstitutionApplicationError] = useState({ institutionType: "", institutionName: "", numberOfPersonnel: ""})
   
-  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "0000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: new Date(), institutionId: "Pending", institutionName: "Pending" });
+  const [personalInfo, setPersonalInfo] = useState({ firstName: "", lastName: "", userCode: "0000000", email: "", password: "", phone: "", role: "Representative", isActive: "false", applicationDate: Date.now(), institutionId: "Pending", institutionName: "Pending" });
   const [personalInfoError, setPersonalInfoError] = useState({firstName: "", lastName: "", email: "", phone: "", password: ""});
   
   const [certificate, setCertificate] = useState('');
@@ -96,15 +96,13 @@ const InstitutionSection = () => {
       setLocationErrors({province: '',district: '',sector: '',})
       setErrorMessage('');
       
+      setSavingProgress('Saving in progress ...');
       axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/createUser`, personalInfo)
       .then(response => {
-        if (response.status === 201) {
-          setSavingProgress('Saving in progress ...');
-          
+        if (response.status === 201) {    
           setTimeout(()=>{
             setSavingProgress('');
             setSuccessMessage({ message: response.data.message, visible: true });
-
             axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByEmail?email=${response.data.info.email}`)
             .then(response=>{
               setDirector(response.data._id)
@@ -112,11 +110,13 @@ const InstitutionSection = () => {
             .catch(error => setErrorMessage(error))
 
             setOpen({formOne: false, formTwo: true});
-          }, 5000);
+          }, 3000);
         }
       })
       .catch(error => {
-        setErrorMessage(error);
+        if (error.response && error.response.status >= 400 && error.response.status <= 500){
+          setErrorMessage(error.response.data.message);
+        }
       })
     } 
   }
@@ -164,7 +164,7 @@ const InstitutionSection = () => {
 
       institutionApplication.directorId = director
       institutionApplication.institutionId = "Default"
-      institutionApplication.sendDate = new Date().toDateString()
+      institutionApplication.sendDate = Date.now()
       institutionApplication.status = "Pending"
       institutionApplication.location = locations.province+", "+locations.district+", "+locations.sector
       institutionApplication.certificate = certificate
@@ -173,20 +173,22 @@ const InstitutionSection = () => {
       setCertificateError('');
       setErrorMessageTwo('');
 
+      setSavingProgressTwo('Saving in progress ...');
       axios.post(`http://localhost:5050/api/mfss/applicationForInstitution/add`, institutionApplication, config)
       .then(response => {
         if (response.status === 201) {
-          setSavingProgressTwo('Saving in progress ...');
-          
           setTimeout(()=>{
             setSavingProgressTwo('');
             setSuccessMessageTwo({ message: response.data.message, visible: true });
             setOpen({formOne: false, formTwo: false});
-          }, 5000);
-
+          }, 3000);
         }
       })
-      .catch(error => setErrorMessage(error))
+      .catch(error => {
+        if (error.response && error.response.status >= 400 && error.response.status <= 500){
+          setErrorMessageTwo(error.response.data.message);
+        }
+      })
     }
 
   }
@@ -226,7 +228,7 @@ const InstitutionSection = () => {
               </FormInput>
               <FormInput>
                 <label htmlFor="phone">Phone</label>
-                <input type="text" name="phone" id="phone" maxLenght={10} minLength={10} value={personalInfo.phone} onChange={handlePersonalInfo} placeholder='Phone'/>
+                <input type="text" name="phone" id="phone" maxlenght={10} minLength={10} value={personalInfo.phone} onChange={handlePersonalInfo} placeholder='Phone'/>
                 {personalInfoError.phone && <p>{personalInfoError.phone}</p>}
               </FormInput>
               <FormInput>
