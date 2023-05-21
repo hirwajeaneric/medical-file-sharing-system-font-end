@@ -80,15 +80,7 @@ export default function TestedDiseasesStats() {
       
     useEffect(() => {
         let personnel = {};
-        if (params.role === 'r') {
-            personnel = JSON.parse(localStorage.getItem('instAdmPe'));
-        } else if (params.role === 'd') {
-            personnel = JSON.parse(localStorage.getItem('instDocPe'));
-        } else if (params.role === 'n') {
-            personnel = JSON.parse(localStorage.getItem('instNurPe'));
-        } else if (params.role === 'l') {
-            personnel = JSON.parse(localStorage.getItem('instLabPe'));
-        } 
+        personnel = JSON.parse(localStorage.getItem('usr'));
 
         // Bring filter information
         var filter = JSON.parse(localStorage.getItem('filter'));
@@ -100,7 +92,7 @@ export default function TestedDiseasesStats() {
             var parsedTestData = [];
 
             response.data.forEach(file => {
-                if (file.hospitalName === personnel.institutionName && Date.parse(file.creationDate) >= Date.parse(new Date(filter.from)) && Date.parse(file.creationDate) <= Date.parse(new Date(filter.to))) {
+                if (Date.parse(file.creationDate) >= Date.parse(new Date(filter.from)) && Date.parse(file.creationDate) <= Date.parse(new Date(filter.to))) {
                     if (file.exams) {
                         stringifiedTestData.push(file.exams);
                     }
@@ -126,7 +118,7 @@ export default function TestedDiseasesStats() {
         
             // Stringifying and sending filtered data to the localstorage for other pages to use it.
             const localTestStats = JSON.stringify(testStatistics)
-            localStorage.setItem('stats-diseases',localTestStats);
+            localStorage.setItem('stats-diseases-A',localTestStats);
         })
         .catch(error => console.log(error));
     },[params.role])

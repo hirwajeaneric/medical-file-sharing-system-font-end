@@ -28,6 +28,7 @@ const DashboardHome = () => {
         <div>
           <NavLink to={'hsp'}>Hospitals</NavLink>
           <NavLink to={'per'}>Personnel</NavLink>
+          <NavLink to={'dis'}>Recorded diseases</NavLink>
         </div>
         <Button variant='text' size='small' color='primary' onClick={handleClick} >Print reports</Button>
         <Menu
@@ -42,6 +43,7 @@ const DashboardHome = () => {
           {/* <MenuItem onClick={() => { handleClose(); goToReportPage('General Hospital Report'); }}>General hospital report</MenuItem> */}
           <MenuItem onClick={() => { handleClose(); goToReportPage('Hospitals Report'); }}>Hospital</MenuItem>
           <MenuItem onClick={() => { handleClose(); goToReportPage('Hospital Personnel Report'); }}>Hospital personnel</MenuItem>
+          <MenuItem onClick={() => { handleClose(); goToReportPage('Recorded Diseases Numbers'); }}>Recorded disease numbers</MenuItem>
         </Menu>
       </StatsCategories>
       <Outlet />
