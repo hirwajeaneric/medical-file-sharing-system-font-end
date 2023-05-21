@@ -58,6 +58,7 @@ import InsResetPassword from './components/authenticationRelated/InsResetPasswor
 import Institution from './pages/institutionPersonel/dashboard/Institution';
 import SearchResults from './pages/institutionPersonel/dashboard/SearchResults';
 import TestedDiseasesStats from './pages/institutionPersonel/dashboard/TestedDiseasesStats';
+import AdminTestedDiseasesStats from './pages/admin/dashboard/TestedDiseasesStats';
 
 // Contexts declaration 
 export var ResponseMessageContext = createContext();
@@ -116,6 +117,7 @@ function App() {
                                 <Route path='' element={<HospitalStatsA/>}/>
                                 <Route path='per' element={<PersonnelStatsA/>}/>
                                 <Route path='hsp' element={<HospitalStatsA/>}/>
+                                <Route path='dis' element={<AdminTestedDiseasesStats/>}/>
                               </Route>
                               <Route path='reports' element={<Reports />} />
                               <Route path='patients' element={<Patients />} />
@@ -140,7 +142,7 @@ function App() {
                               <Route path='' element={<RecordAndFilesStats/>}/>
                               <Route path='per' element={<PersonnelStats/>}/>
                               <Route path='rec' element={<RecordAndFilesStats/>}/>
-                              <Route path='dis' element={<TestedDiseasesStats/>}/>
+                              <Route path='dis' element={<AdminTestedDiseasesStats/>}/>
                             </Route>
                             <Route path='reports' exact element={<Navigate replace to='/admin/auth/signin/' />} />
                             <Route path='patients' exact element={<Navigate replace to='/admin/auth/signin/' />} />
