@@ -201,7 +201,7 @@ const PatientDetails = () => {
                     </TwoSidedParagraphContainer>
                     <TwoSidedParagraphContainer>
                         <strong>Join Date:</strong>
-                        <p>&nbsp;{patient.joinDate}</p>
+                        <p>&nbsp;{new Date(patient.joinDate).toLocaleString()}</p>
                     </TwoSidedParagraphContainer>
                     <TwoSidedParagraphContainer>
                         <strong>Male guardian:</strong>

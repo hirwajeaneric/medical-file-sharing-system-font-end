@@ -53,6 +53,8 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        var email = {email: userInfo.email, subject: 'Account credentials', text:''}
+
         userInfo.institutionId = localData.institutionId;
         userInfo.institutionName = localData.institutionName;
         userInfo.institutionCode = params.institution;
@@ -67,6 +69,8 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
         var userCode = institutionFirstThreeLetters.join("").toUpperCase()+""+employeeNumber.toString().padStart(3, '0');
 
         userInfo.userCode = userCode;
+        // Email body composition
+        email.text = `Dear ${userInfo.firstName} ${userInfo.lastName}, \n\nThis email contains user credentials for your new account for access to the Medicase (Medical File Sharing System) through ${localData.institutionName}.\n\nCREDENTIALS:\n1. Access URL: http://localhost:3030/${params.institution}/auth/signin\n2. User Code: ${userCode}\nPassword:${userInfo.password}\n\nNOTE THAT: You should immediately reset your password on signin. Any issues related to bleach to the system that is resulted by a institution personnel's fault can result to severe lawsuit measures or other charges according to the weight of the issue.\n\nIf you have an issue signing in, or getting access to your account, or if there is any sign of attach into your account. Please inform your hospital system admin in charge of the Medicase app.  \n\nRegards`;
 
         if (userInfo.firstName === ''){
             setUserInputErrors({...userInputErrors, firstName: 'Required*'});
@@ -96,6 +100,18 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
             .then(response=> {
                 if (response.status === 201) {
                     
+                    // Send an email containing account credentials to the newly created user.
+                    axios.post(`http://localhost:5050/api/mfss/email`, email)
+                    .then(response => {
+                        if (response.status === 200) { console.log(response.data) }
+                    })
+                    .catch(error => { 
+                        if (error.response && error.response.status >= 400 && error.response.status <= 500){
+                            console.log(error.response.data.message);
+                        }
+                    })
+
+
                     let numberOfPersonnel = 0;
 
                     // Get full list of personnel
