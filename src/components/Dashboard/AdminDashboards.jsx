@@ -261,3 +261,31 @@ export const SideChart = styled.div`
         width: 100%;
     }
 `;
+
+export const OverViewDetails = styled.div`
+    width: 29%;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+
+    div {
+        ul {
+            list-style-type: none;
+            margin: 10px 0px 20px;
+            font-size: 90%;
+        }
+    }
+
+    @media (max-width: 1080px) {
+        
+    }
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+
+    @media (max-width: 480px) {
+        width: 100%;
+    }
+`;

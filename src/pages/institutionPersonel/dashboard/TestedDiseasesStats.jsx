@@ -2,8 +2,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import PieChart from '../../../components/Charts/PieChart';
-import { AStatistic, ChartOne, ChartSection, SideChart, Stats } from '../../../components/Dashboard/AdminDashboards'
+import { AStatistic, ChartOne, ChartSection, OverViewDetails, SideChart, Stats } from '../../../components/Dashboard/AdminDashboards'
 import RecordsTable from '../../../components/tables/RecordsTable';
+import TestsTable from '../../../components/tables/TestsTable';
 
 export default function TestedDiseasesStats() {
     const params = useParams();
@@ -120,7 +121,7 @@ export default function TestedDiseasesStats() {
 
             var testStatistics = calculateTestStatistics(mergedTestData);
 
-            setData(mergedTestData);
+            setData(testStatistics.testedDiseases);
             setTopStats(testStatistics);
 
             console.log(testStatistics);
@@ -168,14 +169,28 @@ export default function TestedDiseasesStats() {
                 </AStatistic>
             </Stats>
             <ChartSection>
-                <ChartOne>
+                <ChartOne style={{ width: topStats.extremeCases.length === 0 && topStats.rareCases.length === 0 ? '100%' : '68%' }}>
                     <h4>Tracked Diseases</h4>
-                    <RecordsTable data={data} />
+                    <TestsTable data={data} />
                 </ChartOne>
-                <SideChart>
-                    <h4>Overview</h4>
-                    {/* <PieChart chartData={[ topStats.positive, topStats.rare, topStats.extreme ]}/> */}
-                </SideChart>
+                {(topStats.extremeCases.length !== 0 || topStats.rareCases.length !== 0) && <OverViewDetails>
+                    {topStats.extremeCases.length !== 0 && 
+                        <div>
+                            <h4>Extreme cases</h4>
+                            <ul>
+                                {topStats.extremeCases.map((element, index) => <p key={index}>{element}</p>)}
+                            </ul>
+                        </div>
+                    }
+                    {topStats.rareCases.length !== 0 && 
+                        <div>
+                            <h4>Rare cases</h4>
+                            <ul>
+                                {topStats.rareCases.map((element, index) => <li key={index}>{element}</li>)}
+                            </ul>
+                        </div>
+                    }
+                </OverViewDetails>}
             </ChartSection>
         </>
     )
