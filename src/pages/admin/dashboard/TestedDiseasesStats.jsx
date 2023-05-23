@@ -83,7 +83,7 @@ export default function TestedDiseasesStats() {
         personnel = JSON.parse(localStorage.getItem('usr'));
 
         // Bring filter information
-        var filter = JSON.parse(localStorage.getItem('filter'));
+        // var filter = JSON.parse(localStorage.getItem('filter'));
 
         // Fetch records
         axios.get(`http://localhost:5050/api/mfss/file/list`)
@@ -92,11 +92,11 @@ export default function TestedDiseasesStats() {
             var parsedTestData = [];
 
             response.data.forEach(file => {
-                if (Date.parse(file.creationDate) >= Date.parse(new Date(filter.from)) && Date.parse(file.creationDate) <= Date.parse(new Date(filter.to))) {
+                // if (Date.parse(file.creationDate) >= Date.parse(new Date(filter.from)) && Date.parse(file.creationDate) <= Date.parse(new Date(filter.to))) {
                     if (file.exams) {
                         stringifiedTestData.push(file.exams);
                     }
-                }
+                // }
             });
 
             stringifiedTestData.forEach(element => {
