@@ -255,7 +255,7 @@ const PatientDetails = () => {
                                                     <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='success' onClick={() => { navigate('new'); setRecordId(recordDetails._id); }}><AiOutlinePlus />&nbsp;Add File</Button>
                                                 }
 
-                                                {(medicalPersonnel.role==='nurse' && medicalPersonnel.institutionName === recordDetails.hospitalName) && 
+                                                {(medicalPersonnel.institutionName === recordDetails.hospitalName) && 
                                                     <Button style={{ marginTop: '10px'}} variant='contained' sx={{ padding: "0px 5px"}} size='small' color='warning' onClick={closeRecord}><AiOutlineClose />&nbsp;Close Record</Button>
                                                 }
                                             </>

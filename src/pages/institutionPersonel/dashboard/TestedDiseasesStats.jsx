@@ -17,7 +17,6 @@ export default function TestedDiseasesStats() {
         extremeCases: [] 
     });
     const [data, setData] = useState([]);
-    const [tests, setTests] = useState([]);
     
     // Function to generate Statistics
     function calculateTestStatistics(tests) {
