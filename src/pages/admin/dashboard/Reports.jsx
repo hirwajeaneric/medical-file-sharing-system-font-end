@@ -15,7 +15,7 @@ export default function Reports () {
   return (
     <Container>
       <Helmet>
-        <title>Reports - Admin reports</title>
+        <title>Reports preview - Admin reports</title>
         <meta name="description" content="Medicase, admin reports."/> 
       </Helmet>
       <PageHeaderContainer>

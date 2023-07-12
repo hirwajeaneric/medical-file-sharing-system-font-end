@@ -16,7 +16,7 @@ const columns = [
     },
     {
         field: 'frequency',
-        headerName: 'Number of positive cases',
+        headerName: 'Number of Tests',
         width: 300,
     }
 ]
