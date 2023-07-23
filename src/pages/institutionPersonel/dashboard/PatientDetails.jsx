@@ -46,12 +46,12 @@ const PatientDetails = () => {
 
     // Fetch Patient Info
     useEffect(() => {
-        axios.get(`http://localhost:5050/api/mfss/patient/findById?id=${params.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/patient/findById?id=${params.id}`)
         .then(response => { 
             setPatient(response.data);
 
             // Fetch Guardian Info
-            axios.get(`http://localhost:5050/api/mfss/guardian/findByPatientId?patientId=${patient._id}`)
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/guardian/findByPatientId?patientId=${patient._id}`)
             .then(response => { setGuardians(response.data); })
             .catch(error => { console.log(error) })
         })
@@ -61,7 +61,7 @@ const PatientDetails = () => {
 
     // Fetch Records for this patient
     useEffect(()=>{
-        axios.get(`http://localhost:5050/api/mfss/record/findByPatientId?patientId=${params.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/findByPatientId?patientId=${params.id}`)
         .then(response => { 
             response.data.sort((a, b) => new Date(b.openTime) - new Date(a.openTime))
             setRecords(response.data) 
@@ -71,7 +71,7 @@ const PatientDetails = () => {
 
     // Fetch files for this patients record
     useEffect(()=>{
-        axios.get(`http://localhost:5050/api/mfss/file/findByRecordId?recordId=${recordDetails._id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/file/findByRecordId?recordId=${recordDetails._id}`)
         .then(response => { setFiles(response.data); })
         .catch(error => { console.log(error) })
     },[recordDetails._id])
@@ -104,7 +104,7 @@ const PatientDetails = () => {
 
         const recordToBeSaved = { firstName: patient.firstName, lastName: patient.lastName, patientId: patient._id, email: patient.email, hospitalName: medicalPersonnel.institutionName, hospitalId: medicalPersonnel.institutionId, recordOpener: medicalPersonnel.firstName+" "+medicalPersonnel.lastName, recordCloser: "", openTime: new Date(), closeTime: "", status: "open", insuranceName: "" };
 
-        axios.post(`http://localhost:5050/api/mfss/record/new`, recordToBeSaved)
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/new`, recordToBeSaved)
         .then(response => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: response.data.message});
@@ -135,7 +135,7 @@ const PatientDetails = () => {
             console.log("Record to be updated: ");
             console.log(recordDetails);
 
-            axios.put(`http://localhost:5050/api/mfss/record/update?id=${recordDetails._id}`, recordDetails)
+            axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/update?id=${recordDetails._id}`, recordDetails)
             .then(response => {
                 if (response.status === 201) {
                     setNotification({severity: 'success', message: response.data.message});

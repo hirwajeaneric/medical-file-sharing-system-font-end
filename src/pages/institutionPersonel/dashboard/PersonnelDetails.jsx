@@ -23,7 +23,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
 
     // Fetch Data 
     useEffect(()=>{
-        axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${popupPayLoad.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findById?id=${popupPayLoad.id}`)
         .then(response => { setUserInfo(response.data); })
         .catch(error => { console.log(error); })
     },[popupPayLoad.id])
@@ -34,7 +34,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
         
         userInfo.isActive = 'true';
         
-        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/updateInstitution?id=${popupPayLoad.id}`, userInfo)
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/updateInstitution?id=${popupPayLoad.id}`, userInfo)
         .then(response => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account updated!"});
@@ -57,7 +57,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
 
         userInfo.isActive = 'false';
         
-        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/updateInstitution?id=${popupPayLoad.id}`, userInfo)
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/updateInstitution?id=${popupPayLoad.id}`, userInfo)
         .then(response => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account updated!"});
@@ -77,7 +77,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
     const deleteAccount = (e) => {
         e.preventDefault();
         
-        axios.delete(`http://localhost:5050/api/mfss/institutionPersonnel/delete?id=${popupPayLoad.id}`)
+        axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/delete?id=${popupPayLoad.id}`)
         .then(response => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account deleted!"});

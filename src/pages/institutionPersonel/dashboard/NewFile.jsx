@@ -52,7 +52,7 @@ const NewFile = () => {
         setInstitutionPersonnel(user);
 
         // Fetch institutionInfo
-        axios.get(`http://localhost:5050/api/mfss/institution/findById?id=${user.institutionId}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/findById?id=${user.institutionId}`)
         .then(response => { setInstitutionInformation(response.data) })
         .catch(error => { console.log('Server error: '+error) })
 
@@ -60,7 +60,7 @@ const NewFile = () => {
         if (!recordDetailsId) { navigate(`/${params.institution}/${params.role}/patients/${params.id}`) }
 
         // Fetch patient information
-        axios.get(`http://localhost:5050/api/mfss/patient/findById?id=${params.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/patient/findById?id=${params.id}`)
         .then(response => { setPatientInfo(response.data) })
         .catch(error => { console.log('Server error: '+error) });
         
@@ -69,7 +69,7 @@ const NewFile = () => {
 
     // Fetch Patient Info
     useEffect(()=>{
-        axios.get(`http://localhost:5050/api/mfss/patient/findById?id=${params.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/patient/findById?id=${params.id}`)
         .then(response => { setPatientInfo(response.data) })
         .catch(error => { console.log('Server error: '+error) })
     },[params.id]);
@@ -128,7 +128,7 @@ const NewFile = () => {
             setInputPrescriptionData({ number: 1, prescriptionName: '', type:'', quantity: '' })
             setAttachment("");
 
-            const URL = file.fileAttachment ? 'http://localhost:5050/api/mfss/file/add' : 'http://localhost:5050/api/mfss/file/new';
+            const URL = file.fileAttachment ? `${process.env.REACT_APP_SERVER_URL}/api/mfss/file/add` : '${process.env.REACT_APP_SERVER_URL}/api/mfss/file/new';
 
             axios.post(URL, file, file.fileAttachment && config )
             .then(response => { 

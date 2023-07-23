@@ -13,7 +13,7 @@ const Institution = () => {
   // const [numberOfPersonnel, setNumberOfPersonnel] = useState('');
 
   useEffect(()=>{
-    axios.get(`http://localhost:5050/api/mfss/institution/findByCode?institutionCode=${params.institution}`)
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/findByCode?institutionCode=${params.institution}`)
     .then(response=>{
       setInstitution(response.data);
       setInstitutionName(response.data.name);

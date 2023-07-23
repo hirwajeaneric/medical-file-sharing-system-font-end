@@ -57,7 +57,7 @@ const ListOfRecords = () => {
       } 
       setMedicalPersonnel(personnel);
 
-      axios.get(`http://localhost:5050/api/mfss/record/list`)
+      axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/list`)
       .then(response => { 
         let records = [];
         response.data.forEach((element)=>{
@@ -76,7 +76,7 @@ const ListOfRecords = () => {
 
     // Fetch files for this patients record
     useEffect(()=>{
-      axios.get(`http://localhost:5050/api/mfss/file/findByRecordId?recordId=${recordDetails._id}`)
+      axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/file/findByRecordId?recordId=${recordDetails._id}`)
       .then(response => { setFiles(response.data); })
       .catch(error => { console.log(error) })
     },[recordDetails._id])
@@ -102,7 +102,7 @@ const ListOfRecords = () => {
 
       const recordToBeSaved = { firstName: patient.firstName, lastName: patient.lastName, patientId: patient._id, email: patient.email, hospitalName: medicalPersonnel.institutionName, hospitalId: medicalPersonnel.institutionId, recordOpener: medicalPersonnel.firstName+" "+medicalPersonnel.lastName, recordCloser: "", openTime: new Date(), closeTime: "", status: "open", insuranceName: "" };
 
-      axios.post(`http://localhost:5050/api/mfss/record/new`, recordToBeSaved)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/new`, recordToBeSaved)
       .then(response => {
           if (response.status === 201) {
               setNotification({severity: 'success', message: response.data.message});
@@ -133,7 +133,7 @@ const ListOfRecords = () => {
           console.log("Record to be updated: ");
           console.log(recordDetails);
 
-          axios.put(`http://localhost:5050/api/mfss/record/update?id=${recordDetails._id}`, recordDetails)
+          axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/update?id=${recordDetails._id}`, recordDetails)
           .then(response => {
               if (response.status === 201) {
                   setNotification({severity: 'success', message: response.data.message});

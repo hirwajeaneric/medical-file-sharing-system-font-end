@@ -44,7 +44,7 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
         });
 
         // Finding institution by id
-        axios.get(`http://localhost:5050/api/mfss/institution/findById?id=${userInfo.institutionId}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/findById?id=${userInfo.institutionId}`)
         .then(response => { setInstitution(response.data) })
         .catch(error => console.log(error))
     },[]);
@@ -52,7 +52,7 @@ export const ComponentToPrint = React.forwardRef((props, ref) => {
     return (
         <ReportPaperContainer ref={ref}>
             <ReportHeader>
-                <img src={`http://localhost:5050/api/mfss/uploads/${institution.logo}`} alt='' />
+                <img src={`${process.env.REACT_APP_SERVER_URL}/api/mfss/uploads/${institution.logo}`} alt='' />
                 <InstitutionDetails>
                     <h3>{institution.name}</h3>
                     <p>Location: {institution.location}</p>

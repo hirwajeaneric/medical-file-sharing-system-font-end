@@ -39,7 +39,7 @@ const InstitutionPersonnelDashboard = () => {
 
     // Fetch Records for this patient
     useEffect(()=>{
-      axios.get(`http://localhost:5050/api/mfss/record/list`)
+      axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/list`)
       .then(response => { 
         let records = [];
         response.data.forEach((element)=>{
@@ -55,7 +55,7 @@ const InstitutionPersonnelDashboard = () => {
 
     // Fetch files for this patients record
     useEffect(()=>{
-      axios.get(`http://localhost:5050/api/mfss/file/findByRecordId?recordId=${recordDetails._id}`)
+      axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/file/findByRecordId?recordId=${recordDetails._id}`)
       .then(response => { setFiles(response.data); })
       .catch(error => { console.log(error) })
     },[recordDetails._id])
@@ -83,7 +83,7 @@ const InstitutionPersonnelDashboard = () => {
 
       console.log(recordToBeSaved);
 
-      axios.post(`http://localhost:5050/api/mfss/record/new`, recordToBeSaved)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/new`, recordToBeSaved)
       .then(response => {
           if (response.status === 201) {
               setNotification({severity: 'success', message: response.data.message});
@@ -114,7 +114,7 @@ const InstitutionPersonnelDashboard = () => {
           console.log("Record to be updated: ");
           console.log(recordDetails);
 
-          axios.put(`http://localhost:5050/api/mfss/record/update?id=${recordDetails._id}`, recordDetails)
+          axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/update?id=${recordDetails._id}`, recordDetails)
           .then(response => {
               if (response.status === 201) {
                   setNotification({severity: 'success', message: response.data.message});

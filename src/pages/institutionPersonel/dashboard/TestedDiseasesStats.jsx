@@ -93,7 +93,7 @@ export default function TestedDiseasesStats() {
         var filter = JSON.parse(localStorage.getItem('filter'));
 
         // Fetch records
-        axios.get(`http://localhost:5050/api/mfss/file/list`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/file/list`)
         .then(response => {
             var stringifiedTestData = [];
             var parsedTestData = [];

@@ -71,7 +71,7 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
         } else {
             institution.logo = logo;
 
-            axios.put(`http://localhost:5050/api/mfss/institution/updateLogo?id=${institution._id}`, institution, config)
+            axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/updateLogo?id=${institution._id}`, institution, config)
             .then(response => {
                 if (response.status === 201) {
                     setUpdateInProgress({...updateInProgress, two: 'Updating...'});
@@ -104,7 +104,7 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
         } else {
             institution.certificate = certificate;
 
-            axios.put(`http://localhost:5050/api/mfss/institution/updateCertificate?id=${institution._id}`, institution, config)
+            axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/updateCertificate?id=${institution._id}`, institution, config)
             .then(response => {
                 if (response.status === 201) {
                     setUpdateInProgress({...updateInProgress, three: 'Updating...'});
@@ -212,7 +212,7 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
                 <LeftHalf >
                     <div 
                         style={{ 
-                            backgroundImage: "url('http://localhost:5050/api/mfss/uploads/"+institution.logo+"')",  
+                            backgroundImage: "url('"+process.env.REACT_APP_SERVER_URL+"/api/mfss/uploads/"+institution.logo+"')",  
                             height: '150px',
                             width: '150px',
                             backgroundSize: 'cover',
@@ -232,7 +232,7 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
             <hr style={{ margin: '20px 0px'}}/>
             <TwoSidedParagraphContainer style={{ width: '100%'}}>
                 <LeftHalf>
-                    <a href={`http://localhost:5050/api/mfss/uploads/${institution.certificate}`} target='_blank' rel="noreferrer" style={{ fontSize: '500%', color: 'tomato'}} ><BsFileEarmarkPdf/></a>
+                    <a href={`${process.env.REACT_APP_SERVER_URL}/api/mfss/uploads/${institution.certificate}`} target='_blank' rel="noreferrer" style={{ fontSize: '500%', color: 'tomato'}} ><BsFileEarmarkPdf/></a>
                 </LeftHalf>
                 <RightHalf>
                     <h3 style={{ marginBottom: '20px' }}>Upload/Update Certificate</h3>

@@ -20,9 +20,9 @@ const Records = () => {
 
   // Data fetch (Fetching only records from this specific hospital)
   useEffect(()=>{
-    axios.get(`http://localhost:5050/api/mfss/institution/findByCode?institutionCode=${params.institution}`)
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/findByCode?institutionCode=${params.institution}`)
     .then(response => {
-      axios.get(`http://localhost:5050/api/mfss/record/findByHospitalId?hospitalId=${response.data._id}`)
+      axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/findByHospitalId?hospitalId=${response.data._id}`)
       .then(response => {
         response.data.forEach(element => {
           element.id = element._id;

@@ -27,7 +27,7 @@ const RecordAndFilesStats = () => {
         var filter = JSON.parse(localStorage.getItem('filter'));
 
         // Fetch records
-        axios.get(`http://localhost:5050/api/mfss/record/list`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/record/list`)
         .then(response => {
             let total = [];
             let open = [];

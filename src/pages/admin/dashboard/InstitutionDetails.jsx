@@ -53,7 +53,7 @@ const InstitutionDetails = ({popupPayLoad}) => {
         // setOpen(true);
                     
 
-        // await axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
+        // await axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         // .then(response=>{
 
         //     setTimeout(()=>{
@@ -72,12 +72,12 @@ const InstitutionDetails = ({popupPayLoad}) => {
         //         institution.institutionCode = response.data.payload.institutionName.replace(/\s/g, '').toLowerCase() ;
 
         //         // Record new institution
-        //         axios.post(`http://localhost:5050/api/mfss/institution/approve`, institution)
+        //         axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/approve`, institution)
         //         .then(response => {
         //             setTimeout(()=>{
         //                 if (response.status === 201) {
         //                     // Fetch the recorded institution using the certificate provided.
-        //                     axios.get(`http://localhost:5050/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
+        //                     axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
         //                     .then(response => {
 
         //                         /** Update Applicant information. */
@@ -102,7 +102,7 @@ const InstitutionDetails = ({popupPayLoad}) => {
         //                         applicant.institutionName = response.data[0].name
         //                         applicant.isActive = true
     
-        //                         axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/updateInstitution?id=${applicant._id}`, applicant)
+        //                         axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/updateInstitution?id=${applicant._id}`, applicant)
         //                         .then(response => {
         //                             if (response.status === 201) {
         //                                 setNotification({severity: 'success', message: "Request approved!"});
@@ -148,7 +148,7 @@ const InstitutionDetails = ({popupPayLoad}) => {
         // application.status = 'Rejected';
         // application.respondDate = new Date().toDateString();
 
-        // axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
+        // axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         // .then(response=>{
         //     if (response.status === 201) {
         //         setNotification({severity: 'success', message: response.data.message});

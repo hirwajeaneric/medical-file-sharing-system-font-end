@@ -17,7 +17,7 @@ const ListOfPersonnel = () => {
 
   // Data fetch 
   useEffect(()=>{
-    axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByInstitutionId?institutionId=${JSON.parse(localStorage.getItem('instAdmPe')).institutionId}`)
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findByInstitutionId?institutionId=${JSON.parse(localStorage.getItem('instAdmPe')).institutionId}`)
     .then(response => {
       response.data.forEach(element => {
         element.id = element._id;
