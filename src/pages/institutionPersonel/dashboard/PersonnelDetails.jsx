@@ -34,12 +34,12 @@ const PersonnelDetails = ({popupPayLoad}) => {
         
         userInfo.isActive = 'true';
         
-        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/updateInstitution?id=${popupPayLoad.id}`, userInfo)
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/update?id=${popupPayLoad.id}`, userInfo)
         .then(response => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account updated!"});
                 setOpen(true);
-                setTimeout(()=>{ window.location.reload(); },5000)
+                setTimeout(()=>{ window.location.reload(); },1000)
             }
         })
         .catch(error => {
@@ -57,12 +57,12 @@ const PersonnelDetails = ({popupPayLoad}) => {
 
         userInfo.isActive = 'false';
         
-        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/updateInstitution?id=${popupPayLoad.id}`, userInfo)
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/update?id=${popupPayLoad.id}`, userInfo)
         .then(response => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account updated!"});
                 setOpen(true);
-                setTimeout(()=>{ window.location.reload(); },5000)
+                setTimeout(()=>{ window.location.reload(); },2000)
             }
         })
         .catch(error => {
@@ -82,7 +82,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
             if (response.status === 201) {
                 setNotification({severity: 'success', message: "Account deleted!"});
                 setOpen(true);
-                setTimeout(()=>{ window.location.reload(); },3000)
+                window.location.reload();
             }
         })
         .catch(error => {

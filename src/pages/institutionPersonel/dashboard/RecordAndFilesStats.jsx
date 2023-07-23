@@ -105,10 +105,10 @@ const RecordAndFilesStats = () => {
                     <h4>Our Records</h4>
                     <RecordsTable data={data} />
                 </ChartOne>
-                <SideChart>
+                {/* <SideChart>
                     <h4>Overview</h4>
                     <PieChart chartData={[ topStats.open, topStats.closed, topStats.hospitalized ]}/>
-                </SideChart>
+                </SideChart> */}
             </ChartSection>
         </>
     )

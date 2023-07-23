@@ -38,7 +38,7 @@ const PersonnelStats = () => {
             var filter = JSON.parse(localStorage.getItem('filter'));
 
             response.data.forEach(element => {
-                if (element.institutionName === personnel.institutionName && Date.parse(element.joinDate) >= Date.parse(new Date(filter.from)) && Date.parse(element.joinDate) <= Date.parse(new Date(filter.to))) {
+                if (element.institutionName === personnel.institutionName) {
                     total.push(element);
                     
                     element.id = element._id

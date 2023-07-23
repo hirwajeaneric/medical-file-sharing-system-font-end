@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { BiBell, BiBuilding, BiFileBlank, BiFileFind, BiHomeAlt, BiMenuAltLeft, BiUserCheck, BiUserCircle, BiUserX } from 'react-icons/bi'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { DashboardContainer, HospitalName, MainContent, MenuButton, MenuPopup, Mfss, NavigationComponents, NavItem, NavItemContainer, NavItemContainerHome, OutletSpace, SideBar, TitleContainer, TopBar, User } from '../../../components/Dashboard/DashboardComponents'
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -115,7 +115,7 @@ const Dashboard = () => {
                   <p style={{ textDecoration: 'none', textAlign: 'left', fontSize:'100%', color: 'gray', marginBottom:'10px', marginLeft: '10px' }}>Notifications</p>
                 </div>
                 {notifications.length !== 0 && notifications.map((notification, index) =>
-                  <div key={index} style={{ width: '100%', cursor: 'pointer', padding:'10px', display: 'flex', flexDirection: 'column', background: notification.viewed ? 'white':'#e0ebeb' }} onClick={console.log(notification._id)}>
+                  <div key={index} style={{ width: '100%', cursor: 'pointer', padding:'10px', display: 'flex', flexDirection: 'column', background: notification.viewed ? 'white':'#e0ebeb' }}>
                     <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent:'space-between', alignItems:'center' }}>
                       <span style={{ fontSize: '80%', color: notification.severity === 'Critical' ? 'red' : notification.severity === 'Warning' ? 'yellow' : notification.severity === 'Emergency' ? 'orange' : 'black' }}>{notification.severity}</span>
                       <span style={{ fontSize: '80%', color: 'gray' }}>{new Date(notification.time).toUTCString()}</span>

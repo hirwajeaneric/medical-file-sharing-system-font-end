@@ -114,7 +114,7 @@ export default function TestedDiseasesStats() {
             setData(testStatistics.testedDiseases);
             setTopStats(testStatistics);
 
-            console.log(testStatistics);
+            // console.log(testStatistics);
         
             // Stringifying and sending filtered data to the localstorage for other pages to use it.
             const localTestStats = JSON.stringify(testStatistics)

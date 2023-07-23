@@ -43,12 +43,13 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
         .then(response => {
             if (response.status === 201) {
                 setUpdateInProgress({...updateInProgress, one: 'Updating institution info...'});
+                setNotification({severity: 'success', message: "Information updated!"});
+                setOpen(true);
+                setUpdateInProgress({...updateInProgress, one: ''});
+                    
                 setTimeout(()=>{
-                    setNotification({severity: 'success', message: "Information updated!"});
-                    setOpen(true);
-                    setUpdateInProgress({...updateInProgress, one: ''});
                     window.location.reload();
-                },3000)
+                },2000)
             }
         })
         .catch(error => {
@@ -75,10 +76,11 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
             .then(response => {
                 if (response.status === 201) {
                     setUpdateInProgress({...updateInProgress, two: 'Updating...'});
+                    setNotification({severity: 'success', message: "Logo uploaded!"});
+                    setOpen(true);
+                    setUpdateInProgress({...updateInProgress, two: ''});
+                        
                     setTimeout(()=>{
-                        setNotification({severity: 'success', message: "Logo uploaded!"});
-                        setOpen(true);
-                        setUpdateInProgress({...updateInProgress, two: ''});
                         window.location.reload();
                     },3000)
                 }
@@ -108,10 +110,10 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
             .then(response => {
                 if (response.status === 201) {
                     setUpdateInProgress({...updateInProgress, three: 'Updating...'});
+                    setNotification({severity: 'success', message: "Certificate uploaded!"});
+                    setOpen(true);
+                    setUpdateInProgress({...updateInProgress, three: ''});    
                     setTimeout(()=>{
-                        setNotification({severity: 'success', message: "Certificate uploaded!"});
-                        setOpen(true);
-                        setUpdateInProgress({...updateInProgress, three: ''});
                         window.location.reload();
                     },3000)
                 }
