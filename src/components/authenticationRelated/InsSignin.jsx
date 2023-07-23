@@ -49,7 +49,7 @@ const InsSignin = () => {
       return;
     } else {
       setErrorMessage('');
-      axios.post('http://localhost:5050/api/mfss/institutionPersonnel/signin', formData)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/signin`, formData)
       .then(response => {
         if (response.status === 200 && response.data.token) {
           setFormData({ userCode: '', password: ''});

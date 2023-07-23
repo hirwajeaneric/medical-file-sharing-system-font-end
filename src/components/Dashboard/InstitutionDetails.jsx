@@ -39,7 +39,7 @@ const InstitutionDetails = ({ institution, setInstitution }) => {
 
     const updateData = (e) => {
         e.preventDefault();
-        axios.put(`http://localhost:5050/api/mfss/institution/updateOne?id=${institution._id}`, institution)
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/updateOne?id=${institution._id}`, institution)
         .then(response => {
             if (response.status === 201) {
                 setUpdateInProgress({...updateInProgress, one: 'Updating institution info...'});

@@ -12,7 +12,7 @@ const PersonnelStats = () => {
     
     useEffect(() => {
         // Fetch patients
-        axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/list`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/list`)
         .then(response => {
             let total = [];
             let doctors = [];

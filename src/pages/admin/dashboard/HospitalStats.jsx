@@ -13,7 +13,7 @@ const HospitalStats = () => {
  
     useEffect(() => {
         // Fetch records
-        axios.get(`http://localhost:5050/api/mfss/institution/list`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/list`)
         .then(response => {
             let total = [];
             let active = [];

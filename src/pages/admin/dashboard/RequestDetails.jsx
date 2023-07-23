@@ -23,11 +23,11 @@ const RequestDetails = ({popupPayLoad}) => {
 
     // Fetch Data 
     useEffect(()=>{
-        axios.get(`http://localhost:5050/api/mfss/applicationForInstitution/findById?id=${popupPayLoad.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/findById?id=${popupPayLoad.id}`)
         .then(response=>{
             setApplication(response.data);
 
-            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${response.data.directorId}`)
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findById?id=${response.data.directorId}`)
             .then(response=>{
                 setApplicant(response.data);
             })
@@ -51,7 +51,7 @@ const RequestDetails = ({popupPayLoad}) => {
         setOpen(true);
                     
 
-        await axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
+        await axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         .then(response=>{
             /** Create new hospital. */
             institution.name = response.data.payload.institutionName
@@ -68,11 +68,11 @@ const RequestDetails = ({popupPayLoad}) => {
             institution.institutionCode = response.data.payload.institutionName.replace(/\s/g, '').toLowerCase() ;
 
             // Record new institution
-            axios.post(`http://localhost:5050/api/mfss/institution/approve`, institution)
+            axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/approve`, institution)
             .then(response => {
                 if (response.status === 201) {
                     // Fetch the recorded institution using the certificate provided.
-                    axios.get(`http://localhost:5050/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
+                    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
                     .then(response => {
 
                         /** Update Applicant information. */
@@ -97,7 +97,7 @@ const RequestDetails = ({popupPayLoad}) => {
                         applicant.institutionName = response.data[0].name
                         applicant.isActive = true
 
-                        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/update?id=${applicant._id}`, applicant)
+                        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/update?id=${applicant._id}`, applicant)
                         .then(response => {
                             if (response.status === 201) {
                                 // Sending an email
@@ -107,7 +107,7 @@ const RequestDetails = ({popupPayLoad}) => {
                                     text: `Dear ${applicant.lastName}, \n\nThis email containss sensitive and important information related to the access of ${applicant.institutionName} to the MEDICASE.\n\nAccess URL: http://localhost:3030/${applicant.institutionCode}/auth/signin\n\nLogin credentials:\nUsercode: ${applicant.userCode}\nPassword: The password you used to register the institution. \n\nPlease note that for the sake of data security of this application and for the security of patients data, you are prohibited to share above credentials to any other person out of this institution. Any sign or tentative of bleach, missuse, or compromise that will come from ${applicant.institutionName} may result to getting the hospital banned from accessing the system in addition to other measures that can include law enforcement. \n\nThis therefore gives you ${applicant.firstName+" "+applicant.lastName} full responsibility of how the hospital you have applied for uses the system. \n\nMore details will be found in your dashboard. \n\n\nBest Regards,`
                                 };
                                 
-                                axios.post(`http://localhost:5050/api/mfss/email/`, email)
+                                axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/email/`, email)
                                 .then(response => {
                                     console.log(response.data);
                                 })
@@ -154,7 +154,7 @@ const RequestDetails = ({popupPayLoad}) => {
         application.status = 'Rejected';
         application.respondDate = Date.now();
 
-        axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         .then(response=>{
             if (response.status === 201) {
                 setNotification({severity: 'success', message: response.data.message});
@@ -224,7 +224,7 @@ const RequestDetails = ({popupPayLoad}) => {
                 </DetailDiv>
                 <DetailDiv>
                     <p><strong>Certificate: </strong></p>
-                    <a href={`http://localhost:5050/api/mfss/uploads/${application.certificate}`}>Work Certificate</a>
+                    <a href={`${process.env.REACT_APP_SERVER_URL}/api/mfss/uploads/${application.certificate}`}>Work Certificate</a>
                 </DetailDiv>
                 <hr style={{height: '1px', background: '#b3b3cc', border: 'none',  marginBottom: '20px'}}/>
                 <DetailDiv>

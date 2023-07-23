@@ -64,7 +64,7 @@ const InsSignup = () => {
       
       setErrorMessage('');
 
-      axios.post('http://localhost:5050/api/mfss/admin/signup', formData)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/admin/signup`, formData)
       .then(response => {
         if(response.data) {
           

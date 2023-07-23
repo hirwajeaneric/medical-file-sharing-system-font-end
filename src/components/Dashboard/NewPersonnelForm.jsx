@@ -29,7 +29,7 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
         setLocalData({ institutionId: local.institutionId, institutionName: local.institutionName })
 
         // Get all institution data
-        axios.get(`http://localhost:5050/api/mfss/institution/findById?id=${local.institutionId}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/findById?id=${local.institutionId}`)
         .then(response => { setInstitution(response.data) })
         .catch(error => console.log(error));
     },[]);    
@@ -96,12 +96,12 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
 
             setProgress('Recording user info ...')
 
-            axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/addUser`, userInfo)
+            axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/addUser`, userInfo)
             .then(response=> {
                 if (response.status === 201) {
                     
                     // Send an email containing account credentials to the newly created user.
-                    axios.post(`http://localhost:5050/api/mfss/email`, email)
+                    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/email`, email)
                     .then(response => {
                         if (response.status === 200) { console.log(response.data) }
                     })
@@ -115,7 +115,7 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
                     let numberOfPersonnel = 0;
 
                     // Get full list of personnel
-                    axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByInstitutionId?institutionId=${localData.institutionId}`)
+                    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findByInstitutionId?institutionId=${localData.institutionId}`)
                     .then(response => { 
                         numberOfPersonnel = response.data.length 
                     })
@@ -124,7 +124,7 @@ const NewPersonnelForm = ({numberOfPersonnel}) => {
                     setTimeout(() => {
                         // Update the number of personnel
                         institution.numberOfPersonnel = numberOfPersonnel;
-                        axios.put(`http://localhost:5050/api/mfss/institution/updateOne?id=${localData.institutionId}`,institution)
+                        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/updateOne?id=${localData.institutionId}`,institution)
                         .then(response => {
                             if (response.status === 201) {
                                 setProgress('');

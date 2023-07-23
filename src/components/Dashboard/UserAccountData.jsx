@@ -42,7 +42,7 @@ const UserAccountData = () => {
             personnel = JSON.parse(localStorage.getItem('instLabPe'));
         } 
 
-        axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${personnel.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findById?id=${personnel.id}`)
         .then(response => { 
             setUserInformation(response.data); 
         })
@@ -52,7 +52,7 @@ const UserAccountData = () => {
     const updateData = (e) => {
         e.preventDefault();
 
-        axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/update?id=${userInformation._id}`, userInformation)
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/update?id=${userInformation._id}`, userInformation)
         .then(response => {
             if (response.status === 201) {
                 setUpdateInProgress('Updating user info...');
@@ -81,7 +81,7 @@ const UserAccountData = () => {
         } else {
             let passwordResetInfo = { email: userInformation.email, hospital: params.institution }
 
-            axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/requestPasswordReset`, passwordResetInfo)
+            axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/requestPasswordReset`, passwordResetInfo)
             .then(response => {
                 if (response.status === 201) {
                     setNotification({ severity: 'success', message: response.data });

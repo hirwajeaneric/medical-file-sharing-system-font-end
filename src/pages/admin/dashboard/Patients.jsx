@@ -14,7 +14,7 @@ const Patients = () => {
 
   // Data fetch
   useEffect(()=>{
-    axios.get(`http://localhost:5050/api/mfss/patient/list`)
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/patient/list`)
     .then(response => {
       response.data.forEach(element => {
         element.id = element._id;

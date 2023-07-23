@@ -25,7 +25,7 @@ const Dashboard = () => {
   useEffect(()=>{
     setUserIdentity(JSON.parse(localStorage.getItem('usr')));
 
-    axios.get('http://localhost:5050/api/mfss/notification/list')
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/notification/list`)
     .then(response => {
       response.data.sort((a, b) => new Date(b.time) - new Date(a.time));
       let listOfNotifications = [];

@@ -128,7 +128,7 @@ const AddPatientForm = () => {
 
             personalInfo.residence = locations.province+", "+locations.district+", "+locations.sector;
 
-            axios.post(`http://localhost:5050/api/mfss/patient/signup`, personalInfo)
+            axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/patient/signup`, personalInfo)
             .then(response => {
                 if (response.status === 201) {
                 setSavingProgress('Saving in progress ...');
@@ -136,7 +136,7 @@ const AddPatientForm = () => {
                 setTimeout(()=>{
                     guardian.patientId = response.data.patient._id;
 
-                    axios.post(`http://localhost:5050/api/mfss/guardian/add`, guardian)
+                    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/guardian/add`, guardian)
                     .then(response=>{
                         setSavingProgress('');
                         window.location.replace(`/${params.institution}/${[params.role]}/patients`);

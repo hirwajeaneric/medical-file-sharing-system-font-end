@@ -32,7 +32,7 @@ const AdminUserAccountData = () => {
     useEffect(() => {
         let personnel = JSON.parse(localStorage.getItem('usr'));
          
-        axios.get(`http://localhost:5050/api/mfss/admin/findById?id=${personnel.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/admin/findById?id=${personnel.id}`)
         .then(response => { 
             setUserInformation(response.data); 
         })
@@ -42,7 +42,7 @@ const AdminUserAccountData = () => {
     const updateData = (e) => {
         e.preventDefault();
 
-        axios.put(`http://localhost:5050/api/mfss/admin/update?id=${userInformation._id}`, userInformation)
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/admin/update?id=${userInformation._id}`, userInformation)
         .then(response => {
             if (response.status === 201) {
                 setUpdateInProgress('Updating user info...');
@@ -71,7 +71,7 @@ const AdminUserAccountData = () => {
         } else {
             let passwordResetInfo = { email: userInformation.email, hospital: params.institution }
 
-            axios.post(`http://localhost:5050/api/mfss/admin/requestPasswordReset`, passwordResetInfo)
+            axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/admin/requestPasswordReset`, passwordResetInfo)
             .then(response => {
                 if (response.status === 201) {
                     setNotification({ severity: 'success', message: response.data });

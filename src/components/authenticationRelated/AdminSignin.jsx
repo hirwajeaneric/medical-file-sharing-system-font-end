@@ -54,7 +54,7 @@ const AdminSignin = () => {
       return;
     } else {
       setErrorMessage('');
-      axios.post('http://localhost:5050/api/mfss/admin/signin', formData)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/admin/signin`, formData)
       .then(response => {
         if (response.status === 200 && response.data.token) {
           setFormData({

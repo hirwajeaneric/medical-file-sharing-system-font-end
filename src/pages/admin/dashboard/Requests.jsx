@@ -18,7 +18,7 @@ const Requests = () => {
 
   // Data fetch 
   useEffect(()=>{
-    axios.get('http://localhost:5050/api/mfss/applicationForInstitution/list')
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/list`)
     .then(response => {
       response.data.forEach(element => {
         element.id = element._id;

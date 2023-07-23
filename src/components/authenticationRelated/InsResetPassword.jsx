@@ -54,7 +54,7 @@ const InsResetPassword = () => {
       let newCredentials = { password: formData.newPassword }
 
       setErrorMessage('');
-      axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/resetPassword?id=${params.id}&token=${params.token}`, newCredentials)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/resetPassword?id=${params.id}&token=${params.token}`, newCredentials)
       .then(response => {
         if (response.status === 201) {
           setFormData({ newPassword: '', confirmPassword: ''});

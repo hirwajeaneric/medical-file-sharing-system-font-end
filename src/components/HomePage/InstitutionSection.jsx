@@ -97,13 +97,13 @@ const InstitutionSection = () => {
       setErrorMessage('');
       
       setSavingProgress('Saving in progress ...');
-      axios.post(`http://localhost:5050/api/mfss/institutionPersonnel/createUser`, personalInfo)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/createUser`, personalInfo)
       .then(response => {
         if (response.status === 201) {    
           setTimeout(()=>{
             setSavingProgress('');
             setSuccessMessage({ message: response.data.message, visible: true });
-            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findByEmail?email=${response.data.info.email}`)
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findByEmail?email=${response.data.info.email}`)
             .then(response=>{
               setDirector(response.data._id)
             })
@@ -174,7 +174,7 @@ const InstitutionSection = () => {
       setErrorMessageTwo('');
 
       setSavingProgressTwo('Saving in progress ...');
-      axios.post(`http://localhost:5050/api/mfss/applicationForInstitution/add`, institutionApplication, config)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/add`, institutionApplication, config)
       .then(response => {
         if (response.status === 201) {
           setTimeout(()=>{

@@ -22,21 +22,21 @@ const FileDetails = ({file}) => {
     useEffect(() => {
         if (file.type === 'laboratory tests') {
             // Fetch lab technician
-            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${file.labTechId}`)
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findById?id=${file.labTechId}`)
             .then(response => {
                 setLabTechnitian(response.data)
             })
             .catch(error => console.log("Server error :: "+error))
 
             // Fetch doctor
-            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${file.doctorId}`)
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findById?id=${file.doctorId}`)
             .then(response => {
                 setDoctor(response.data)
             })
             .catch(error => console.log("Server error :: "+error))
         } else {
             // Fetch doctor
-            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${file.doctorId}`)
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findById?id=${file.doctorId}`)
             .then(response => {
                 setDoctor(response.data)
             })

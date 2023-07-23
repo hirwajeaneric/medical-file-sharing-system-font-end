@@ -25,11 +25,11 @@ const InstitutionDetails = ({popupPayLoad}) => {
         console.log('Institution Details: ');
         console.log(popupPayLoad.id)
 
-        axios.get(`http://localhost:5050/api/mfss/institution/findById?id=${popupPayLoad.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/findById?id=${popupPayLoad.id}`)
         .then(response=>{
             setInstitution(response.data);
 
-            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${response.data.directorId}`)
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findById?id=${response.data.directorId}`)
             .then(response=>{
                 setApplicant(response.data);
             })
@@ -207,7 +207,7 @@ const InstitutionDetails = ({popupPayLoad}) => {
                 </DetailDiv>
                 <DetailDiv>
                     <p><strong>Certificate: </strong></p>
-                    <a href={`http://localhost:5050/api/mfss/uploads/${institution.certificate}`}>Work Permit</a>
+                    <a href={`${process.env.REACT_APP_SERVER_URL}/api/mfss/uploads/${institution.certificate}`}>Work Permit</a>
                 </DetailDiv>
                 <hr style={{height: '1px', background: '#b3b3cc', border: 'none',  marginBottom: '20px'}}/>
                 <DetailDiv>

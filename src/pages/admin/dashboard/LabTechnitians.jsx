@@ -25,11 +25,11 @@ const PersonnelDetails = ({popupPayLoad}) => {
 
     // Fetch Data 
     useEffect(()=>{
-        axios.get(`http://localhost:5050/api/mfss/applicationForInstitution/findById?id=${popupPayLoad.id}`)
+        axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/findById?id=${popupPayLoad.id}`)
         .then(response=>{
             setApplication(response.data);
 
-            axios.get(`http://localhost:5050/api/mfss/institutionPersonnel/findById?id=${response.data.directorId}`)
+            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/findById?id=${response.data.directorId}`)
             .then(response=>{
                 setApplicant(response.data);
             })
@@ -53,7 +53,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
         setOpen(true);
                     
 
-        await axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
+        await axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         .then(response=>{
 
             setTimeout(()=>{
@@ -72,12 +72,12 @@ const PersonnelDetails = ({popupPayLoad}) => {
                 institution.institutionCode = response.data.payload.institutionName.replace(/\s/g, '').toLowerCase() ;
 
                 // Record new institution
-                axios.post(`http://localhost:5050/api/mfss/institution/approve`, institution)
+                axios.post(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/approve`, institution)
                 .then(response => {
                     setTimeout(()=>{
                         if (response.status === 201) {
                             // Fetch the recorded institution using the certificate provided.
-                            axios.get(`http://localhost:5050/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
+                            axios.get(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institution/findByCertificate?certificate=${institution.certificate}`)
                             .then(response => {
 
                                 /** Update Applicant information. */
@@ -102,7 +102,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
                                 applicant.institutionName = response.data[0].name
                                 applicant.isActive = true
     
-                                axios.put(`http://localhost:5050/api/mfss/institutionPersonnel/updateInstitution?id=${applicant._id}`, applicant)
+                                axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/institutionPersonnel/updateInstitution?id=${applicant._id}`, applicant)
                                 .then(response => {
                                     if (response.status === 201) {
                                         setNotification({severity: 'success', message: "Request approved!"});
@@ -143,7 +143,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
         application.status = 'Rejected';
         application.respondDate = new Date().toDateString();
 
-        axios.put(`http://localhost:5050/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
+        axios.put(`${process.env.REACT_APP_SERVER_URL}/api/mfss/applicationForInstitution/update?id=${application._id}`, application)
         .then(response=>{
             if (response.status === 201) {
                 setNotification({severity: 'success', message: response.data.message});
@@ -210,7 +210,7 @@ const PersonnelDetails = ({popupPayLoad}) => {
                 </DetailDiv>
                 <DetailDiv>
                     <p><strong>Certificate: </strong></p>
-                    <a href={`http://localhost:5050/api/mfss/uploads/${application.certificate}`}>Work Certificate</a>
+                    <a href={`${process.env.REACT_APP_SERVER_URL}/api/mfss/uploads/${application.certificate}`}>Work Certificate</a>
                 </DetailDiv>
                 <hr style={{height: '1px', background: '#b3b3cc', border: 'none',  marginBottom: '20px'}}/>
                 <DetailDiv>
